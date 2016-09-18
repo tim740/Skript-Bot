@@ -29,45 +29,65 @@ public class SkriptBot {
         }
         try {
             jda = new JDABuilder().setBotToken(args[0]).addListener(new MessageListener()).buildBlocking();
-            System.out.println("[Skript-Bot]: Successfully authenticated with Discord");
+            System.out.println("[Skript-Bot]: Successfully Connected to Skript-Chat!");
         } catch (LoginException e) {
             System.out.println("[Skript-Bot]: Invalid Token: " + args[0]);
+            System.exit(0);
         } catch (Exception e) {
             System.out.println("[Skript-Bot]: " + e.getMessage());
+            System.exit(0);
         }
 
     }
     private static class MessageListener extends ListenerAdapter {
         @Override
         public void onMessageReceived(MessageReceivedEvent e){
-            if (e.getMessage().getContent().startsWith("@Skript-Bot")); {
-                String[] msg = e.getMessage().getContent().split(" ");
-                User user = e.getMessage().getAuthor();
-                ArrayList<String> cl = e.getGuild().getRolesForUser(user).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new));
-                if (Objects.equals(msg[1], "help")) {
-                    e.getMessage().getChannel().sendMessage(
-                            "Commands: (All Commands start with @Skript-Bot \n\n" +
-                            "`help` (Returns this help command) \n" +
-                            "`info` (Returns Info about me) \n" +
-                            "`joinlink` (Returns the Join link for Skript-Chat \n" +
-                            "`kick <user>`\n");
-                }else if (Objects.equals(msg[1], "info")) {
-                    e.getMessage().getChannel().sendMessage(
-                            "Creator: @tim740#1139 \n" +
-                            "Source: https://github.com/tim740/Skript-Bot\n" +
-                            "Creation Date: 18/09/2016");
-                }else if (Objects.equals(msg[1], "joinlink")) {
-                    e.getMessage().getChannel().sendMessage("Skript-Chat Join Link: https://discord.gg/0lx4QhQvwelCZbEX");
-                }else if (Objects.equals(msg[1], "kick")) {
-                    if (cl.contains("Staff")) {
-                        if (msg[2].contains("@")) {
-                            new GuildManager(e.getGuild()).kick(user);
-                            e.getMessage().getChannel().sendMessage("Kicked: " + user);
-                        }else{
-                            e.getMessage().getChannel().sendMessage("You need to provide a user name!");
+            if (!e.getMessage().getAuthor().getUsername().equals("Skript-Bot")) {
+                if (e.getMessage().getContent().startsWith("@Skript-Bot")) {
+                    String[] msg = e.getMessage().getContent().split(" ");
+                    User user = e.getMessage().getAuthor();
+                    ArrayList<String> cl = e.getGuild().getRolesForUser(user).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new));
+                    if (Objects.equals(msg[1], "help")) {
+                        user.getPrivateChannel().sendMessage(
+                                "Commands: (All Commands start with `@Skript-Bot`) \n\n" +
+                                        "**info** (Returns Info about me) \n" +
+                                        "**joinlink** (Returns the Join link for Skript-Chat) \n");
+                        if (cl.contains("Staff")) {
+                            user.getPrivateChannel().sendMessage(
+                                    "Admin Commands: \n\n" +
+                                            "**kick <user>** (kicks a user)\n");
+                        }
+                        if (e.getMessage().getAuthor().getUsername().equals("tim740")) {
+                            user.getPrivateChannel().sendMessage("**stop** (Stops Skript-Bot)");
+                        }
+                        e.getMessage().getChannel().sendMessage("I've sent a list of commands to you @" + e.getMessage().getAuthor().getUsername());
+                    } else if (Objects.equals(msg[1], "info")) {
+                        e.getMessage().getChannel().sendMessage(
+                                "Creator: @tim740#1139 \n" +
+                                        "Source: https://github.com/tim740/Skript-Bot\n" +
+                                        "Creation Date: 18/09/2016");
+                    } else if (Objects.equals(msg[1], "joinlink")) {
+                        e.getMessage().getChannel().sendMessage("Skript-Chat Join Link: https://discord.gg/0lx4QhQvwelCZbEX");
+                    } else if (Objects.equals(msg[1], "kick")) {
+                        if (cl.contains("Staff")) {
+                            if (msg[2].contains("@")) {
+                                new GuildManager(e.getGuild()).kick(user);
+                                e.getMessage().getChannel().sendMessage("Kicked: " + user);
+                            } else {
+                                e.getMessage().getChannel().sendMessage("You need to provide a user name!");
+                            }
+                        } else {
+                            e.getMessage().getChannel().sendMessage(":x: You do not have the right permissions :x:");
+                        }
+                    } else if (Objects.equals(msg[1], "stop") || (Objects.equals(msg[1], "fuck") && (Objects.equals(msg[2], "off")))) {
+                        if (e.getMessage().getAuthor().getUsername().equals("tim740")) {
+                            e.getMessage().getChannel().sendMessage("Closing...");
+                            System.exit(0);
+                        } else {
+                            e.getMessage().getChannel().sendMessage(":x: Only tim740 can stop me! :x:");
                         }
                     } else {
-                        e.getMessage().getChannel().sendMessage(":x: No Permissions :x:");
+                        e.getMessage().getChannel().sendMessage("Did you mean `@Skript-Bot help` " + e.getMessage().getAuthor().getUsername() +"?");
                     }
                 }
             }

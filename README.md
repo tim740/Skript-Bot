@@ -1,0 +1,2 @@
+# SkriptBot
+SkriptBot for Discord

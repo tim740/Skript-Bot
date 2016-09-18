@@ -106,14 +106,14 @@ public class SkriptBot {
         }
     }
     private static String getJoinTxt(){
-        return ("Welcome to Skript-Chat's Discord! \n" +
+        return ("Welcome to **Skript-Chat**'s Discord! \n" +
                 "You can get my commands by doing `@Skript-Bot help` \n\n" +
-                "Rules: \n" +
-                "   1. Use the right channels.\n" +
-                "   2. Don't scam, spam or disrespect people. \n\n" +
-                "If you an addon dev and would like the @Addon Developer Rank, Proved the link to your post so we can prove that it's really you, then you will be able to post updates in #addon-updates (Please try to stick to the default format, your allowed to leave comments too if you wish) \n\n" +
-                "If you would like to add a bot but need authorization you can message one of the staff members or @Staff \n\n" +
-                "@Staff If you need a Staff Member to make you Supporter, they will need proof still. \n\n" +
-                "If you need any more help ask a staff member :)");
+                "**Rules**: \n" +
+                "   **1**. Use the right channels.\n" +
+                "   **2**. Don't scam, spam or disrespect people. \n\n" +
+                "If you an ***addon dev*** and would like the ***@Addon Developer Rank***, Proved the link to your post so we can prove that it's really you, then you will be able to post updates in ***#addon-updates*** (Please try to stick to the default format, your allowed to leave comments too if you wish) \n\n" +
+                "If you would like to add a bot but need authorization you can message one of the staff members or ***@Staff*** \n\n" +
+                "***@Staff*** If you need a Staff Member to make you ***Supporter***, they will need proof still. \n\n" +
+                "If you need any more help ask a ***staff member*** :)");
     }
 }

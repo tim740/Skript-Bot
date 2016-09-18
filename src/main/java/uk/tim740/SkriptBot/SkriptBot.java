@@ -79,7 +79,7 @@ public class SkriptBot {
                         } else {
                             e.getMessage().getChannel().sendMessage(":x: You do not have the right permissions :x:");
                         }
-                    } else if (Objects.equals(msg[1], "stop") || (Objects.equals(msg[1], "fuck") && (Objects.equals(msg[2], "off")))) {
+                    } else if (Objects.equals(msg[1], "stop")) {
                         if (e.getMessage().getAuthor().getUsername().equals("tim740")) {
                             e.getMessage().getChannel().sendMessage("Closing...");
                             System.exit(0);

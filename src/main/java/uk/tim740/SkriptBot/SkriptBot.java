@@ -37,7 +37,7 @@ public class SkriptBot {
             System.out.println("[Skript-Bot]: " + e.getMessage());
             System.exit(0);
         }
-
+        jda.getAccountManager().setGame("@Skript-Bot help");
     }
     private static class MessageListener extends ListenerAdapter {
         @Override
@@ -51,7 +51,8 @@ public class SkriptBot {
                         user.getPrivateChannel().sendMessage(
                                 "Commands: (All Commands start with `@Skript-Bot`) \n\n" +
                                         "**info** (Returns Info about me) \n" +
-                                        "**joinlink** (Returns the Join link for Skript-Chat) \n");
+                                        "**joinlink** (Returns the Join link for Skript-Chat) \n" +
+                                        "**jointxt** (Gets the First join text)");
                         if (cl.contains("Staff")) {
                             user.getPrivateChannel().sendMessage(
                                     "Admin Commands: \n\n" +
@@ -60,50 +61,59 @@ public class SkriptBot {
                         if (e.getMessage().getAuthor().getUsername().equals("tim740")) {
                             user.getPrivateChannel().sendMessage("**stop** (Stops Skript-Bot)");
                         }
-                        e.getMessage().getChannel().sendMessage("I've sent a list of commands to you @" + e.getMessage().getAuthor().getUsername());
+                        e.getMessage().getChannel().sendMessage("I've sent a list of commands to you " + user.getAsMention());
+                        e.getMessage().deleteMessage();
                     } else if (Objects.equals(msg[1], "info")) {
                         e.getMessage().getChannel().sendMessage(
-                                "Creator: @tim740#1139 \n" +
+                                "Created: @tim740#1139 (18/09/2016)\n" +
+                                        "Website: https://tim740.github.io/\n" +
                                         "Source: https://github.com/tim740/Skript-Bot\n" +
-                                        "Creation Date: 18/09/2016");
+                                        "Built with JDA: https://github.com/DV8FromTheWorld/JDA");
                     } else if (Objects.equals(msg[1], "joinlink")) {
                         e.getMessage().getChannel().sendMessage("Skript-Chat Join Link: https://discord.gg/0lx4QhQvwelCZbEX");
+                    }else if (Objects.equals(msg[1], "jointxt")) {
+                        user.getPrivateChannel().sendMessage(getJoinTxt());
+                        e.getMessage().getChannel().sendMessage("I've sent you the join text " + user.getAsMention());
+                        e.getMessage().deleteMessage();
                     } else if (Objects.equals(msg[1], "kick")) {
                         if (cl.contains("Staff")) {
                             if (msg[2].contains("@")) {
                                 new GuildManager(e.getGuild()).kick(user);
-                                e.getMessage().getChannel().sendMessage("Kicked: " + user);
-                            } else {
-                                e.getMessage().getChannel().sendMessage("You need to provide a user name!");
+                                e.getMessage().getChannel().sendMessage("Kicked: " + user.getUsername());
                             }
                         } else {
-                            e.getMessage().getChannel().sendMessage(":x: You do not have the right permissions :x:");
+                            e.getMessage().getChannel().sendMessage(":x: You do not have the right permissions " + user.getAsMention());
                         }
+
                     } else if (Objects.equals(msg[1], "stop")) {
+                        e.getMessage().deleteMessage();
                         if (e.getMessage().getAuthor().getUsername().equals("tim740")) {
                             e.getMessage().getChannel().sendMessage("Closing...");
                             System.exit(0);
                         } else {
-                            e.getMessage().getChannel().sendMessage(":x: Only tim740 can stop me! :x:");
+                            e.getMessage().getChannel().sendMessage(":x: Only tim740 can stop me " + user.getAsMention());
                         }
                     } else {
-                        e.getMessage().getChannel().sendMessage("Did you mean `@Skript-Bot help` " + e.getMessage().getAuthor().getUsername() +"?");
+                        e.getMessage().getChannel().sendMessage("Did you mean `@Skript-Bot help` " + user.getAsMention() +"?");
+                        e.getMessage().deleteMessage();
                     }
                 }
             }
         }
         @Override
         public void onGuildMemberJoin(GuildMemberJoinEvent e) {
-            e.getUser().getPrivateChannel().sendMessage(
-                    "Welcome to Skript-Chat's Discord! \n" +
-                    "You can get my commands by doing `@Skript-Bot help` \n\n" +
-                    "Rules: \n" +
-                    "   1. Use the right channels.\n" +
-                    "   2. Don't scam, spam or disrespect people. \n\n" +
-                    "If you an addon dev and would like the @Addon Developer Rank, Proved the link to your post so we can prove that it's really you, then you will be able to post updates in #addon-updates (Please try to stick to the default format, your allowed to leave comments too if you wish) \n\n" +
-                    "If you would like to add a bot but need authorization you can message one of the staff members or @Staff \n\n" +
-                    "@Staff If you need a Staff Member to make you Supporter, they will need proof still. \n\n" +
-                    "If you need any more help ask a staff member :)");
+            e.getUser().getPrivateChannel().sendMessage(getJoinTxt());
         }
+    }
+    private static String getJoinTxt(){
+        return ("Welcome to Skript-Chat's Discord! \n" +
+                "You can get my commands by doing `@Skript-Bot help` \n\n" +
+                "Rules: \n" +
+                "   1. Use the right channels.\n" +
+                "   2. Don't scam, spam or disrespect people. \n\n" +
+                "If you an addon dev and would like the @Addon Developer Rank, Proved the link to your post so we can prove that it's really you, then you will be able to post updates in #addon-updates (Please try to stick to the default format, your allowed to leave comments too if you wish) \n\n" +
+                "If you would like to add a bot but need authorization you can message one of the staff members or @Staff \n\n" +
+                "@Staff If you need a Staff Member to make you Supporter, they will need proof still. \n\n" +
+                "If you need any more help ask a staff member :)");
     }
 }

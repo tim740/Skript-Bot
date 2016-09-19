@@ -60,7 +60,7 @@ public class SkriptBot {
                         }
                         e.getMessage().getChannel().sendMessage("I've sent a list of commands to you " + u.getAsMention());
                     } else if (Objects.equals(msg[1], "info")) {
-                        e.getMessage().getChannel().sendMessage(
+                        u.getPrivateChannel().sendMessage(
                                 "Created: @tim740#1139 (18/09/2016)\n" +
                                         "Website: <https://tim740.github.io/>\n" +
                                         "Source: <https://github.com/tim740/Skript-Bot>\n" +
@@ -68,7 +68,7 @@ public class SkriptBot {
                     } else if (Objects.equals(msg[1], "suggest")) {
                         String sn = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("suggest", "");
                         jda.getUserById("138441986314207232").getPrivateChannel().sendMessage(u.getAsMention() + " Suggested:\n" + sn);
-                        e.getMessage().getChannel().sendMessage("Your suggestion has been noted " + u.getAsMention());
+                        u.getPrivateChannel().sendMessage("Your suggestion has been noted " + u.getAsMention());
                     } else if (Objects.equals(msg[1], "links")) {
                         e.getMessage().getChannel().sendMessage(
                                 "**USEFUL LINKS**\n" +
@@ -77,7 +77,7 @@ public class SkriptBot {
                                         "   **Latest Aliases**: <https://forums.skunity.com/t/40?u=tim740>\n" +
                                         "   **Formatting**: <https://support.discordapp.com/hc/en-us/articles/210298617>");
                     } else if (Objects.equals(msg[1], "joinlink")) {
-                        e.getMessage().getChannel().sendMessage("Skript-Chat Join Link: https://discord.gg/0lx4QhQvwelCZbEX");
+                        e.getMessage().getChannel().sendMessage("Skript-Chat Join Link: https://discord.gg/bxaPNjN");
                     } else if (Objects.equals(msg[1], "jointxt")) {
                         u.getPrivateChannel().sendMessage(getJoinTxt());
                         e.getMessage().getChannel().sendMessage("I've sent you the join text " + u.getAsMention());

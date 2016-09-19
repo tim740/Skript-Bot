@@ -75,7 +75,7 @@ public class SkriptBot {
                             c.add("Source: <https://github.com/tim740/Skript-Bot>");
                             c.add("JDA Api: <https://github.com/DV8FromTheWorld/JDA>");
                             long dt = (new Date().getTime() - st);
-                            c.add("Uptime: " + dt /1000/60/60/24 + "d " + dt /1000/60/60 + "h " + dt /1000/60 + "m " + dt /1000 + "s");
+                            c.add("Uptime: " + (dt /1000/60/60/24) + "d " + (dt /1000/60/60) + "h " + (dt /1000/60) + "m " + (dt /1000) + "s");
                             u.getPrivateChannel().sendMessage(msgBuilder(c));
                             break;
                         }

@@ -51,19 +51,23 @@ public class SkriptBot {
                         case "help": {//send message as skript bot
                             ArrayList<String> c = new ArrayList<>();
                             c.add("**COMMANDS** (All Commands start with `@Skript-Bot`)");
-                            c.add("   **info** - (Returns Info about me)");
-                            c.add("   **uptime** - (Gets my uptime)");
-                            c.add("   **whois <user>** - (Gets User Info)");
-                            c.add("   **links** - (Returns useful links)");
-                            c.add("   **joinlink** - (Returns the Join link for Skript-Chat)");
-                            c.add("   **jointxt** - (Gets the First join text)");
-                            c.add("   **suggest <idea>** (Suggest an idea for Skript-Bot)");
+                            c.add("```xl");
+                            c.add("   info - (Returns Info about me)");
+                            c.add("   uptime - (Gets my uptime)");
+                            c.add("   whois <user> - (Gets User Info)");
+                            c.add("   links - (Returns useful links)");
+                            c.add("   joinlink - (Returns the Join link for Skript-Chat)");
+                            c.add("   jointxt - (Gets the First join text)");
+                            c.add("   suggest <idea> (Suggest an idea for Skript-Bot)");
+                            c.add("```");
                             if (cl.contains("Staff")) {
                                 c.add("**ADMIN COMMANDS**");
-                                c.add("   **setgame <text>** - (Sets my game)");
-                                c.add("   **setnick <user> <text>** - (Sets a users nick)");
-                                c.add("   **kick <user>** - (kicks a user)");
-                                c.add("   **stop** - (Stops Skript-Bot)");
+                                c.add("```xl");
+                                c.add("   setgame <text> - (Sets my game)");
+                                c.add("   setnick <user> <text> - (Sets a users nick)");
+                                c.add("   kick <user> - (kicks a user)");
+                                c.add("   stop - (Stops Skript-Bot)");
+                                c.add("```");
                             }
                             u.getPrivateChannel().sendMessage(msgBuilder(c));
                             //e.getMessage().getChannel().sendMessage("I've send you a list of commands " + u.getAsMention());
@@ -135,6 +139,7 @@ public class SkriptBot {
                             if (cl.contains("Staff")) {
                                 String snn = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("setnick", "").replaceFirst(msg[2], "");
                                 new GuildManager(e.getGuild()).setNickname(e.getMessage().getMentionedUsers().get(1), snn);
+                                e.getMessage().getChannel().sendMessage(u.getAsMention() + " set '" + msg[2] + "' nickname to " + e.getMessage().getMentionedUsers().get(1));
                             }
                             break;
                         case "stop":

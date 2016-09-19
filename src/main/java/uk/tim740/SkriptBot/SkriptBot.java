@@ -38,7 +38,7 @@ public class SkriptBot {
     private static class MessageListener extends ListenerAdapter {
         @Override
         public void onMessageReceived(MessageReceivedEvent e){
-            if (!e.getMessage().getAuthor().getUsername().equals("Skript-Bot")) {
+            if (!e.getMessage().getAuthor().getId().equals("227067574469394432")) {
                 if (e.getMessage().getContent().startsWith("@Skript-Bot")) {
                     String[] msg = e.getMessage().getContent().split(" ");
                     User u = e.getMessage().getAuthor();
@@ -92,7 +92,7 @@ public class SkriptBot {
                         }
 
                     } else if (Objects.equals(msg[1], "stop")) {
-                        if (e.getMessage().getAuthor().getUsername().equals("tim740")) {
+                        if (e.getMessage().getAuthor().getId().equals("138441986314207232")) {
                             e.getMessage().getChannel().sendMessage("Closing...");
                             System.exit(0);
                         } else {

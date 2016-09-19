@@ -41,11 +41,11 @@ public class SkriptBot {
             if (!e.getMessage().getAuthor().getUsername().equals("Skript-Bot")) {
                 if (e.getMessage().getContent().startsWith("@Skript-Bot")) {
                     String[] msg = e.getMessage().getContent().split(" ");
-                    User user = e.getMessage().getAuthor();
-                    ArrayList<String> cl = e.getGuild().getRolesForUser(user).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new));
+                    User u = e.getMessage().getAuthor();
+                    ArrayList<String> cl = e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new));
                     e.getMessage().deleteMessage();
                     if (Objects.equals(msg[1], "help")) {
-                        user.getPrivateChannel().sendMessage(
+                        u.getPrivateChannel().sendMessage(
                                 "**COMMANDS**: (All Commands start with `@Skript-Bot`)\n" +
                                         "   **info** - (Returns Info about me)\n" +
                                         "   **links** - (Returns useful links)\n" +
@@ -53,12 +53,12 @@ public class SkriptBot {
                                         "   **jointxt** - (Gets the First join text)\n" +
                                         "   **suggest <idea>** (Suggest an idea for Skript-Bot)");
                         if (cl.contains("Staff")) {
-                            user.getPrivateChannel().sendMessage(
+                            u.getPrivateChannel().sendMessage(
                                     "**ADMIN COMMANDS**: \n" +
                                             "   **kick <user>** - (kicks a user)\n" +
                                             "   **stop** - (Stops Skript-Bot)");
                         }
-                        e.getMessage().getChannel().sendMessage("I've sent a list of commands to you " + user.getAsMention());
+                        e.getMessage().getChannel().sendMessage("I've sent a list of commands to you " + u.getAsMention());
                     } else if (Objects.equals(msg[1], "info")) {
                         e.getMessage().getChannel().sendMessage(
                                 "Created: @tim740#1139 (18/09/2016)\n" +
@@ -67,8 +67,8 @@ public class SkriptBot {
                                         "JDA Api: <https://github.com/DV8FromTheWorld/JDA>");
                     } else if (Objects.equals(msg[1], "suggest")) {
                         String sn = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("suggest", "");
-                        jda.getUserById("138441986314207232").getPrivateChannel().sendMessage(user.getAsMention() + " Suggested:\n" + sn);
-                        e.getMessage().getChannel().sendMessage("Your suggestion has been noted " + user.getAsMention());
+                        jda.getUserById("138441986314207232").getPrivateChannel().sendMessage(u.getAsMention() + " Suggested:\n" + sn);
+                        e.getMessage().getChannel().sendMessage("Your suggestion has been noted " + u.getAsMention());
                     } else if (Objects.equals(msg[1], "links")) {
                         e.getMessage().getChannel().sendMessage(
                                 "**USEFUL LINKS**\n" +
@@ -79,16 +79,16 @@ public class SkriptBot {
                     } else if (Objects.equals(msg[1], "joinlink")) {
                         e.getMessage().getChannel().sendMessage("Skript-Chat Join Link: https://discord.gg/0lx4QhQvwelCZbEX");
                     } else if (Objects.equals(msg[1], "jointxt")) {
-                        user.getPrivateChannel().sendMessage(getJoinTxt());
-                        e.getMessage().getChannel().sendMessage("I've sent you the join text " + user.getAsMention());
+                        u.getPrivateChannel().sendMessage(getJoinTxt());
+                        e.getMessage().getChannel().sendMessage("I've sent you the join text " + u.getAsMention());
                     } else if (Objects.equals(msg[1], "kick")) {
                         if (cl.contains("Staff")) {
                             if (msg[2].contains("@")) {
-                                new GuildManager(e.getGuild()).kick(user);
-                                e.getMessage().getChannel().sendMessage("Kicked: " + user.getUsername());
+                                new GuildManager(e.getGuild()).kick(u);
+                                e.getMessage().getChannel().sendMessage("Kicked: " + u.getUsername());
                             }
                         } else {
-                            e.getMessage().getChannel().sendMessage(":x: You do not have the right permissions " + user.getAsMention());
+                            e.getMessage().getChannel().sendMessage(":x: You do not have the right permissions " + u.getAsMention());
                         }
 
                     } else if (Objects.equals(msg[1], "stop")) {
@@ -96,10 +96,10 @@ public class SkriptBot {
                             e.getMessage().getChannel().sendMessage("Closing...");
                             System.exit(0);
                         } else {
-                            e.getMessage().getChannel().sendMessage(":x: Only tim740 can stop me " + user.getAsMention());
+                            e.getMessage().getChannel().sendMessage(":x: Only tim740 can stop me " + u.getAsMention());
                         }
                     } else {
-                        e.getMessage().getChannel().sendMessage("Did you mean `@Skript-Bot help` " + user.getAsMention() +"?");
+                        e.getMessage().getChannel().sendMessage("Did you mean `@Skript-Bot help` " + u.getAsMention() +"?");
                     }
                 }
             }
@@ -107,6 +107,7 @@ public class SkriptBot {
         @Override
         public void onGuildMemberJoin(GuildMemberJoinEvent e) {
             e.getUser().getPrivateChannel().sendMessage(getJoinTxt());
+            jda.getTextChannelById("138464183946575874").sendMessage("Welcome " + e.getUser().getAsMention() + " to Skript-Chat!");
         }
     }
     private static String getJoinTxt(){

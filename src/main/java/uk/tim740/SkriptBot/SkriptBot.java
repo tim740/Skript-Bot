@@ -9,7 +9,9 @@ import net.dv8tion.jda.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.hooks.ListenerAdapter;
 import net.dv8tion.jda.managers.GuildManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -24,17 +26,17 @@ public class SkriptBot {
     public static void main(String[] args){
         long s = System.currentTimeMillis();
         if (args.length < 1){
-            System.out.println("[Skript-Bot]: No Token Specified");
+            prSys("No Token Specified");
             System.exit(0);
         }
         try {
             jda = new JDABuilder().setBotToken(args[0]).addListener(new MessageListener()).buildBlocking();
         } catch (Exception e) {
-            System.out.println("[Skript-Bot]: " + e.getMessage());
+            prSys(e.getMessage());
             System.exit(0);
         }
         jda.getAccountManager().setGame("@Skript-Bot help");
-        System.out.println("[Skript-Bot]: Successfully Connected to Skript-Chat, took " + (System.currentTimeMillis() - s) + "ms!");
+        prSys("Successfully Connected to Skript-Chat, took " + (System.currentTimeMillis() - s) + "ms!");
     }
     private static class MessageListener extends ListenerAdapter {
         @Override
@@ -45,6 +47,7 @@ public class SkriptBot {
                     User u = e.getMessage().getAuthor();
                     ArrayList<String> cl = e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new));
                     e.getMessage().deleteMessage();
+                    prSys("@" + u.getUsername() + " executed: '" + e.getMessage().getContent() + "'");
                     if (Objects.equals(msg[1], "help")) {
                         u.getPrivateChannel().sendMessage(
                                 "**COMMANDS**: (All Commands start with `@Skript-Bot`)\n" +
@@ -101,6 +104,7 @@ public class SkriptBot {
         public void onGuildMemberJoin(GuildMemberJoinEvent e) {
             e.getUser().getPrivateChannel().sendMessage(getJoinTxt());
             jda.getTextChannelById("138464183946575874").sendMessage("Welcome " + e.getUser().getAsMention() + " to Skript-Chat!");
+            prSys("@" + e.getUser().getUsername() + " has joined Skript-Chat!");
         }
     }
     private static String getJoinTxt(){
@@ -113,5 +117,8 @@ public class SkriptBot {
                 "If you would like to add a bot but need authorization you can message one of the staff members or ***@Staff*** \n\n" +
                 "***@Staff*** If you need a Staff Member to make you ***Supporter***, they will need proof still. \n\n" +
                 "If you need any more help ask a ***staff member*** :)");
+    }
+    private static void prSys(String s) {
+        System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Info] [Skript-Bot]: " + s);
     }
 }

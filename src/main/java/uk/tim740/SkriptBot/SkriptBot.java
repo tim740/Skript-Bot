@@ -22,18 +22,19 @@ public class SkriptBot {
     private static JDA jda;
 
     public static void main(String[] args){
+        long s = System.currentTimeMillis();
         if (args.length < 1){
             System.out.println("[Skript-Bot]: No Token Specified");
             System.exit(0);
         }
         try {
             jda = new JDABuilder().setBotToken(args[0]).addListener(new MessageListener()).buildBlocking();
-            System.out.println("[Skript-Bot]: Successfully Connected to Skript-Chat!");
         } catch (Exception e) {
             System.out.println("[Skript-Bot]: " + e.getMessage());
             System.exit(0);
         }
         jda.getAccountManager().setGame("@Skript-Bot help");
+        System.out.println("[Skript-Bot]: Successfully Connected to Skript-Chat, took " + (System.currentTimeMillis() - s) + "ms!");
     }
     private static class MessageListener extends ListenerAdapter {
         @Override

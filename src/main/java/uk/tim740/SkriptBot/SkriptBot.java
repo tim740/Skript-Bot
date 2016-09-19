@@ -47,6 +47,7 @@ public class SkriptBot {
                     String[] msg = e.getMessage().getContent().split(" ");
                     User user = e.getMessage().getAuthor();
                     ArrayList<String> cl = e.getGuild().getRolesForUser(user).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new));
+                    e.getMessage().deleteMessage();
                     if (Objects.equals(msg[1], "help")) {
                         user.getPrivateChannel().sendMessage(
                                 "**COMMANDS**: (All Commands start with `@Skript-Bot`)\n\n" +
@@ -64,18 +65,16 @@ public class SkriptBot {
                             user.getPrivateChannel().sendMessage("  **stop** - (Stops Skript-Bot)");
                         }
                         e.getMessage().getChannel().sendMessage("I've sent a list of commands to you " + user.getAsMention());
-                        e.getMessage().deleteMessage();
                     } else if (Objects.equals(msg[1], "info")) {
                         e.getMessage().getChannel().sendMessage(
                                 "Created: @tim740#1139 (18/09/2016)\n" +
                                         "Website: <https://tim740.github.io/>\n" +
                                         "Source: <https://github.com/tim740/Skript-Bot>\n" +
                                         "JDA Api: <https://github.com/DV8FromTheWorld/JDA>");
-                        e.getMessage().deleteMessage();
                     } else if (Objects.equals(msg[1], "suggest")) {
-                        e.getMessage().deleteMessage();
                         String sn = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("suggest", "");
                         jda.getUserById("138441986314207232").getPrivateChannel().sendMessage(user.getAsMention() + " Suggested:\n" + sn);
+                        e.getMessage().getChannel().sendMessage("Your suggestion has been noted " + user.getAsMention());
                     } else if (Objects.equals(msg[1], "links")) {
                         e.getMessage().getChannel().sendMessage(
                                 "**USEFUL LINKS**\n\n" +
@@ -87,7 +86,6 @@ public class SkriptBot {
                     } else if (Objects.equals(msg[1], "jointxt")) {
                         user.getPrivateChannel().sendMessage(getJoinTxt());
                         e.getMessage().getChannel().sendMessage("I've sent you the join text " + user.getAsMention());
-                        e.getMessage().deleteMessage();
                     } else if (Objects.equals(msg[1], "kick")) {
                         if (cl.contains("Staff")) {
                             if (msg[2].contains("@")) {
@@ -99,7 +97,6 @@ public class SkriptBot {
                         }
 
                     } else if (Objects.equals(msg[1], "stop")) {
-                        e.getMessage().deleteMessage();
                         if (e.getMessage().getAuthor().getUsername().equals("tim740")) {
                             e.getMessage().getChannel().sendMessage("Closing...");
                             System.exit(0);
@@ -108,7 +105,6 @@ public class SkriptBot {
                         }
                     } else {
                         e.getMessage().getChannel().sendMessage("Did you mean `@Skript-Bot help` " + user.getAsMention() +"?");
-                        e.getMessage().deleteMessage();
                     }
                 }
             }

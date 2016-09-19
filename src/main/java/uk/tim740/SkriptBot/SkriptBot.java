@@ -59,7 +59,6 @@ public class SkriptBot {
                                             "   **kick <user>** - (kicks a user)\n" +
                                             "   **stop** - (Stops Skript-Bot)");
                         }
-                        e.getMessage().getChannel().sendMessage("I've sent a list of commands to you " + u.getAsMention());
                     } else if (Objects.equals(msg[1], "info")) {
                         u.getPrivateChannel().sendMessage(
                                 "Created: @tim740#1139 (18/09/2016)\n" +
@@ -71,7 +70,7 @@ public class SkriptBot {
                         jda.getUserById("138441986314207232").getPrivateChannel().sendMessage(u.getAsMention() + " Suggested:\n" + sn);
                         u.getPrivateChannel().sendMessage("Your suggestion has been noted " + u.getAsMention());
                     } else if (Objects.equals(msg[1], "links")) {
-                        e.getMessage().getChannel().sendMessage(
+                        u.getPrivateChannel().sendMessage(
                                 "**USEFUL LINKS**\n" +
                                         "   **Bensku's Skript**: <https://github.com/bensku/Skript/releases>\n" +
                                         "   **Virustotal's skQuery**: <https://github.com/SkriptLegacy/skquery/releases>\n" +
@@ -81,17 +80,13 @@ public class SkriptBot {
                         e.getMessage().getChannel().sendMessage("Skript-Chat Join Link: https://discord.gg/bxaPNjN");
                     } else if (Objects.equals(msg[1], "jointxt")) {
                         u.getPrivateChannel().sendMessage(getJoinTxt());
-                        e.getMessage().getChannel().sendMessage("I've sent you the join text " + u.getAsMention());
                     } else if (Objects.equals(msg[1], "kick")) {
                         if (cl.contains("Staff")) {
                             if (msg[2].contains("@")) {
                                 new GuildManager(e.getGuild()).kick(u);
                                 e.getMessage().getChannel().sendMessage("Kicked: " + u.getUsername());
                             }
-                        } else {
-                            e.getMessage().getChannel().sendMessage(":x: You do not have the right permissions " + u.getAsMention());
                         }
-
                     } else if (Objects.equals(msg[1], "stop")) {
                         if (e.getMessage().getAuthor().getId().equals("138441986314207232")) {
                             System.exit(0);

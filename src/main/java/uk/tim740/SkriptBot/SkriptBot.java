@@ -93,10 +93,7 @@ public class SkriptBot {
 
                     } else if (Objects.equals(msg[1], "stop")) {
                         if (e.getMessage().getAuthor().getId().equals("138441986314207232")) {
-                            e.getMessage().getChannel().sendMessage("Closing...");
                             System.exit(0);
-                        } else {
-                            e.getMessage().getChannel().sendMessage(":x: Only tim740 can stop me " + u.getAsMention());
                         }
                     } else {
                         e.getMessage().getChannel().sendMessage("Did you mean `@Skript-Bot help` " + u.getAsMention() +"?");

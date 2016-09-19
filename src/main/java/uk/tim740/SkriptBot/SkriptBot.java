@@ -12,7 +12,6 @@ import net.dv8tion.jda.managers.GuildManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -22,9 +21,9 @@ import java.util.stream.Collectors;
 
 public class SkriptBot {
     private static JDA jda;
+    private static long st = System.currentTimeMillis();
 
     public static void main(String[] args){
-        long s = System.currentTimeMillis();
         if (args.length < 1){
             prSys("No Token Specified");
             System.exit(0);
@@ -36,7 +35,7 @@ public class SkriptBot {
             System.exit(0);
         }
         jda.getAccountManager().setGame("@Skript-Bot help");
-        prSys("Successfully Connected to Skript-Chat, took " + (System.currentTimeMillis() - s) + "ms!");
+        prSys("Successfully Connected to Skript-Chat, took " + (System.currentTimeMillis() - st) + "ms!");
     }
     private static class MessageListener extends ListenerAdapter {
         @Override
@@ -46,56 +45,100 @@ public class SkriptBot {
                     String[] msg = e.getMessage().getContent().split(" ");
                     User u = e.getMessage().getAuthor();
                     ArrayList<String> cl = e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new));
-                    e.getMessage().deleteMessage();
+                    //e.getMessage().deleteMessage();
                     prSys("@" + u.getUsername() + " executed: '" + e.getMessage().getContent() + "'");
-                    if (Objects.equals(msg[1], "help")) {
-                        u.getPrivateChannel().sendMessage(
-                                "**COMMANDS**: (All Commands start with `@Skript-Bot`)\n" +
-                                        "   **info** - (Returns Info about me)\n" +
-                                        "   **links** - (Returns useful links)\n" +
-                                        "   **joinlink** - (Returns the Join link for Skript-Chat)\n" +
-                                        "   **jointxt** - (Gets the First join text)\n" +
-                                        "   **suggest <idea>** (Suggest an idea for Skript-Bot)");
-                        if (cl.contains("Staff")) {
-                            u.getPrivateChannel().sendMessage(
-                                    "**ADMIN COMMANDS**: \n" +
-                                            "   **kick <user>** - (kicks a user)\n" +
-                                            "   **stop** - (Stops Skript-Bot)");
-                        }
-                    } else if (Objects.equals(msg[1], "info")) {
-                        u.getPrivateChannel().sendMessage(
-                                "Created: @tim740#1139 (18/09/2016)\n" +
-                                        "Website: <https://tim740.github.io/>\n" +
-                                        "Source: <https://github.com/tim740/Skript-Bot>\n" +
-                                        "JDA Api: <https://github.com/DV8FromTheWorld/JDA>");
-                    } else if (Objects.equals(msg[1], "suggest")) {
-                        String sn = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("suggest", "");
-                        jda.getUserById("138441986314207232").getPrivateChannel().sendMessage(u.getAsMention() + " Suggested:\n" + sn);
-                        u.getPrivateChannel().sendMessage("Your suggestion has been noted " + u.getAsMention());
-                    } else if (Objects.equals(msg[1], "links")) {
-                        u.getPrivateChannel().sendMessage(
-                                "**USEFUL LINKS**\n" +
-                                        "   **Bensku's Skript**: <https://github.com/bensku/Skript/releases>\n" +
-                                        "   **Virustotal's skQuery**: <https://github.com/SkriptLegacy/skquery/releases>\n" +
-                                        "   **Latest Aliases**: <https://forums.skunity.com/t/40?u=tim740>\n" +
-                                        "   **Formatting**: <https://support.discordapp.com/hc/en-us/articles/210298617>");
-                    } else if (Objects.equals(msg[1], "joinlink")) {
-                        e.getMessage().getChannel().sendMessage("Skript-Chat Join Link: https://discord.gg/bxaPNjN");
-                    } else if (Objects.equals(msg[1], "jointxt")) {
-                        u.getPrivateChannel().sendMessage(getJoinTxt());
-                    } else if (Objects.equals(msg[1], "kick")) {
-                        if (cl.contains("Staff")) {
-                            if (msg[2].contains("@")) {
-                                new GuildManager(e.getGuild()).kick(u);
-                                e.getMessage().getChannel().sendMessage("Kicked: " + u.getUsername());
+                    switch (msg[1]) {
+                        case "help": {//send message as skript bot
+                            ArrayList<String> c = new ArrayList<>();
+                            c.add("**COMMANDS** (All Commands start with `@Skript-Bot`)");
+                            c.add("   **info** - (Returns Info about me)");
+                            c.add("   **whois <user>** - (Gets User Info)");
+                            c.add("   **links** - (Returns useful links)");
+                            c.add("   **joinlink** - (Returns the Join link for Skript-Chat)");
+                            c.add("   **jointxt** - (Gets the First join text)");
+                            c.add("   **suggest <idea>** (Suggest an idea for Skript-Bot)");
+                            if (cl.contains("Staff")) {
+                                c.add("**ADMIN COMMANDS**");
+                                c.add("   **setgame <text>** - (Sets my game)");
+                                c.add("   **setnick <user> <text>** - (Sets a users nick)");
+                                c.add("   **kick <user>** - (kicks a user)");
+                                c.add("   **stop** - (Stops Skript-Bot)");
                             }
+                            u.getPrivateChannel().sendMessage(msgBuilder(c));
+                            //e.getMessage().getChannel().sendMessage("I've send you a list of commands " + u.getAsMention());
+                            break;
                         }
-                    } else if (Objects.equals(msg[1], "stop")) {
-                        if (e.getMessage().getAuthor().getId().equals("138441986314207232")) {
-                            System.exit(0);
+                        case "info": {
+                            ArrayList<String> c = new ArrayList<>();
+                            c.add("Created: @tim740#1139 (18/09/2016)");
+                            c.add("Website: <https://tim740.github.io/>");
+                            c.add("Source: <https://github.com/tim740/Skript-Bot>");
+                            c.add("JDA Api: <https://github.com/DV8FromTheWorld/JDA>");
+                            long dt = (new Date().getTime() - st);
+                            c.add("Uptime: " + dt /1000/60/60/24 + "d " + dt /1000/60/60 + "h " + dt /1000/60 + "m " + dt /1000 + "s");
+                            u.getPrivateChannel().sendMessage(msgBuilder(c));
+                            break;
                         }
-                    } else {
-                        e.getMessage().getChannel().sendMessage("Did you mean `@Skript-Bot help` " + u.getAsMention() +"?");
+                        case "whois": {
+                            User wu = e.getMessage().getMentionedUsers().get(1);
+                            ArrayList<String> c = new ArrayList<>();
+                            c.add("**ID**: " + wu.getId());
+                            c.add("**Name**: " + wu.getUsername());
+                            c.add("**Online**: " + wu.getOnlineStatus());
+                            c.add("**Game**: " + wu.getCurrentGame().getName());
+                            c.add("**Bot**: " + wu.isBot());
+                            u.getPrivateChannel().sendMessage(msgBuilder(c));
+                            break;
+                        }
+                        case "suggest":
+                            String sn = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("suggest", "");
+                            jda.getUserById("138441986314207232").getPrivateChannel().sendMessage(u.getAsMention() + " Suggested:\n" + sn);
+                            u.getPrivateChannel().sendMessage("Your suggestion has been noted " + u.getAsMention());
+                            break;
+                        case "links": {
+                            ArrayList<String> c = new ArrayList<>();
+                            c.add("**USEFUL LINKS**");
+                            c.add("   **Bensku's Skript**: <https://github.com/bensku/Skript/releases>");
+                            c.add("   **Virustotal's skQuery**: <https://github.com/SkriptLegacy/skquery/releases>");
+                            c.add("   **Latest Aliases**: <https://forums.skunity.com/t/40?u=tim740>");
+                            c.add("   **Formatting**: <https://support.discordapp.com/hc/en-us/articles/210298617>");
+                            u.getPrivateChannel().sendMessage(msgBuilder(c));
+                            break;
+                        }
+                        case "joinlink":
+                            e.getMessage().getChannel().sendMessage("Skript-Chat Join Link: https://discord.gg/bxaPNjN");
+                            break;
+                        case "jointxt":
+                            u.getPrivateChannel().sendMessage(getJoinTxt());
+                            break;
+                        case "kick":
+                            if (cl.contains("Staff")) {
+                                if (msg[2].contains("@")) {
+                                    new GuildManager(e.getGuild()).kick(msg[2]);
+                                    e.getMessage().getChannel().sendMessage("Kicked: " + e.getMessage().getMentionedUsers().get(1));
+                                }
+                            }
+                            break;
+                        case "setgame":
+                            if (cl.contains("Staff")) {
+                                String sg = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("setgame", "");
+                                jda.getAccountManager().setGame(sg);
+                            }
+                            break;
+                        case "setnick":
+                            if (cl.contains("Staff")) {
+                                String snn = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("setnick", "").replaceFirst(msg[2], "");
+                                new GuildManager(e.getGuild()).setNickname(e.getMessage().getMentionedUsers().get(1), snn);
+                            }
+                            break;
+                        case "stop":
+                            if (e.getMessage().getAuthor().getId().equals("138441986314207232")) {
+                                System.exit(0);
+                            }
+                            break;
+                        default:
+                            e.getMessage().getChannel().sendMessage("Did you mean `@Skript-Bot help` " + u.getAsMention() + "?");
+                            break;
                     }
                 }
             }
@@ -117,6 +160,13 @@ public class SkriptBot {
                 "If you would like to add a bot but need authorization you can message one of the staff members or ***@Staff*** \n\n" +
                 "***@Staff*** If you need a Staff Member to make you ***Supporter***, they will need proof still. \n\n" +
                 "If you need any more help ask a ***staff member*** :)");
+    }
+    private static String msgBuilder(ArrayList<String> s) {
+        String f = "";
+        for (String j : s){
+            f = (f + "\n" + j);
+        }
+        return f;
     }
     private static void prSys(String s) {
         System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Info] [Skript-Bot]: " + s);

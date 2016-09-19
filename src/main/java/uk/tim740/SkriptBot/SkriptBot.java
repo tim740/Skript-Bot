@@ -9,7 +9,6 @@ import net.dv8tion.jda.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.hooks.ListenerAdapter;
 import net.dv8tion.jda.managers.GuildManager;
 
-import javax.security.auth.login.LoginException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -30,9 +29,6 @@ public class SkriptBot {
         try {
             jda = new JDABuilder().setBotToken(args[0]).addListener(new MessageListener()).buildBlocking();
             System.out.println("[Skript-Bot]: Successfully Connected to Skript-Chat!");
-        } catch (LoginException e) {
-            System.out.println("[Skript-Bot]: Invalid Token: " + args[0]);
-            System.exit(0);
         } catch (Exception e) {
             System.out.println("[Skript-Bot]: " + e.getMessage());
             System.exit(0);
@@ -50,7 +46,7 @@ public class SkriptBot {
                     e.getMessage().deleteMessage();
                     if (Objects.equals(msg[1], "help")) {
                         user.getPrivateChannel().sendMessage(
-                                "**COMMANDS**: (All Commands start with `@Skript-Bot`)\n\n" +
+                                "**COMMANDS**: (All Commands start with `@Skript-Bot`)\n" +
                                         "   **info** - (Returns Info about me)\n" +
                                         "   **links** - (Returns useful links)\n" +
                                         "   **joinlink** - (Returns the Join link for Skript-Chat)\n" +
@@ -58,11 +54,9 @@ public class SkriptBot {
                                         "   **suggest <idea>** (Suggest an idea for Skript-Bot)");
                         if (cl.contains("Staff")) {
                             user.getPrivateChannel().sendMessage(
-                                    "\n**ADMIN COMMANDS**: \n\n" +
-                                            "   **kick <user>** - (kicks a user)");
-                        }
-                        if (e.getMessage().getAuthor().getUsername().equals("tim740")) {
-                            user.getPrivateChannel().sendMessage("  **stop** - (Stops Skript-Bot)");
+                                    "**ADMIN COMMANDS**: \n" +
+                                            "   **kick <user>** - (kicks a user)\n" +
+                                            "   **stop** - (Stops Skript-Bot)");
                         }
                         e.getMessage().getChannel().sendMessage("I've sent a list of commands to you " + user.getAsMention());
                     } else if (Objects.equals(msg[1], "info")) {
@@ -77,10 +71,11 @@ public class SkriptBot {
                         e.getMessage().getChannel().sendMessage("Your suggestion has been noted " + user.getAsMention());
                     } else if (Objects.equals(msg[1], "links")) {
                         e.getMessage().getChannel().sendMessage(
-                                "**USEFUL LINKS**\n\n" +
+                                "**USEFUL LINKS**\n" +
                                         "   **Bensku's Skript**: <https://github.com/bensku/Skript/releases>\n" +
-                                        "   **Virustotal's skQuery: <https://github.com/SkriptLegacy/skquery/releases>\n" +
-                                        "   **Latest Aliases:** <https://forums.skunity.com/t/40?u=tim740>\n");
+                                        "   **Virustotal's skQuery**: <https://github.com/SkriptLegacy/skquery/releases>\n" +
+                                        "   **Latest Aliases**: <https://forums.skunity.com/t/40?u=tim740>\n" +
+                                        "   **Formatting**: <https://support.discordapp.com/hc/en-us/articles/210298617>");
                     } else if (Objects.equals(msg[1], "joinlink")) {
                         e.getMessage().getChannel().sendMessage("Skript-Chat Join Link: https://discord.gg/0lx4QhQvwelCZbEX");
                     } else if (Objects.equals(msg[1], "jointxt")) {

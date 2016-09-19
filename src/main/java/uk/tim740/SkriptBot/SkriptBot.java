@@ -49,29 +49,42 @@ public class SkriptBot {
                     ArrayList<String> cl = e.getGuild().getRolesForUser(user).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new));
                     if (Objects.equals(msg[1], "help")) {
                         user.getPrivateChannel().sendMessage(
-                                "Commands: (All Commands start with `@Skript-Bot`) \n\n" +
-                                        "**info** (Returns Info about me) \n" +
-                                        "**joinlink** (Returns the Join link for Skript-Chat) \n" +
-                                        "**jointxt** (Gets the First join text)");
+                                "**COMMANDS**: (All Commands start with `@Skript-Bot`)\n\n" +
+                                        "   **info** - (Returns Info about me)\n" +
+                                        "   **links** - (Returns useful links)\n" +
+                                        "   **joinlink** - (Returns the Join link for Skript-Chat)\n" +
+                                        "   **jointxt** - (Gets the First join text)\n" +
+                                        "   **suggest <idea>** (Suggest an idea for Skript-Bot)");
                         if (cl.contains("Staff")) {
                             user.getPrivateChannel().sendMessage(
-                                    "Admin Commands: \n\n" +
-                                            "**kick <user>** (kicks a user)\n");
+                                    "\n**ADMIN COMMANDS**: \n\n" +
+                                            "   **kick <user>** - (kicks a user)");
                         }
                         if (e.getMessage().getAuthor().getUsername().equals("tim740")) {
-                            user.getPrivateChannel().sendMessage("**stop** (Stops Skript-Bot)");
+                            user.getPrivateChannel().sendMessage("  **stop** - (Stops Skript-Bot)");
                         }
                         e.getMessage().getChannel().sendMessage("I've sent a list of commands to you " + user.getAsMention());
                         e.getMessage().deleteMessage();
                     } else if (Objects.equals(msg[1], "info")) {
                         e.getMessage().getChannel().sendMessage(
                                 "Created: @tim740#1139 (18/09/2016)\n" +
-                                        "Website: https://tim740.github.io/\n" +
-                                        "Source: https://github.com/tim740/Skript-Bot\n" +
-                                        "Built with JDA: https://github.com/DV8FromTheWorld/JDA");
+                                        "Website: <https://tim740.github.io/>\n" +
+                                        "Source: <https://github.com/tim740/Skript-Bot>\n" +
+                                        "JDA Api: <https://github.com/DV8FromTheWorld/JDA>");
+                        e.getMessage().deleteMessage();
+                    } else if (Objects.equals(msg[1], "suggest")) {
+                        e.getMessage().deleteMessage();
+                        String sn = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("suggest", "");
+                        jda.getUserById("138441986314207232").getPrivateChannel().sendMessage(user.getAsMention() + " Suggested:\n" + sn);
+                    } else if (Objects.equals(msg[1], "links")) {
+                        e.getMessage().getChannel().sendMessage(
+                                "**USEFUL LINKS**\n\n" +
+                                        "   **Bensku's Skript**: <https://github.com/bensku/Skript/releases>\n" +
+                                        "   **Virustotal's skQuery: <https://github.com/SkriptLegacy/skquery/releases>\n" +
+                                        "   **Latest Aliases:** <https://forums.skunity.com/t/40?u=tim740>\n");
                     } else if (Objects.equals(msg[1], "joinlink")) {
                         e.getMessage().getChannel().sendMessage("Skript-Chat Join Link: https://discord.gg/0lx4QhQvwelCZbEX");
-                    }else if (Objects.equals(msg[1], "jointxt")) {
+                    } else if (Objects.equals(msg[1], "jointxt")) {
                         user.getPrivateChannel().sendMessage(getJoinTxt());
                         e.getMessage().getChannel().sendMessage("I've sent you the join text " + user.getAsMention());
                         e.getMessage().deleteMessage();

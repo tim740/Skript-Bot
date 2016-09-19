@@ -52,6 +52,7 @@ public class SkriptBot {
                             ArrayList<String> c = new ArrayList<>();
                             c.add("**COMMANDS** (All Commands start with `@Skript-Bot`)");
                             c.add("   **info** - (Returns Info about me)");
+                            c.add("   **uptime** - (Gets my uptime)");
                             c.add("   **whois <user>** - (Gets User Info)");
                             c.add("   **links** - (Returns useful links)");
                             c.add("   **joinlink** - (Returns the Join link for Skript-Chat)");
@@ -74,9 +75,14 @@ public class SkriptBot {
                             c.add("Website: <https://tim740.github.io/>");
                             c.add("Source: <https://github.com/tim740/Skript-Bot>");
                             c.add("JDA Api: <https://github.com/DV8FromTheWorld/JDA>");
-                            long dt = (new Date().getTime() - st);
-                            c.add("Uptime: " + (dt /1000/60/60/24) + "d " + (dt /1000/60/60) + "h " + (dt /1000/60) + "m " + (dt /1000) + "s");
                             u.getPrivateChannel().sendMessage(msgBuilder(c));
+                            break;
+                        }
+                        case "uptime": {
+                            long ts = (System.currentTimeMillis() - st) / 1000;
+                            long tm = ts / 60;
+                            long th = tm / 60;
+                            e.getMessage().getChannel().sendMessage(u.getAsMention() + " My current uptime is: `" + ((th / 24) + "d " + th % 24 + "h " + tm % 60 + "m " + ts % 60 + "s`"));
                             break;
                         }
                         case "whois": {
@@ -132,6 +138,7 @@ public class SkriptBot {
                             }
                             break;
                         case "stop":
+                            e.getMessage().deleteMessage();
                             if (e.getMessage().getAuthor().getId().equals("138441986314207232")) {
                                 System.exit(0);
                             }

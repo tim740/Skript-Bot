@@ -94,7 +94,7 @@ class CmdSys {
                             }
                             case "suggest":
                                 String sc = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("suggest", "");
-                                jda.getUserById("138441986314207232").getPrivateChannel().sendMessage(u.getAsMention() + " Suggested:\n" + sc);
+                                jda.getUserById("138441986314207232").getPrivateChannel().sendMessage("Suggestion from: " + u.getAsMention() + "\n ```" + sc + "```");
                                 e.getMessage().getChannel().sendMessage("Your suggestion has been noted " + u.getAsMention());
                                 break;
                             case "links": {

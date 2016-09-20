@@ -157,7 +157,7 @@ public class SkriptBot {
                         case "say":
                             e.getMessage().deleteMessage();
                             if (cl.contains("Staff")) {
-                                String sc1 = e.getMessage().getContent().replaceFirst("@Skript-Bot", "").replaceFirst("say", "");
+                                String sc1 = e.getMessage().getContent().replaceFirst("@Skript-Bot", "").replaceFirst("say", "").replace("@everyone", "").replace("@here", "");
                                 for (User tu : e.getMessage().getMentionedUsers()) {
                                     sc1 = sc1.replace("@" + tu.getUsername(), tu.getAsMention());
                                 }

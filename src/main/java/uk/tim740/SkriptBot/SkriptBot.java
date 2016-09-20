@@ -134,7 +134,7 @@ public class SkriptBot {
                             break;
                         case "setgame":
                             if (cl.contains("Staff")) {
-                                String sg = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("setgame", "");
+                                String sg = e.getMessage().getContent().replaceFirst("@Skript-Bot", "").replaceFirst("setgame", "");
                                 jda.getAccountManager().setGame(sg);
                             }else{
                                 e.getMessage().deleteMessage();
@@ -143,7 +143,7 @@ public class SkriptBot {
                         case "setnick":
                             if (cl.contains("Staff")) {
                                 try {
-                                    String snn = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("setnick", "").replaceFirst(msg[2], "");
+                                    String snn = e.getMessage().getContent().replaceFirst("@Skript-Bot", "").replaceFirst("setnick", "").replaceFirst(msg[2], "");
                                     new GuildManager(e.getGuild()).setNickname(e.getMessage().getMentionedUsers().get(1), snn);
                                     e.getMessage().getChannel().sendMessage(u.getAsMention() + " set '" + msg[2] + "' nickname to " + e.getMessage().getMentionedUsers().get(1));
                                 }catch (Exception x) {
@@ -157,7 +157,7 @@ public class SkriptBot {
                         case "say":
                             e.getMessage().deleteMessage();
                             if (cl.contains("Staff")) {
-                                String sc1 = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("say", "");
+                                String sc1 = e.getMessage().getContent().replaceFirst("@Skript-Bot", "").replaceFirst("say", "");
                                 for (User tu : e.getMessage().getMentionedUsers()) {
                                     sc1 = sc1.replace("@" + tu.getUsername(), tu.getAsMention());
                                 }

@@ -25,13 +25,13 @@ public class SkriptBot {
 
     public static void main(String[] args){
         if (args.length < 1){
-            prSysI("No Token Specified");
+            prSysE("No Token Specified");
             System.exit(0);
         }
         try {
             jda = new JDABuilder().setBotToken(args[0]).addListener(new MessageListener()).buildBlocking();
-        } catch (Exception e) {
-            prSysI(e.getMessage());
+        } catch (Exception x) {
+            prSysE("Exception: " + x.getMessage());
             System.exit(0);
         }
         jda.getAccountManager().setGame("@Skript-Bot help");
@@ -54,19 +54,20 @@ public class SkriptBot {
                             c.add("```xl");
                             c.add("   info - (Returns Info about me)");
                             c.add("   uptime - (Gets my uptime)");
-                            c.add("   whois <user> - (Gets User Info)");
+                            c.add("   whois %player% - (Gets User Info)");
                             c.add("   links - (Returns useful links)");
                             c.add("   joinlink - (Returns the Join link for Skript-Chat)");
                             c.add("   jointxt - (Gets the First join text)");
-                            c.add("   suggest <idea> (Suggest an idea for Skript-Bot)");
+                            c.add("   suggest %string% (Suggest an idea for me)");
                             c.add("```");
                             if (cl.contains("Staff")) {
                                 c.add("**ADMIN COMMANDS**");
                                 c.add("```xl");
-                                c.add("   setgame <text> - (Sets my game)");
-                                c.add("   setnick <user> <text> - (Sets a users nick)");
-                                c.add("   kick <user> - (kicks a user)");
-                                c.add("   stop - (Stops Skript-Bot)");
+                                c.add("   setgame %string% - (Sets my game)");
+                                c.add("   setnick %player% %string% - (Sets a users nick)");
+                                c.add("   kick %player% - (kicks a user)");
+                                c.add("   say %string% - (Make me Speak)");
+                                c.add("   stop - (Stops me)");
                                 c.add("```");
                             }
                             u.getPrivateChannel().sendMessage(msgBuilder(c));
@@ -127,12 +128,16 @@ public class SkriptBot {
                                     new GuildManager(e.getGuild()).kick(msg[2]);
                                     e.getMessage().getChannel().sendMessage("Kicked: " + e.getMessage().getMentionedUsers().get(1));
                                 }
+                            }else {
+                                e.getMessage().deleteMessage();
                             }
                             break;
                         case "setgame":
                             if (cl.contains("Staff")) {
                                 String sg = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("setgame", "");
                                 jda.getAccountManager().setGame(sg);
+                            }else{
+                                e.getMessage().deleteMessage();
                             }
                             break;
                         case "setnick":
@@ -142,18 +147,27 @@ public class SkriptBot {
                                     new GuildManager(e.getGuild()).setNickname(e.getMessage().getMentionedUsers().get(1), snn);
                                     e.getMessage().getChannel().sendMessage(u.getAsMention() + " set '" + msg[2] + "' nickname to " + e.getMessage().getMentionedUsers().get(1));
                                 }catch (Exception x) {
-                                    prSysE(x.getMessage());
+                                    prSysE("Exception: " + x.getMessage());
                                     e.getMessage().getChannel().sendMessage("Exception: `" + x.getMessage() + "`");
                                 }
+                            }else{
+                                e.getMessage().deleteMessage();
+                            }
+                            break;
+                        case "say":
+                            e.getMessage().deleteMessage();
+                            if (cl.contains("Staff")) {
+                                String sc = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("say", "").replaceFirst(msg[2], "");
+                                e.getMessage().getChannel().sendMessage(sc);
                             }
                             break;
                         case "stop":
-                            e.getMessage().deleteMessage();
                             if (e.getMessage().getAuthor().getId().equals("138441986314207232")) {
                                 System.exit(0);
                             }
                             break;
                         default:
+                            e.getMessage().deleteMessage();
                             e.getMessage().getChannel().sendMessage("Did you mean `@Skript-Bot help` " + u.getAsMention() + "?");
                             break;
                     }

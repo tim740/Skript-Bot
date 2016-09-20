@@ -137,9 +137,13 @@ public class SkriptBot {
                             break;
                         case "setnick":
                             if (cl.contains("Staff")) {
-                                String snn = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("setnick", "").replaceFirst(msg[2], "");
-                                new GuildManager(e.getGuild()).setNickname(e.getMessage().getMentionedUsers().get(1), snn);
-                                e.getMessage().getChannel().sendMessage(u.getAsMention() + " set '" + msg[2] + "' nickname to " + e.getMessage().getMentionedUsers().get(1));
+                                if (!e.getMessage().getMentionedUsers().get(1).getId().equals("138441986314207232")) {
+                                    String snn = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("setnick", "").replaceFirst(msg[2], "");
+                                    new GuildManager(e.getGuild()).setNickname(e.getMessage().getMentionedUsers().get(1), snn);
+                                    e.getMessage().getChannel().sendMessage(u.getAsMention() + " set '" + msg[2] + "' nickname to " + e.getMessage().getMentionedUsers().get(1));
+                                }else{
+                                    e.getMessage().getChannel().sendMessage(u.getAsMention() + " You cannot edit @tim740's nickname!");
+                                }
                             }
                             break;
                         case "stop":

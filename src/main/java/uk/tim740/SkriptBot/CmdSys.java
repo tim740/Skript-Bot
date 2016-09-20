@@ -133,9 +133,9 @@ class CmdSys {
                                 break;
                             case "setnick":
                                 if (cl.contains("Staff")) {
-                                    String snn = e.getMessage().getContent().replaceFirst("@Skript-Bot", "").replaceFirst("setnick", "").replaceFirst(msg[2], "");
+                                    String snn = e.getMessage().getContent().replaceFirst("@Skript-Bot", "").replaceFirst("setnick", "").replaceFirst(e.getMessage().getMentionedUsers().get(1).getAsMention(), "");
                                     new GuildManager(e.getGuild()).setNickname(e.getMessage().getMentionedUsers().get(1), snn);
-                                    e.getMessage().getChannel().sendMessage(u.getAsMention() + " set '" + msg[2] + "' nickname to " + e.getMessage().getMentionedUsers().get(1));
+                                    e.getMessage().getChannel().sendMessage(u.getAsMention() + " set '" + e.getMessage().getMentionedUsers().get(1).getAsMention() + "' nickname to " + snn);
                                 }else{
                                     e.getMessage().deleteMessage();
                                 }

@@ -102,8 +102,8 @@ public class SkriptBot {
                             break;
                         }
                         case "suggest":
-                            String sn = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("suggest", "");
-                            jda.getUserById("138441986314207232").getPrivateChannel().sendMessage(u.getAsMention() + " Suggested:\n" + sn);
+                            String sc = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("suggest", "");
+                            jda.getUserById("138441986314207232").getPrivateChannel().sendMessage(u.getAsMention() + " Suggested:\n" + sc);
                             u.getPrivateChannel().sendMessage("Your suggestion has been noted " + u.getAsMention());
                             break;
                         case "links": {
@@ -157,8 +157,11 @@ public class SkriptBot {
                         case "say":
                             e.getMessage().deleteMessage();
                             if (cl.contains("Staff")) {
-                                String sc = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("say", "").replaceFirst(msg[2], "");
-                                e.getMessage().getChannel().sendMessage(sc);
+                                String sc1 = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("say", "");
+                                for (User tu : e.getMessage().getMentionedUsers()) {
+                                    sc1 = sc1.replace("@" + tu.getUsername(), tu.getAsMention());
+                                }
+                                e.getMessage().getChannel().sendMessage(sc1);
                             }
                             break;
                         case "stop":

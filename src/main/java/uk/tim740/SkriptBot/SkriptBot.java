@@ -26,6 +26,7 @@ public class SkriptBot {
         CmdSys.cmdSys(args);
         jda.getAccountManager().setGame("@Skript-Bot help");
         prSysI("Successfully Connected to Skript-Chat, took " + (System.currentTimeMillis() - st) + "ms!");
+        jda.getTextChannelById("227146011812823052").sendMessage("I was restarted so something new could of been added: `@Skript-Bot help`");
 
         try {
             //noinspection InfiniteLoopStatement

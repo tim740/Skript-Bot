@@ -8,6 +8,9 @@ import net.dv8tion.jda.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.hooks.ListenerAdapter;
 import net.dv8tion.jda.managers.GuildManager;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -45,6 +48,7 @@ class CmdSys {
                                 c.add("**COMMANDS** (All Commands start with `@Skript-Bot`)");
                                 c.add("```xl");
                                 c.add("   info - (Returns Info about me)");
+                                c.add("   version (aliases) - (Gets the latest version)");
                                 c.add("   uptime - (Gets my uptime)");
                                 c.add("   whois %player% - (Gets User Info)");
                                 c.add("   links - (Returns useful links)");
@@ -72,6 +76,14 @@ class CmdSys {
                                 c.add("Source: <https://github.com/tim740/Skript-Bot>");
                                 c.add("JDA Api: <https://github.com/DV8FromTheWorld/JDA>");
                                 u.getPrivateChannel().sendMessage(msgBuilder(c));
+                                break;
+                            }
+                            case "version": {
+                                if (msg[2].equals("aliases")) {
+                                    BufferedReader ur = new BufferedReader(new InputStreamReader(new URL("https://raw.githubusercontent.com/tim740/skAliases/master/version.txt").openStream()));
+                                    e.getMessage().getChannel().sendMessage(u.getAsMention() + " here's latest aliases version: `" + ("v" + ur.readLine()) + "`");
+                                    ur.close();
+                                }
                                 break;
                             }
                             case "uptime": {

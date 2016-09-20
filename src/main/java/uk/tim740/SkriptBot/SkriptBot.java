@@ -25,17 +25,17 @@ public class SkriptBot {
 
     public static void main(String[] args){
         if (args.length < 1){
-            prSys("No Token Specified");
+            prSysI("No Token Specified");
             System.exit(0);
         }
         try {
             jda = new JDABuilder().setBotToken(args[0]).addListener(new MessageListener()).buildBlocking();
         } catch (Exception e) {
-            prSys(e.getMessage());
+            prSysI(e.getMessage());
             System.exit(0);
         }
         jda.getAccountManager().setGame("@Skript-Bot help");
-        prSys("Successfully Connected to Skript-Chat, took " + (System.currentTimeMillis() - st) + "ms!");
+        prSysI("Successfully Connected to Skript-Chat, took " + (System.currentTimeMillis() - st) + "ms!");
     }
     private static class MessageListener extends ListenerAdapter {
         @Override
@@ -46,7 +46,7 @@ public class SkriptBot {
                     User u = e.getMessage().getAuthor();
                     ArrayList<String> cl = e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new));
                     //e.getMessage().deleteMessage();
-                    prSys("@" + u.getUsername() + " executed: '" + e.getMessage().getContent() + "'");
+                    prSysI("@" + u.getUsername() + " executed: '" + e.getMessage().getContent() + "'");
                     switch (msg[1]) {
                         case "help": {//send message as skript bot
                             ArrayList<String> c = new ArrayList<>();
@@ -137,12 +137,13 @@ public class SkriptBot {
                             break;
                         case "setnick":
                             if (cl.contains("Staff")) {
-                                if (!e.getMessage().getMentionedUsers().get(1).getId().equals("138441986314207232")) {
+                                try {
                                     String snn = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("setnick", "").replaceFirst(msg[2], "");
                                     new GuildManager(e.getGuild()).setNickname(e.getMessage().getMentionedUsers().get(1), snn);
                                     e.getMessage().getChannel().sendMessage(u.getAsMention() + " set '" + msg[2] + "' nickname to " + e.getMessage().getMentionedUsers().get(1));
-                                }else{
-                                    e.getMessage().getChannel().sendMessage(u.getAsMention() + " You cannot edit @tim740's nickname!");
+                                }catch (Exception x) {
+                                    prSysE(x.getMessage());
+                                    e.getMessage().getChannel().sendMessage("Exception: " + e.getMessage());
                                 }
                             }
                             break;
@@ -163,7 +164,7 @@ public class SkriptBot {
         public void onGuildMemberJoin(GuildMemberJoinEvent e) {
             e.getUser().getPrivateChannel().sendMessage(getJoinTxt());
             jda.getTextChannelById("138464183946575874").sendMessage("Welcome " + e.getUser().getAsMention() + " to Skript-Chat!");
-            prSys("@" + e.getUser().getUsername() + " has joined Skript-Chat!");
+            prSysI("@" + e.getUser().getUsername() + " has joined Skript-Chat!");
         }
     }
     private static String getJoinTxt(){
@@ -184,7 +185,10 @@ public class SkriptBot {
         }
         return f;
     }
-    private static void prSys(String s) {
+    private static void prSysI(String s) {
         System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Info] [Skript-Bot]: " + s);
+    }
+    private static void prSysE(String s) {
+        System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Error] [Skript-Bot]: " + s);
     }
 }

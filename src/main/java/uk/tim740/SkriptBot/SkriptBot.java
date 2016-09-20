@@ -33,7 +33,7 @@ public class SkriptBot {
                 //System.out.print(">");
                 String[] msg = System.console().readLine().split(" ");
                 switch (msg[0]) {
-                    case "say":
+                    case ("say"):
                         String id = "";
                         for (TextChannel c : jda.getGuildById("138464183946575874").getTextChannels()) {
                             if (msg[1].equals(c.getName())) id = c.getId();
@@ -51,11 +51,11 @@ public class SkriptBot {
                             }
                             String ns = "";
                             for (String clc : cl) {
-                                ns += (clc + " ");
+                                ns += (" " + clc);
                             }
-                            String ts = ns.replaceFirst("say", "").replaceFirst(msg[1], "").replace("@everyone", "").replace("@here", "");
+                            String ts = ns.replaceFirst("say", "").replaceFirst(msg[1], "").replaceFirst("   ", "");
                             jda.getTextChannelById(id).sendMessage(ts);
-                            prSysI("[#" + msg[1] + "] Sent: " + ts);
+                            prSysI("[#" + msg[1] + "] Sent: '" + ts + "'");
                         }
                         break;
                     case "stop":

@@ -143,7 +143,7 @@ public class SkriptBot {
                                     e.getMessage().getChannel().sendMessage(u.getAsMention() + " set '" + msg[2] + "' nickname to " + e.getMessage().getMentionedUsers().get(1));
                                 }catch (Exception x) {
                                     prSysE(x.getMessage());
-                                    e.getMessage().getChannel().sendMessage("Exception: " + x.getMessage());
+                                    e.getMessage().getChannel().sendMessage("Exception: `" + x.getMessage() + "`");
                                 }
                             }
                             break;

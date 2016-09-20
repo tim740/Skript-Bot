@@ -3,6 +3,7 @@ package uk.tim740.SkriptBot;
 import net.dv8tion.jda.JDA;
 import net.dv8tion.jda.JDABuilder;
 import net.dv8tion.jda.entities.Role;
+import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.events.message.MessageReceivedEvent;
@@ -11,6 +12,7 @@ import net.dv8tion.jda.managers.GuildManager;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -36,6 +38,46 @@ public class SkriptBot {
         }
         jda.getAccountManager().setGame("@Skript-Bot help");
         prSysI("Successfully Connected to Skript-Chat, took " + (System.currentTimeMillis() - st) + "ms!");
+
+        try {
+            //noinspection InfiniteLoopStatement
+            while (true) {
+                System.out.print(">");
+                String[] msg = System.console().readLine().split(" ");
+                switch (msg[0]) {
+                    case "say":
+                        String id = "";
+                        for (TextChannel c : jda.getGuildById("138464183946575874").getTextChannels()) {
+                            if (msg[1].equals(c.getName())) id = c.getId();
+                        }
+                        if (!id.equals("")) {
+                            ArrayList<String> cl = new ArrayList<>();
+                            Collections.addAll(cl, msg);
+                            for (int n = 0; n < cl.size(); n++) {
+                                if (msg[n].contains("@")) {
+                                    for (User ul : jda.getGuildById("138464183946575874").getUsers()) {
+                                        if (cl.get(n).equals("@" + ul.getUsername().toLowerCase())) cl.set(n, ul.getAsMention());
+                                        if (cl.get(n).equals("@" + ul.getUsername().toLowerCase() + ",")) cl.set(n, ul.getAsMention() + ",");
+                                    }
+                                }
+                            }
+                            String ns = "";
+                            for (String clc : cl) {
+                                ns += (" " + clc);
+                            }
+                            jda.getTextChannelById(id).sendMessage(ns.replaceFirst("say", "").replaceFirst(msg[1], "").replace("@everyone", "").replace("@here", ""));
+                        }
+                        break;
+                    case "stop":
+                        System.exit(0);
+                    default:
+                        System.out.println("CMDS: stop | say <channel> <text>");
+                        break;
+                }
+            }
+        }catch (Exception x){
+            prSysE("Exception: " + x.getMessage());
+        }
     }
     private static class MessageListener extends ListenerAdapter {
         @Override
@@ -68,7 +110,6 @@ public class SkriptBot {
                                     c.add("   setnick %player% %string% - (Sets a users nick)");
                                     c.add("   kick %player% - (kicks a user)");
                                     c.add("   say %string% - (Make me Speak)");
-                                    c.add("   stop - (Stops me)");
                                     c.add("```");
                                 }
                                 u.getPrivateChannel().sendMessage(msgBuilder(c));
@@ -160,11 +201,6 @@ public class SkriptBot {
                                     e.getMessage().getChannel().sendMessage(sc1);
                                 }
                                 break;
-                            case "stop":
-                                if (e.getMessage().getAuthor().getId().equals("138441986314207232")) {
-                                    System.exit(0);
-                                }
-                                break;
                             default:
                                 e.getMessage().deleteMessage();
                                 e.getMessage().getChannel().sendMessage("Did you mean `@Skript-Bot help` " + u.getAsMention() + "?");
@@ -201,6 +237,7 @@ public class SkriptBot {
         }
         return f;
     }
+
     private static void prSysI(String s) {
         System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Info] [Skript-Bot]: " + s);
     }

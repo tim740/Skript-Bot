@@ -55,7 +55,7 @@ public class SkriptBot {
                             }
                             String ts = ns.replaceFirst("say", "").replaceFirst(msg[1], "").replace("@everyone", "").replace("@here", "");
                             jda.getTextChannelById(id).sendMessage(ts);
-                            prSysI("[" + msg[2] + "] Sent: " + ts);
+                            prSysI("[" + msg[1] + "] Sent: " + ts);
                         }
                         break;
                     case "stop":

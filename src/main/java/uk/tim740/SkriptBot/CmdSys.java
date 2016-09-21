@@ -35,7 +35,7 @@ class CmdSys {
 
     private static class MessageListener extends ListenerAdapter {
         @Override
-        public void onMessageReceived(MessageReceivedEvent e){
+        public void onMessageReceived(MessageReceivedEvent e) {
             if (!e.getMessage().getAuthor().getId().equals("227067574469394432")) {
                 if (e.getMessage().getContent().startsWith("@Skript-Bot")) {
                     String[] msg = e.getMessage().getContent().split(" ");
@@ -141,7 +141,7 @@ class CmdSys {
                                         new GuildManager(e.getGuild()).kick(msg[2]);
                                         e.getMessage().getChannel().sendMessage("Kicked: " + e.getMessage().getMentionedUsers().get(1));
                                     }
-                                }else {
+                                } else {
                                     e.getMessage().deleteMessage();
                                 }
                                 break;
@@ -149,7 +149,7 @@ class CmdSys {
                                 if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
                                     String sg = e.getMessage().getContent().replaceFirst("@Skript-Bot", "").replaceFirst("setgame", "");
                                     jda.getAccountManager().setGame(sg);
-                                }else{
+                                } else {
                                     e.getMessage().deleteMessage();
                                 }
                                 break;
@@ -158,7 +158,7 @@ class CmdSys {
                                     String snn = e.getMessage().getContent().replaceFirst("@Skript-Bot", "").replaceFirst("setnick", "").replaceFirst(e.getMessage().getMentionedUsers().get(1).getAsMention(), "");
                                     new GuildManager(e.getGuild()).setNickname(e.getMessage().getMentionedUsers().get(1), snn);
                                     e.getMessage().getChannel().sendMessage(u.getAsMention() + " set '" + e.getMessage().getMentionedUsers().get(1).getAsMention() + "' nickname to " + snn);
-                                }else{
+                                } else {
                                     e.getMessage().deleteMessage();
                                 }
                                 break;
@@ -183,6 +183,7 @@ class CmdSys {
                 }
             }
         }
+
         @Override
         public void onGuildMemberJoin(GuildMemberJoinEvent e) {
             e.getUser().getPrivateChannel().sendMessage(getJoinTxt());

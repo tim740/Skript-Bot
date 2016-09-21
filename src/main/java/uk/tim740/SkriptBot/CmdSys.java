@@ -40,7 +40,6 @@ class CmdSys {
                 if (e.getMessage().getContent().startsWith("@Skript-Bot")) {
                     String[] msg = e.getMessage().getContent().split(" ");
                     User u = e.getMessage().getAuthor();
-                    ArrayList<String> cl = e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new));
                     //e.getMessage().deleteMessage();
                     prSysI("@" + u.getUsername() + " executed: '" + e.getMessage().getContent() + "'");
                     try {
@@ -59,7 +58,7 @@ class CmdSys {
                                 c.add("   jointxt - (Gets the First join text)");
                                 c.add("   suggest %string% (Suggest an idea for me)");
                                 c.add("```");
-                                if (cl.contains("Staff")) {
+                                if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
                                     c.add("**ADMIN COMMANDS**");
                                     c.add("```xl");
                                     c.add("   setgame %string% - (Sets my game)");
@@ -136,7 +135,8 @@ class CmdSys {
                                 u.getPrivateChannel().sendMessage(getJoinTxt());
                                 break;
                             case "kick":
-                                if (cl.contains("Staff")) {
+
+                                if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
                                     if (msg[2].contains("@")) {
                                         new GuildManager(e.getGuild()).kick(msg[2]);
                                         e.getMessage().getChannel().sendMessage("Kicked: " + e.getMessage().getMentionedUsers().get(1));
@@ -146,7 +146,7 @@ class CmdSys {
                                 }
                                 break;
                             case "setgame":
-                                if (cl.contains("Staff")) {
+                                if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
                                     String sg = e.getMessage().getContent().replaceFirst("@Skript-Bot", "").replaceFirst("setgame", "");
                                     jda.getAccountManager().setGame(sg);
                                 }else{
@@ -154,7 +154,7 @@ class CmdSys {
                                 }
                                 break;
                             case "setnick":
-                                if (cl.contains("Staff")) {
+                                if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
                                     String snn = e.getMessage().getContent().replaceFirst("@Skript-Bot", "").replaceFirst("setnick", "").replaceFirst(e.getMessage().getMentionedUsers().get(1).getAsMention(), "");
                                     new GuildManager(e.getGuild()).setNickname(e.getMessage().getMentionedUsers().get(1), snn);
                                     e.getMessage().getChannel().sendMessage(u.getAsMention() + " set '" + e.getMessage().getMentionedUsers().get(1).getAsMention() + "' nickname to " + snn);
@@ -164,7 +164,7 @@ class CmdSys {
                                 break;
                             case "say":
                                 e.getMessage().deleteMessage();
-                                if (cl.contains("Staff")) {
+                                if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
                                     String sc1 = e.getMessage().getContent().replaceFirst("@Skript-Bot", "").replaceFirst("say", "").replace("@everyone", "").replace("@here", "");
                                     for (User tu : e.getMessage().getMentionedUsers()) {
                                         sc1 = sc1.replace("@" + tu.getUsername(), tu.getAsMention());

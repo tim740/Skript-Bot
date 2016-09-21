@@ -177,7 +177,7 @@ class CmdSys {
                                 e.getMessage().getChannel().sendMessage("Did you mean `@Skript-Bot help` " + u.getAsMention() + "?");
                                 break;
                         }
-                    }catch (Exception x) {
+                    } catch (Exception x) {
                         prSysE("Exception: " + x.getMessage());
                     }
                 }

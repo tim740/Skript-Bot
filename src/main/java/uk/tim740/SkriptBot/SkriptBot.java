@@ -18,8 +18,8 @@ public class SkriptBot {
     static JDA jda;
     static long st = System.currentTimeMillis();
 
-    public static void main(String[] args){
-        if (args.length < 1){
+    public static void main(String[] args) {
+        if (args.length < 1) {
             prSysE("No Token Specified");
             System.exit(0);
         }
@@ -67,7 +67,7 @@ public class SkriptBot {
                         break;
                 }
             }
-        }catch (Exception x){
+        } catch (Exception x) {
             prSysE("Exception: " + x.getMessage());
         }
     }
@@ -85,7 +85,7 @@ public class SkriptBot {
     }
     static String msgBuilder(ArrayList<String> s) {
         String f = "";
-        for (String j : s){
+        for (String j : s) {
             f = (f + "\n" + j);
         }
         return f;

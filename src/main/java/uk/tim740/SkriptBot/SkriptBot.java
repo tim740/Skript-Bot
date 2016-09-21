@@ -17,6 +17,7 @@ import java.util.Date;
 public class SkriptBot {
     static JDA jda;
     static long st = System.currentTimeMillis();
+    static String bn = "@Skript-Bot";
 
     public static void main(String[] args){
         if (args.length < 1){
@@ -24,9 +25,9 @@ public class SkriptBot {
             System.exit(0);
         }
         CmdSys.cmdSys(args);
-        jda.getAccountManager().setGame("@Skript-Bot help");
+        jda.getAccountManager().setGame(bn + " help");
         prSysI("Successfully Connected to Skript-Chat, took " + (System.currentTimeMillis() - st) + "ms!");
-        jda.getTextChannelById("227146011812823052").sendMessage("Restarted!, something new could of been added: `@Skript-Bot help`");
+        jda.getTextChannelById("227146011812823052").sendMessage("Restarted!, something new could of been added: `" + bn + " help`");
 
         try {
             //noinspection InfiniteLoopStatement
@@ -35,6 +36,7 @@ public class SkriptBot {
                 String[] msg = System.console().readLine().split(" ");
                 switch (msg[0]) {
                     case ("say"):
+                    case ("!"):
                         String id = "";
                         for (TextChannel c : jda.getGuildById("138464183946575874").getTextChannels()) {
                             if (msg[1].equals(c.getName())) id = c.getId();
@@ -73,7 +75,7 @@ public class SkriptBot {
 
     static String getJoinTxt(){
         return ("Welcome to **Skript-Chat**'s Discord! \n" +
-                "You can get my commands by doing `@Skript-Bot help` \n\n" +
+                "You can get my commands by doing `" + bn + " help` \n\n" +
                 "**Rules**: \n" +
                 "   **1**. Use the right channels.\n" +
                 "   **2**. Don't scam, spam or disrespect people. \n\n" +
@@ -91,9 +93,9 @@ public class SkriptBot {
     }
 
     static void prSysI(String s) {
-        System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Info] [Skript-Bot]: " + s);
+        System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Info] [" + bn + "]: " + s);
     }
     static void prSysE(String s) {
-        System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Error] [Skript-Bot]: " + s);
+        System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Error] [" + bn + "]: " + s);
     }
 }

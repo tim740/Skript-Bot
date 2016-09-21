@@ -11,6 +11,8 @@ import net.dv8tion.jda.managers.GuildManager;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -49,6 +51,7 @@ class CmdSys {
                                 c.add("```xl");
                                 c.add("   info - (Returns Info about me)");
                                 c.add("   version (aliases) - (Gets the latest version)");
+                                c.add("   ping - (Gets my ping)");
                                 c.add("   uptime - (Gets my uptime)");
                                 c.add("   whois %player% - (Gets User Info)");
                                 c.add("   links - (Returns useful links)");
@@ -80,10 +83,19 @@ class CmdSys {
                             }
                             case "version": {
                                 if (msg[2].equals("aliases")) {
+                                    String v;
                                     BufferedReader ur = new BufferedReader(new InputStreamReader(new URL("https://raw.githubusercontent.com/tim740/skAliases/master/version.txt").openStream()));
-                                    e.getMessage().getChannel().sendMessage(u.getAsMention() + " here's latest aliases version: `" + ("v" + ur.readLine()) + "`");
+                                    v = ur.readLine();
                                     ur.close();
+                                    ArrayList<String> c = new ArrayList<>();
+                                    c.add(u.getAsMention() + " here's latest aliases version: `" + ("v" + v) + "`");
+                                    c.add("Latest aliases thread: <https://forums.skunity.com/t/40?u=tim740>");
+                                    e.getMessage().getChannel().sendMessage(msgBuilder(c));
                                 }
+                                break;
+                            }
+                            case "ping": {
+                                e.getMessage().getChannel().sendMessage(u.getAsMention() + " My current ping is: `" + Math.abs(e.getMessage().getTime().until(OffsetDateTime.now(), ChronoUnit.MILLIS)) + "ms`");
                                 break;
                             }
                             case "uptime": {
@@ -111,12 +123,10 @@ class CmdSys {
                                 break;
                             case "links": {
                                 ArrayList<String> c = new ArrayList<>();
-                                c.add("**USEFUL LINKS**");
-                                c.add("   **Bensku's Skript**: <https://github.com/bensku/Skript/releases>");
-                                c.add("   **Virustotal's skQuery**: <https://github.com/SkriptLegacy/skquery/releases>");
-                                c.add("   **Latest Aliases**: <https://forums.skunity.com/t/40?u=tim740>");
-                                c.add("   **Formatting**: <https://support.discordapp.com/hc/en-us/articles/210298617>");
-                                u.getPrivateChannel().sendMessage(msgBuilder(c));
+                                c.add("Skript (bensku): <https://github.com/bensku/Skript/releases>");
+                                c.add("skQuery (VirusTotal): <https://github.com/SkriptLegacy/skquery/releases>");
+                                c.add("Formatting: <https://support.discordapp.com/hc/en-us/articles/210298617>");
+                                e.getMessage().getChannel().sendMessage(msgBuilder(c));
                                 break;
                             }
                             case "joinlink":

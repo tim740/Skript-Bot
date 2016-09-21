@@ -72,7 +72,7 @@ public class SkriptBot {
         }
     }
 
-    static String getJoinTxt(){
+    static String getJoinTxt() {
         return ("Welcome to **Skript-Chat**'s Discord! \n" +
                 "You can get my commands by doing `@Skript-Bot help` \n\n" +
                 "**Rules**: \n" +
@@ -83,6 +83,7 @@ public class SkriptBot {
                 "***@Staff*** If you need a Staff Member to make you ***Supporter***, they will need proof still. \n\n" +
                 "If you need any more help ask a ***staff member*** :)");
     }
+
     static String msgBuilder(ArrayList<String> s) {
         String f = "";
         for (String j : s) {
@@ -94,6 +95,7 @@ public class SkriptBot {
     static void prSysI(String s) {
         System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Info] [Skript-Bot]: " + s);
     }
+
     static void prSysE(String s) {
         System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Error] [Skript-Bot]: " + s);
     }

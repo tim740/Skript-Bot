@@ -17,7 +17,6 @@ import java.util.Date;
 public class SkriptBot {
     static JDA jda;
     static long st = System.currentTimeMillis();
-    static String bn = "@Skript-Bot";
 
     public static void main(String[] args){
         if (args.length < 1){
@@ -25,9 +24,9 @@ public class SkriptBot {
             System.exit(0);
         }
         CmdSys.cmdSys(args);
-        jda.getAccountManager().setGame(bn + " help");
+        jda.getAccountManager().setGame("@Skript-Bot help");
         prSysI("Successfully Connected to Skript-Chat, took " + (System.currentTimeMillis() - st) + "ms!");
-        jda.getTextChannelById("227146011812823052").sendMessage("Restarted!, something new could of been added: `" + bn + " help`");
+        jda.getTextChannelById("227146011812823052").sendMessage("Restarted!, something new could of been added: `@Skript-Bot help`");
 
         try {
             //noinspection InfiniteLoopStatement
@@ -75,7 +74,7 @@ public class SkriptBot {
 
     static String getJoinTxt(){
         return ("Welcome to **Skript-Chat**'s Discord! \n" +
-                "You can get my commands by doing `" + bn + " help` \n\n" +
+                "You can get my commands by doing `@Skript-Bot help` \n\n" +
                 "**Rules**: \n" +
                 "   **1**. Use the right channels.\n" +
                 "   **2**. Don't scam, spam or disrespect people. \n\n" +
@@ -93,9 +92,9 @@ public class SkriptBot {
     }
 
     static void prSysI(String s) {
-        System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Info] [" + bn + "]: " + s);
+        System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Info] [Skript-Bot]: " + s);
     }
     static void prSysE(String s) {
-        System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Error] [" + bn + "]: " + s);
+        System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Error] [Skript-Bot]: " + s);
     }
 }

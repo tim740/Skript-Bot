@@ -122,7 +122,7 @@ class CmdSys {
                                 break;
                             case "skunity": {
                                 String sk = umsg.replace(msg[1] + " ", "").replaceAll(" ", "+");
-                                e.getMessage().getChannel().sendMessage(u.getAsMention() + "http://skunity.com/search?search=" + sk + "#");
+                                e.getMessage().getChannel().sendMessage(u.getAsMention() + " http://skunity.com/search?search=" + sk + "#");
                                 break;
                             }
                             case "links": {

@@ -26,7 +26,7 @@ class CmdSys {
     static void cmdSys(String[] args) {
         try {
             jda = new JDABuilder().setBotToken(args[0]).addListener(new MessageListener()).buildBlocking();
-            prSysI("Loaded: CmdSys.class");
+            prSysI("Loaded: Command System!");
         } catch (Exception x) {
             prSysE("Exception: " + x.getMessage());
             System.exit(0);

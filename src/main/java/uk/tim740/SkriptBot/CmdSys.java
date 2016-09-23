@@ -82,12 +82,10 @@ class CmdSys {
                             }
                             case "version": {
                                 if (msg[2].equals("aliases")) {
-                                    String v;
-                                    BufferedReader ur = new BufferedReader(new InputStreamReader(new URL("https://raw.githubusercontent.com/tim740/skAliases/master/version.txt").openStream()));
-                                    v = ur.readLine();
-                                    ur.close();
                                     ArrayList<String> c = new ArrayList<>();
-                                    c.add(u.getAsMention() + " here's latest aliases version: `" + ("v" + v) + "`");
+                                    BufferedReader ur = new BufferedReader(new InputStreamReader(new URL("https://raw.githubusercontent.com/tim740/skAliases/master/version.txt").openStream()));
+                                    c.add(u.getAsMention() + " here's latest aliases version: `" + ("v" + ur.readLine()) + "`");
+                                    ur.close();
                                     c.add("Latest aliases thread: <https://forums.skunity.com/t/40?u=tim740>");
                                     e.getMessage().getChannel().sendMessage(msgBuilder(c));
                                 }
@@ -101,7 +99,7 @@ class CmdSys {
                                 long ts = (System.currentTimeMillis() - st) / 1000;
                                 long tm = ts / 60;
                                 long th = tm / 60;
-                                e.getMessage().getChannel().sendMessage(u.getAsMention() + " My current uptime is: `" + ((th / 24) + "d " + th % 24 + "h " + tm % 60 + "m " + ts % 60 + "s`"));
+                                e.getMessage().getChannel().sendMessage(u.getAsMention() + " My current uptime is: `" + (th / 24 + "d " + th % 24 + "h " + tm % 60 + "m " + ts % 60 + "s`"));
                                 break;
                             }
                             case "whois": {
@@ -135,31 +133,27 @@ class CmdSys {
                                 u.getPrivateChannel().sendMessage(getJoinTxt());
                                 break;
                             case "kick":
-
+                                e.getMessage().deleteMessage();
                                 if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
                                     if (msg[2].contains("@")) {
                                         new GuildManager(e.getGuild()).kick(msg[2]);
                                         e.getMessage().getChannel().sendMessage("Kicked: " + e.getMessage().getMentionedUsers().get(1));
                                     }
-                                } else {
-                                    e.getMessage().deleteMessage();
                                 }
                                 break;
                             case "setgame":
+                                e.getMessage().deleteMessage();
                                 if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
                                     String sg = e.getMessage().getContent().replaceFirst("@Skript-Bot", "").replaceFirst("setgame", "");
                                     jda.getAccountManager().setGame(sg);
-                                } else {
-                                    e.getMessage().deleteMessage();
                                 }
                                 break;
                             case "setnick":
+                                e.getMessage().deleteMessage();
                                 if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
                                     String snn = e.getMessage().getContent().replaceFirst("@Skript-Bot", "").replaceFirst("setnick", "").replaceFirst(e.getMessage().getMentionedUsers().get(1).getAsMention(), "");
                                     new GuildManager(e.getGuild()).setNickname(e.getMessage().getMentionedUsers().get(1), snn);
                                     e.getMessage().getChannel().sendMessage(u.getAsMention() + " set '" + e.getMessage().getMentionedUsers().get(1).getAsMention() + "' nickname to " + snn);
-                                } else {
-                                    e.getMessage().deleteMessage();
                                 }
                                 break;
                             case "say":

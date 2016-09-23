@@ -39,6 +39,7 @@ class CmdSys {
             if (!e.getMessage().getAuthor().getId().equals("227067574469394432")) {
                 if (e.getMessage().getContent().startsWith("@Skript-Bot")) {
                     String[] msg = e.getMessage().getContent().split(" ");
+                    String umsg = e.getMessage().getContent().replaceFirst("@Skript-Bot ", "");
                     User u = e.getMessage().getAuthor();
                     //e.getMessage().deleteMessage();
                     prSysI("@" + u.getUsername() + " executed: '" + e.getMessage().getContent() + "'");
@@ -53,6 +54,7 @@ class CmdSys {
                                 c.add("   ping - (Gets my ping)");
                                 c.add("   uptime - (Gets my uptime)");
                                 c.add("   whois %player% - (Gets User Info)");
+                                c.add("   skunity %string% - (Lookup on skUnity Docs)");
                                 c.add("   links - (Returns useful links)");
                                 c.add("   joinlink - (Returns the Join link for Skript-Chat)");
                                 c.add("   jointxt - (Gets the First join text)");
@@ -114,10 +116,15 @@ class CmdSys {
                                 break;
                             }
                             case "suggest":
-                                String sc = e.getMessage().getContent().replace("@Skript-Bot", "").replaceFirst("suggest", "");
+                                String sc = umsg.replace(msg[1] + " ", "");
                                 jda.getUserById("138441986314207232").getPrivateChannel().sendMessage("Suggestion from: " + u.getAsMention() + "\n ```" + sc + "```");
                                 e.getMessage().getChannel().sendMessage("Your suggestion has been noted " + u.getAsMention());
                                 break;
+                            case "skunity": {
+                                String sk = umsg.replace(msg[1] + " ", "").replaceAll(" ", "+");
+                                e.getMessage().getChannel().sendMessage(u.getAsMention() + "http://skunity.com/search?search=" + sk + "#");
+                                break;
+                            }
                             case "links": {
                                 ArrayList<String> c = new ArrayList<>();
                                 c.add("Skript (bensku): <https://github.com/bensku/Skript/releases>");
@@ -135,8 +142,8 @@ class CmdSys {
                             case "kick":
                                 e.getMessage().deleteMessage();
                                 if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-                                    if (msg[2].contains("@")) {
-                                        new GuildManager(e.getGuild()).kick(msg[2]);
+                                    if (msg[1].contains("@")) {
+                                        new GuildManager(e.getGuild()).kick(msg[1] + " ");
                                         e.getMessage().getChannel().sendMessage("Kicked: " + e.getMessage().getMentionedUsers().get(1));
                                     }
                                 }
@@ -144,14 +151,14 @@ class CmdSys {
                             case "setgame":
                                 e.getMessage().deleteMessage();
                                 if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-                                    String sg = e.getMessage().getContent().replaceFirst("@Skript-Bot", "").replaceFirst("setgame", "");
+                                    String sg = umsg.replaceFirst(msg[1] + " ", "");
                                     jda.getAccountManager().setGame(sg);
                                 }
                                 break;
                             case "setnick":
                                 e.getMessage().deleteMessage();
                                 if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-                                    String snn = e.getMessage().getContent().replaceFirst("@Skript-Bot", "").replaceFirst("setnick", "").replaceFirst(e.getMessage().getMentionedUsers().get(1).getAsMention(), "");
+                                    String snn = umsg.replaceFirst(msg[1] + " ", "").replaceFirst(msg[2] + " ", "");
                                     new GuildManager(e.getGuild()).setNickname(e.getMessage().getMentionedUsers().get(1), snn);
                                     e.getMessage().getChannel().sendMessage(u.getAsMention() + " set '" + e.getMessage().getMentionedUsers().get(1).getAsMention() + "' nickname to " + snn);
                                 }
@@ -159,7 +166,7 @@ class CmdSys {
                             case "say":
                                 e.getMessage().deleteMessage();
                                 if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-                                    String sc1 = e.getMessage().getContent().replaceFirst("@Skript-Bot", "").replaceFirst("say", "").replace("@everyone", "").replace("@here", "");
+                                    String sc1 = umsg.replaceFirst(msg[1] + " ", "").replace("@everyone", "").replace("@here", "");
                                     for (User tu : e.getMessage().getMentionedUsers()) {
                                         sc1 = sc1.replace("@" + tu.getUsername(), tu.getAsMention());
                                     }

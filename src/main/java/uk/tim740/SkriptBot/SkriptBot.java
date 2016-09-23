@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
-
 /**
  * Created by tim740 on 18/09/2016
  */
@@ -26,12 +25,11 @@ public class SkriptBot {
         CmdSys.cmdSys(args);
         jda.getAccountManager().setGame("@Skript-Bot help");
         prSysI("Successfully Connected to Skript-Chat, took " + (System.currentTimeMillis() - st) + "ms!");
-        jda.getTextChannelById("227146011812823052").sendMessage("Restarted!, new things could have been added: `@Skript-Bot help`");
+        jda.getTextChannelById("227146011812823052").sendMessage("Restarted!, new things may have been added: `@Skript-Bot help`");
 
         try {
             //noinspection InfiniteLoopStatement
             while (true) {
-                //System.out.print(">");
                 String[] msg = System.console().readLine().split(" ");
                 switch (msg[0]) {
                     case ("say"):
@@ -43,6 +41,7 @@ public class SkriptBot {
                         if (!id.equals("")) {
                             ArrayList<String> cl = new ArrayList<>();
                             Collections.addAll(cl, msg);
+                            for (int n = 0; n < 2; n++) cl.remove(0);
                             for (int n = 0; n < cl.size(); n++) {
                                 if (msg[n].contains("@")) {
                                     for (User ul : jda.getGuildById("138464183946575874").getUsers()) {
@@ -55,15 +54,14 @@ public class SkriptBot {
                             for (String clc : cl) {
                                 ns += (" " + clc);
                             }
-                            String ts = ns.replaceFirst("say", "").replaceFirst(msg[1], "").replaceFirst("   ", "");
-                            jda.getTextChannelById(id).sendMessage(ts);
-                            prSysI("[#" + msg[1] + "] Sent: '" + ts + "'");
+                            jda.getTextChannelById(id).sendMessage(ns);
+                            prSysI("[#" + msg[1] + "] Sent: '" + ns.replaceFirst(" ", "") + "'");
                         }
                         break;
                     case "stop":
                         System.exit(0);
                     default:
-                        System.out.println("CMDS: stop | say <channel> <text>");
+                        System.out.println("CMDS: stop | (say/!) <channel> <text>");
                         break;
                 }
             }
@@ -87,7 +85,7 @@ public class SkriptBot {
     static String msgBuilder(ArrayList<String> s) {
         String f = "";
         for (String j : s) {
-            f = (f + "\n" + j);
+            f += ("\n" + j);
         }
         return f;
     }

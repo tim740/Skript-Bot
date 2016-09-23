@@ -45,7 +45,6 @@ public class SkriptBot {
                             for (int n = 0; n < cl.size(); n++) {
                                 if (cl.get(n).contains("@")) {
                                     for (User ul : jda.getGuildById("138464183946575874").getUsers()) {
-                                        System.out.println("found " + ul);
                                         if (cl.get(n).equals("@" + ul.getUsername().toLowerCase())) {
                                             cl.set(n, ul.getAsMention());
                                             break;

@@ -32,7 +32,6 @@ public class SkriptBot {
             while (true) {
                 String[] msg = System.console().readLine().split(" ");
                 switch (msg[0]) {
-                    case ("say"):
                     case ("!"):
                         String id = "";
                         for (TextChannel c : jda.getGuildById("138464183946575874").getTextChannels()) {
@@ -64,10 +63,11 @@ public class SkriptBot {
                             prSysI("[#" + msg[1] + "] Sent: '" + ns.replaceFirst(" ", "") + "'");
                         }
                         break;
-                    case "stop":
+                    case "rs":
                         System.exit(0);
                     default:
-                        System.out.println("CMDS: stop | (say/!) <channel> <text>");
+                        System.out.println("Restart: rs");
+                        System.out.println("Say: ! <channel> <text>");
                         break;
                 }
             }

@@ -43,10 +43,17 @@ public class SkriptBot {
                             Collections.addAll(cl, msg);
                             for (int n = 0; n < 2; n++) cl.remove(0);
                             for (int n = 0; n < cl.size(); n++) {
-                                if (msg[n].contains("@")) {
+                                if (cl.get(n).contains("@")) {
                                     for (User ul : jda.getGuildById("138464183946575874").getUsers()) {
-                                        if (cl.get(n).equals("@" + ul.getUsername().toLowerCase())) cl.set(n, ul.getAsMention());
-                                        if (cl.get(n).equals("@" + ul.getUsername().toLowerCase() + ",")) cl.set(n, ul.getAsMention() + ",");
+                                        System.out.println("found " + ul);
+                                        if (cl.get(n).equals("@" + ul.getUsername().toLowerCase())) {
+                                            cl.set(n, ul.getAsMention());
+                                            break;
+                                        }
+                                        if (cl.get(n).equals("@" + ul.getUsername().toLowerCase() + ",")) {
+                                            cl.set(n, ul.getAsMention() + ",");
+                                            break;
+                                        }
                                     }
                                 }
                             }

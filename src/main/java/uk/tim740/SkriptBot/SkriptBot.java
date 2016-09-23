@@ -66,8 +66,8 @@ public class SkriptBot {
                     case "rs":
                         System.exit(0);
                     default:
-                        System.out.println("Restart: rs");
-                        System.out.println("Say: ! <channel> <text>");
+                        System.out.println("> Restart: rs");
+                        System.out.println("> Say: ! <channel> <text>");
                         break;
                 }
             }

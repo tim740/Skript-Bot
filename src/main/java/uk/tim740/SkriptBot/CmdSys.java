@@ -94,14 +94,14 @@ class CmdSys {
                                 break;
                             }
                             case "ping": {
-                                e.getMessage().getChannel().sendMessage(u.getAsMention() + " My current ping is: `" + Math.abs(e.getMessage().getTime().until(OffsetDateTime.now(), ChronoUnit.MILLIS)) + "ms`");
+                                e.getMessage().getChannel().sendMessage(u.getAsMention() + " Ping: `" + Math.abs(e.getMessage().getTime().until(OffsetDateTime.now(), ChronoUnit.MILLIS)) + "ms`");
                                 break;
                             }
                             case "uptime": {
                                 long ts = (System.currentTimeMillis() - st) / 1000;
                                 long tm = ts / 60;
                                 long th = tm / 60;
-                                e.getMessage().getChannel().sendMessage(u.getAsMention() + " My current uptime is: `" + (th / 24 + "d " + th % 24 + "h " + tm % 60 + "m " + ts % 60 + "s`"));
+                                e.getMessage().getChannel().sendMessage(u.getAsMention() + " Uptime: `" + (th / 24 + "d " + th % 24 + "h " + tm % 60 + "m " + ts % 60 + "s`"));
                                 break;
                             }
                             case "whois": {

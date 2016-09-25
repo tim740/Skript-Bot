@@ -48,7 +48,7 @@ class CmdSys {
                             case "help": {
                                 ArrayList<String> c = new ArrayList<>();
                                 c.add("**COMMANDS** (All Commands start with `@Skript-Bot`)");
-                                c.add("```xl");
+                                c.add("```");
                                 c.add("   info - (Returns Info about me)");
                                 c.add("   version (aliases) - (Gets the latest version)");
                                 c.add("   ping - (Gets my ping)");
@@ -62,7 +62,7 @@ class CmdSys {
                                 c.add("```");
                                 if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
                                     c.add("**ADMIN COMMANDS**");
-                                    c.add("```xl");
+                                    c.add("```");
                                     c.add("   setgame %string% - (Sets my game)");
                                     c.add("   setnick %player% %string% - (Sets a users nick)");
                                     c.add("   kick %player% - (kicks a user)");
@@ -117,7 +117,7 @@ class CmdSys {
                             }
                             case "suggest":
                                 String sc = umsg.replace(msg[1] + " ", "");
-                                jda.getUserById("138441986314207232").getPrivateChannel().sendMessage("Suggestion from: " + u.getAsMention() + "\n ```" + sc + "```");
+                                jda.getUserById("138441986314207232").getPrivateChannel().sendMessage("**Suggestion from**: " + u.getAsMention() + "\n\n" + sc + "");
                                 e.getMessage().getChannel().sendMessage("Your suggestion has been noted " + u.getAsMention());
                                 break;
                             case "skunity": {

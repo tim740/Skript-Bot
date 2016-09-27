@@ -134,7 +134,7 @@ class CmdSys {
                                 break;
                             }
                             case "joinlink":
-                                e.getMessage().getChannel().sendMessage("Skript-Chat Join Link: https://discord.gg/bxaPNjN");
+                                e.getMessage().getChannel().sendMessage("Skript-Chat Join Link: https://discord.gg/0lx4QhQvwelCZbEX");
                                 break;
                             case "kick":
                                 e.getMessage().deleteMessage();

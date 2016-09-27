@@ -136,9 +136,6 @@ class CmdSys {
                             case "joinlink":
                                 e.getMessage().getChannel().sendMessage("Skript-Chat Join Link: https://discord.gg/bxaPNjN");
                                 break;
-                            case "jointxt":
-                                u.getPrivateChannel().sendMessage(getJoinTxt());
-                                break;
                             case "kick":
                                 e.getMessage().deleteMessage();
                                 if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
@@ -187,7 +184,6 @@ class CmdSys {
 
         @Override
         public void onGuildMemberJoin(GuildMemberJoinEvent e) {
-            e.getUser().getPrivateChannel().sendMessage(getJoinTxt());
             jda.getTextChannelById("138464183946575874").sendMessage("Welcome " + e.getUser().getAsMention() + " to Skript-Chat!");
             prSysI("@" + e.getUser().getUsername() + " has joined Skript-Chat!");
         }

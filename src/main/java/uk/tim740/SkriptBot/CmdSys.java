@@ -81,7 +81,7 @@ class CmdSys {
                                 c.add("Website: <https://tim740.github.io/>");
                                 c.add("Source: <https://github.com/tim740/Skript-Bot>");
                                 c.add("JDA Api: <https://github.com/DV8FromTheWorld/JDA>");
-                                u.getPrivateChannel().sendMessage(msgBuilder(c));
+                                e.getMessage().getChannel().sendMessage(msgBuilder(c));
                                 break;
                             }
                             case "version": {

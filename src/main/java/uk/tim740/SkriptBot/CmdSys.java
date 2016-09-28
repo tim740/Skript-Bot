@@ -7,11 +7,13 @@ import net.dv8tion.jda.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.hooks.ListenerAdapter;
 import net.dv8tion.jda.managers.GuildManager;
+import net.dv8tion.jda.utils.MiscUtil;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -107,19 +109,26 @@ class CmdSys {
                             case "whois": {
                                 User wu = e.getMessage().getMentionedUsers().get(1);
                                 ArrayList<String> c = new ArrayList<>();
-                                c.add("**ID**: " + wu.getId());
-                                c.add("**Name**: " + wu.getUsername());
-                                c.add("**Online**: " + wu.getOnlineStatus());
-                                c.add("**Game**: " + wu.getCurrentGame().getName());
-                                c.add("**Bot**: " + wu.isBot());
-                                u.getPrivateChannel().sendMessage(msgBuilder(c));
+                                c.add("```");
+                                c.add("ID: " + wu.getId());
+                                c.add("Name: " + wu.getUsername());
+                                c.add("Discriminator: " + wu.getDiscriminator());
+                                c.add("Status: " + wu.getOnlineStatus());
+                                c.add("Game: " + (wu.getCurrentGame() != null ? wu.getCurrentGame().getName() : "None"));
+                                c.add("Bot: " + wu.isBot());
+                                c.add("Joined Discord: " + MiscUtil.getCreationTime(wu.getId()).format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")));
+                                c.add("Joined Skript-Chat: " + e.getGuild().getJoinDateForUser(wu).format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")));
+                                c.add("Roles: " + e.getGuild().getRolesForUser(wu).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)));
+                                c.add("```");
+                                e.getMessage().getChannel().sendMessage(msgBuilder(c));
                                 break;
                             }
-                            case "suggest":
+                            case "suggest": {
                                 String sc = umsg.replace(msg[1] + " ", "");
                                 jda.getUserById("138441986314207232").getPrivateChannel().sendMessage("**Suggestion from**: " + u.getAsMention() + "\n\n" + sc + "");
                                 e.getMessage().getChannel().sendMessage("Your suggestion has been noted " + u.getAsMention());
                                 break;
+                            }
                             case "skunity": {
                                 String sk = umsg.replace(msg[1] + " ", "").replaceAll(" ", "+");
                                 e.getMessage().getChannel().sendMessage(u.getAsMention() + " http://skunity.com/search?search=" + sk + "#");
@@ -133,10 +142,11 @@ class CmdSys {
                                 e.getMessage().getChannel().sendMessage(msgBuilder(c));
                                 break;
                             }
-                            case "joinlink":
+                            case "joinlink": {
                                 e.getMessage().getChannel().sendMessage("Skript-Chat Join Link: https://discord.gg/0lx4QhQvwelCZbEX");
                                 break;
-                            case "kick":
+                            }
+                            case "kick": {
                                 e.getMessage().deleteMessage();
                                 if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
                                     if (msg[1].contains("@")) {
@@ -145,14 +155,16 @@ class CmdSys {
                                     }
                                 }
                                 break;
-                            case "setgame":
+                            }
+                            case "setgame": {
                                 e.getMessage().deleteMessage();
                                 if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
                                     String sg = umsg.replaceFirst(msg[1] + " ", "");
                                     jda.getAccountManager().setGame(sg);
                                 }
                                 break;
-                            case "setnick":
+                            }
+                            case "setnick": {
                                 e.getMessage().deleteMessage();
                                 if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
                                     String snn = umsg.replaceFirst(msg[1] + " ", "").replaceFirst(msg[2] + " ", "");
@@ -160,7 +172,8 @@ class CmdSys {
                                     e.getMessage().getChannel().sendMessage(u.getAsMention() + " set '" + e.getMessage().getMentionedUsers().get(1).getAsMention() + "' nickname to " + snn);
                                 }
                                 break;
-                            case "say":
+                            }
+                            case "say": {
                                 e.getMessage().deleteMessage();
                                 if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
                                     String sc1 = umsg.replaceFirst(msg[1] + " ", "").replace("@everyone", "").replace("@here", "");
@@ -170,13 +183,16 @@ class CmdSys {
                                     e.getMessage().getChannel().sendMessage(sc1);
                                 }
                                 break;
-                            default:
+                            }
+                            default: {
                                 e.getMessage().deleteMessage();
                                 e.getMessage().getChannel().sendMessage("Did you mean `@Skript-Bot help` " + u.getAsMention() + "?");
                                 break;
+                            }
                         }
                     } catch (Exception x) {
                         prSysE("Exception: " + x.getMessage());
+                        //x.printStackTrace();
                     }
                 }
             }

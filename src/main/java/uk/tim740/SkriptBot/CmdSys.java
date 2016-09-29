@@ -1,6 +1,7 @@
 package uk.tim740.SkriptBot;
 
 import net.dv8tion.jda.JDABuilder;
+import net.dv8tion.jda.OnlineStatus;
 import net.dv8tion.jda.entities.Role;
 import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.events.guild.member.GuildMemberJoinEvent;
@@ -52,6 +53,7 @@ class CmdSys {
                                 c.add("**COMMANDS** (All Commands start with `@Skript-Bot`)");
                                 c.add("```");
                                 c.add("   info - (Returns Info about me)");
+                                c.add("   info skript-chat - (Gets chat info)");
                                 c.add("   version (aliases) - (Gets the latest version)");
                                 c.add("   ping - (Gets my ping)");
                                 c.add("   uptime - (Gets my uptime)");
@@ -77,10 +79,36 @@ class CmdSys {
                             }
                             case "info": {
                                 ArrayList<String> c = new ArrayList<>();
-                                c.add("Created: @tim740#1139 (18/09/2016)");
-                                c.add("Website: <https://tim740.github.io/>");
-                                c.add("Source: <https://github.com/tim740/Skript-Bot>");
-                                c.add("JDA Api: <https://github.com/DV8FromTheWorld/JDA>");
+                                if (umsg.contains("skript-chat")) {
+                                    int on = 0, off = 0, bot = 0;
+                                    for (User s : e.getGuild().getUsers()) {
+                                        if (s.getOnlineStatus().equals(OnlineStatus.ONLINE) || s.getOnlineStatus().equals(OnlineStatus.AWAY)) {
+                                            on++;
+                                        } else if (s.getOnlineStatus().equals(OnlineStatus.OFFLINE)) {
+                                            off++;
+                                        }
+                                        if (s.isBot()) {
+                                            bot++;
+                                        }
+                                    }
+                                    c.add("**Here's the information on Skript-chat!**");
+                                    c.add("```");
+                                    c.add("Creator: " + e.getGuild().getOwner().getUsername());
+                                    c.add("Members: " + e.getGuild().getUsers().size());
+                                    c.add("Online Users: " + on);
+                                    c.add("Offline Users: " + off);
+                                    c.add("Bots: " + bot);
+                                    c.add("Text Channels: " + e.getGuild().getTextChannels().size());
+                                    c.add("Voice Channels: " + e.getGuild().getVoiceChannels().size());
+                                    c.add("Region: " + e.getGuild().getRegion());
+                                    c.add("```");
+                                } else {
+                                    c.add("**Here's my information!**");
+                                    c.add("Created: @tim740#1139 (18/09/2016)");
+                                    c.add("Website: <https://tim740.github.io/>");
+                                    c.add("Source: <https://github.com/tim740/Skript-Bot>");
+                                    c.add("JDA Api: <https://github.com/DV8FromTheWorld/JDA>");
+                                }
                                 e.getMessage().getChannel().sendMessage(msgBuilder(c));
                                 break;
                             }
@@ -109,6 +137,7 @@ class CmdSys {
                             case "whois": {
                                 User wu = e.getMessage().getMentionedUsers().get(1);
                                 ArrayList<String> c = new ArrayList<>();
+                                c.add("**Here's the information on** " + wu.getAsMention());
                                 c.add("```");
                                 c.add("ID: " + wu.getId());
                                 c.add("Name: " + wu.getUsername());
@@ -136,6 +165,7 @@ class CmdSys {
                             }
                             case "links": {
                                 ArrayList<String> c = new ArrayList<>();
+                                c.add("**Here's some links!**");
                                 c.add("Skript (bensku): <https://github.com/bensku/Skript/releases>");
                                 c.add("skQuery (VirusTotal): <https://github.com/SkriptLegacy/skquery/releases>");
                                 c.add("Formatting: <https://support.discordapp.com/hc/en-us/articles/210298617>");

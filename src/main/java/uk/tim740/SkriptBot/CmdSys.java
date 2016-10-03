@@ -61,7 +61,6 @@ class CmdSys {
                                 c.add("   skunity %string% - (Lookup on skUnity Docs)");
                                 c.add("   links - (Returns useful links)");
                                 c.add("   joinlink - (Returns the Join link for Skript-Chat)");
-                                c.add("   jointxt - (Gets the First join text)");
                                 c.add("   suggest %string% (Suggest an idea for me)");
                                 c.add("```");
                                 if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {

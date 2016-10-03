@@ -93,12 +93,11 @@ class CmdSys {
                                     c.add("**Here's the information on Skript-chat!**");
                                     c.add("```");
                                     c.add("Creator: " + e.getGuild().getOwner().getUsername());
-                                    c.add("Members: " + e.getGuild().getUsers().size());
                                     c.add("Online Users: " + on + "/" + e.getGuild().getUsers().size());
                                     c.add("Offline Users: " + off + "/" + e.getGuild().getUsers().size());
                                     c.add("Bots: " + bot + "/" + e.getGuild().getUsers().size());
                                     c.add("Text/Voice Channels: " + e.getGuild().getTextChannels().size() + "/" + e.getGuild().getVoiceChannels().size());
-                                    c.add("Region: " + e.getGuild().getRegion());
+                                    //c.add("Region: " + e.getGuild().getRegion());
                                     c.add("```");
                                 } else {
                                     c.add("**Here's my information!**");

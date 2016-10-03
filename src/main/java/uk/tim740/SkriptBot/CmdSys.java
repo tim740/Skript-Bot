@@ -53,7 +53,7 @@ class CmdSys {
                                 c.add("**COMMANDS** (All Commands start with `@Skript-Bot`)");
                                 c.add("```");
                                 c.add("   info - (Returns Info about me)");
-                                c.add("   info skript-chat - (Gets chat info)");
+                                c.add("   info (skript-chat|skc) - (Gets chat info)");
                                 c.add("   version (aliases) - (Gets the latest version)");
                                 c.add("   ping - (Gets my ping)");
                                 c.add("   uptime - (Gets my uptime)");
@@ -78,7 +78,7 @@ class CmdSys {
                             }
                             case "info": {
                                 ArrayList<String> c = new ArrayList<>();
-                                if (umsg.contains("skript-chat")) {
+                                if (umsg.contains("skript-chat") || umsg.contains("skc")) {
                                     int on = 0, off = 0, bot = 0;
                                     for (User s : e.getGuild().getUsers()) {
                                         if (s.getOnlineStatus().equals(OnlineStatus.ONLINE) || s.getOnlineStatus().equals(OnlineStatus.AWAY)) {
@@ -97,7 +97,6 @@ class CmdSys {
                                     c.add("Offline Users: " + off + "/" + e.getGuild().getUsers().size());
                                     c.add("Bots: " + bot + "/" + e.getGuild().getUsers().size());
                                     c.add("Text/Voice Channels: " + e.getGuild().getTextChannels().size() + "/" + e.getGuild().getVoiceChannels().size());
-                                    //c.add("Region: " + e.getGuild().getRegion());
                                     c.add("```");
                                 } else {
                                     c.add("**Here's my information!**");

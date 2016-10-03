@@ -32,7 +32,7 @@ public class SkriptBot {
             while (true) {
                 String[] msg = System.console().readLine().split(" ");
                 switch (msg[0]) {
-                    case ("!"):
+                    case ("!"): {
                         String id = "";
                         for (TextChannel c : jda.getGuildById("138464183946575874").getTextChannels()) {
                             if (msg[1].equals(c.getName())) id = c.getId();
@@ -63,12 +63,15 @@ public class SkriptBot {
                             prSysI("[#" + msg[1] + "] Sent: '" + ns.replaceFirst(" ", "") + "'");
                         }
                         break;
-                    case "rs":
+                    }
+                    case "rs": {
                         System.exit(0);
-                    default:
+                    }
+                    default: {
                         System.out.println("> Restart: rs");
                         System.out.println("> Say: ! <channel> <text>");
                         break;
+                    }
                 }
             }
         } catch (Exception x) {

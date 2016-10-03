@@ -124,7 +124,7 @@ class CmdSys {
                                 break;
                             }
                             case "ping": {
-                                e.getMessage().getChannel().sendMessage(u.getAsMention() + " Ping: `" + Math.abs(e.getMessage().getTime().until(OffsetDateTime.now(), ChronoUnit.MILLIS)) + "ms`");
+                                e.getMessage().getChannel().sendMessage(u.getAsMention() + " Ping: `" + Math.abs(e.getMessage().getTime().until(OffsetDateTime.now(), ChronoUnit.MILLIS))  + "ms`");
                                 break;
                             }
                             case "uptime": {

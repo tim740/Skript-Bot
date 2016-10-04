@@ -2,6 +2,7 @@ package uk.tim740.SkriptBot;
 
 import net.dv8tion.jda.JDABuilder;
 import net.dv8tion.jda.OnlineStatus;
+import net.dv8tion.jda.entities.Emote;
 import net.dv8tion.jda.entities.Role;
 import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.events.guild.member.GuildMemberJoinEvent;
@@ -53,11 +54,12 @@ class CmdSys {
                                 c.add("**COMMANDS** (All Commands start with `@Skript-Bot`)");
                                 c.add("```");
                                 c.add("   info - (Returns Info about me)");
-                                c.add("   info (skript-chat|skc) - (Gets chat info)");
-                                c.add("   version (aliases) - (Gets the latest version)");
-                                c.add("   ping - (Gets my ping)");
-                                c.add("   uptime - (Gets my uptime)");
-                                c.add("   whois %player% - (Gets User Info)");
+                                c.add("   info (skript-chat|skc) - (Returns chat info)");
+                                c.add("   emotes - (Returns all the Emotes)");
+                                c.add("   version (aliases) - (Returns the latest version)");
+                                c.add("   ping - (Returns my ping)");
+                                c.add("   uptime - (Returns my uptime)");
+                                c.add("   whois %player% - (Returns User Info)");
                                 c.add("   skunity %string% - (Lookup on skUnity Docs)");
                                 c.add("   links - (Returns useful links)");
                                 c.add("   joinlink - (Returns the Join link for Skript-Chat)");
@@ -105,6 +107,17 @@ class CmdSys {
                                     c.add("Source: <https://github.com/tim740/Skript-Bot>");
                                     c.add("JDA Api: <https://github.com/DV8FromTheWorld/JDA>");
                                 }
+                                e.getMessage().getChannel().sendMessage(msgBuilder(c));
+                                break;
+                            }
+                            case "emotes": {
+                                ArrayList<String> c = new ArrayList<>();
+                                String el = "";
+                                for (Emote s : e.getGuild().getEmotes()) {
+                                    el = (el + s.getAsEmote());
+                                }
+                                c.add("**Here's a list of all the emotes in Skript-chat!**");
+                                c.add(el);
                                 e.getMessage().getChannel().sendMessage(msgBuilder(c));
                                 break;
                             }

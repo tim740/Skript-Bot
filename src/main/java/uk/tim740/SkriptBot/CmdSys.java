@@ -114,7 +114,7 @@ class CmdSys {
                                 ArrayList<String> c = new ArrayList<>();
                                 String el = "";
                                 for (Emote s : e.getGuild().getEmotes()) {
-                                    el = (el + s.getAsEmote());
+                                    el = (el + " " + s.getAsEmote());
                                 }
                                 c.add("**Here's a list of all the emotes in Skript-chat!**");
                                 c.add(el);
@@ -162,14 +162,12 @@ class CmdSys {
                                 break;
                             }
                             case "suggest": {
-                                String sc = umsg.replace(msg[1] + " ", "");
-                                jda.getUserById("138441986314207232").getPrivateChannel().sendMessage("**Suggestion from**: " + u.getAsMention() + "\n\n" + sc + "");
+                                jda.getUserById("138441986314207232").getPrivateChannel().sendMessage("**Suggestion from**: " + u.getAsMention() + "\n\n" + (umsg.replace(msg[1] + " ", "")) + "");
                                 e.getMessage().getChannel().sendMessage("Your suggestion has been noted " + u.getAsMention());
                                 break;
                             }
                             case "skunity": {
-                                String sk = umsg.replace(msg[1] + " ", "").replaceAll(" ", "+");
-                                e.getMessage().getChannel().sendMessage(u.getAsMention() + " http://skunity.com/search?search=" + sk + "#");
+                                e.getMessage().getChannel().sendMessage(u.getAsMention() + " http://skunity.com/search?search=" + (umsg.replace(msg[1] + " ", "").replaceAll(" ", "+")) + "#");
                                 break;
                             }
                             case "links": {
@@ -185,6 +183,13 @@ class CmdSys {
                                 e.getMessage().getChannel().sendMessage("Skript-Chat Join Link: https://discord.gg/0lx4QhQvwelCZbEX");
                                 break;
                             }
+                            case "setgame": {
+                                e.getMessage().deleteMessage();
+                                if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
+                                    jda.getAccountManager().setGame(umsg.replaceFirst(msg[1] + " ", ""));
+                                }
+                                break;
+                            }
                             case "kick": {
                                 e.getMessage().deleteMessage();
                                 if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
@@ -192,14 +197,6 @@ class CmdSys {
                                         new GuildManager(e.getGuild()).kick(msg[1] + " ");
                                         e.getMessage().getChannel().sendMessage("Kicked: " + e.getMessage().getMentionedUsers().get(1));
                                     }
-                                }
-                                break;
-                            }
-                            case "setgame": {
-                                e.getMessage().deleteMessage();
-                                if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-                                    String sg = umsg.replaceFirst(msg[1] + " ", "");
-                                    jda.getAccountManager().setGame(sg);
                                 }
                                 break;
                             }

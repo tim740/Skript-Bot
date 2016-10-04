@@ -69,7 +69,6 @@ class CmdSys {
                                     c.add("**ADMIN COMMANDS**");
                                     c.add("```");
                                     c.add("   setgame %string% - (Sets my game)");
-                                    c.add("   setnick %player% %string% - (Sets a users nick)");
                                     c.add("   kick %player% - (kicks a user)");
                                     c.add("   say %string% - (Make me Speak)");
                                     c.add("```");
@@ -197,15 +196,6 @@ class CmdSys {
                                         new GuildManager(e.getGuild()).kick(msg[1] + " ");
                                         e.getMessage().getChannel().sendMessage("Kicked: " + e.getMessage().getMentionedUsers().get(1));
                                     }
-                                }
-                                break;
-                            }
-                            case "setnick": {
-                                e.getMessage().deleteMessage();
-                                if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-                                    String snn = umsg.replaceFirst(msg[1] + " ", "").replaceFirst(msg[2] + " ", "");
-                                    new GuildManager(e.getGuild()).setNickname(e.getMessage().getMentionedUsers().get(1), snn);
-                                    e.getMessage().getChannel().sendMessage(u.getAsMention() + " set '" + e.getMessage().getMentionedUsers().get(1).getAsMention() + "' nickname to " + snn);
                                 }
                                 break;
                             }

@@ -166,7 +166,7 @@ class CmdSys {
                                 break;
                             }
                             case "skunity": {
-                                e.getMessage().getChannel().sendMessage(u.getAsMention() + " http://skunity.com/search?search=" + (umsg.replace(msg[1] + " ", "").replaceAll(" ", "+")) + "#");
+                                e.getMessage().getChannel().sendMessage("**Here's your link:** " + u.getAsMention() + "\n<http://skunity.com/search?search=" + (umsg.replace(msg[1] + " ", "").replaceAll(" ", "+")) + "#>");
                                 break;
                             }
                             case "links": {

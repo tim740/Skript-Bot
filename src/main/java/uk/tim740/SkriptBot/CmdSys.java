@@ -47,7 +47,6 @@ class CmdSys {
                     String[] msg = e.getMessage().getContent().split(" ");
                     String umsg = e.getMessage().getContent().replaceFirst("@Skript-Bot ", "");
                     User u = e.getMessage().getAuthor();
-                    //e.getMessage().deleteMessage();
                     prSysI("@" + u.getUsername() + " executed: '" + e.getMessage().getContent() + "'");
                     try {
                         switch (msg[1]) {
@@ -190,7 +189,6 @@ class CmdSys {
                                     }
                                     c.add("  <https://discord.gg/" + s.getCode() + "> - " + chm + " (" + s.getUses() + ")");
                                 }
-                                //e.getMessage().getChannel().sendMessage("Skript-Chat Join Link: https://discord.gg/0lx4QhQvwelCZbEX");
                                 e.getMessage().getChannel().sendMessage(msgBuilder(c));
                                 break;
                             }
@@ -222,15 +220,9 @@ class CmdSys {
                                 }
                                 break;
                             }
-                            default: {
-                                e.getMessage().deleteMessage();
-                                e.getMessage().getChannel().sendMessage("Did you mean `@Skript-Bot help` " + u.getAsMention() + "?");
-                                break;
-                            }
                         }
                     } catch (Exception x) {
                         prSysE("Exception: " + x.getMessage());
-                        //x.printStackTrace();
                     }
                 }
             }

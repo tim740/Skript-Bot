@@ -54,6 +54,9 @@ public class SkriptBot {
                                         }
                                     }
                                 }
+                                for (TextChannel ch : jda.getGuildById("138464183946575874").getTextChannels()) {
+                                    if (cl.get(n).equals("#" + ch.getName())) cl.set(n, ch.getAsMention());
+                                }
                             }
                             String ns = "";
                             for (String clc : cl) {

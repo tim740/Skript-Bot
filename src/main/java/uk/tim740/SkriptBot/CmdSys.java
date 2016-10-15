@@ -4,11 +4,13 @@ import net.dv8tion.jda.JDABuilder;
 import net.dv8tion.jda.OnlineStatus;
 import net.dv8tion.jda.entities.Emote;
 import net.dv8tion.jda.entities.Role;
+import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.hooks.ListenerAdapter;
 import net.dv8tion.jda.managers.GuildManager;
+import net.dv8tion.jda.utils.InviteUtil;
 import net.dv8tion.jda.utils.MiscUtil;
 
 import java.io.BufferedReader;
@@ -179,7 +181,17 @@ class CmdSys {
                                 break;
                             }
                             case "joinlink": {
-                                e.getMessage().getChannel().sendMessage("Skript-Chat Join Link: https://discord.gg/0lx4QhQvwelCZbEX");
+                                ArrayList<String> c = new ArrayList<>();
+                                c.add("**Here's a list of Invites for Skript-Chat!**");
+                                for (InviteUtil.AdvancedInvite s : e.getGuild().getInvites()) {
+                                    String chm = null;
+                                    for (TextChannel ch : e.getGuild().getTextChannels()) {
+                                        if (ch.getName().equals(s.getChannelName())) chm = ch.getAsMention();
+                                    }
+                                    c.add("  <https://discord.gg/" + s.getCode() + "> - " + chm + " (" + s.getUses() + ")");
+                                }
+                                //e.getMessage().getChannel().sendMessage("Skript-Chat Join Link: https://discord.gg/0lx4QhQvwelCZbEX");
+                                e.getMessage().getChannel().sendMessage(msgBuilder(c));
                                 break;
                             }
                             case "setgame": {

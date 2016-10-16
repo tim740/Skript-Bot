@@ -7,6 +7,7 @@ import net.dv8tion.jda.entities.Role;
 import net.dv8tion.jda.entities.TextChannel;
 import net.dv8tion.jda.entities.User;
 import net.dv8tion.jda.events.guild.member.GuildMemberJoinEvent;
+import net.dv8tion.jda.events.guild.member.GuildMemberLeaveEvent;
 import net.dv8tion.jda.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.hooks.ListenerAdapter;
 import net.dv8tion.jda.managers.GuildManager;
@@ -181,7 +182,7 @@ class CmdSys {
                             }
                             case "joinlink": {
                                 ArrayList<String> c = new ArrayList<>();
-                                c.add("**Here's a list of Invites for Skript-Chat!**");
+                                c.add("**Here's the invites for Skript-Chat!**");
                                 for (InviteUtil.AdvancedInvite s : e.getGuild().getInvites()) {
                                     String chm = null;
                                     for (TextChannel ch : e.getGuild().getTextChannels()) {
@@ -232,6 +233,10 @@ class CmdSys {
         public void onGuildMemberJoin(GuildMemberJoinEvent e) {
             jda.getTextChannelById("138464183946575874").sendMessage("Welcome " + e.getUser().getAsMention() + " to Skript-Chat!");
             prSysI("@" + e.getUser().getUsername() + " has joined Skript-Chat!");
+        }
+        @Override
+        public void onGuildMemberLeave(GuildMemberLeaveEvent e) {
+            prSysI("@" + e.getUser().getUsername() + " has left Skript-Chat!");
         }
     }
 }

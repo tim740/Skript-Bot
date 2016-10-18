@@ -30,6 +30,7 @@ import static uk.tim740.SkriptBot.SkriptBot.*;
  * Created by tim740 on 20/09/2016
  */
 class CmdSys {
+    private static Pattern tf = Pattern.compile("(true|false)(,)? the person below me .+");
 
     static void cmdSys(String[] args) {
         try {
@@ -215,8 +216,7 @@ class CmdSys {
                         //x.printStackTrace();
                     }
                 } else if (e.getChannel().getId().equals("237960698854899713")) {
-                    Pattern p = Pattern.compile("(true|false)(,)? the person below me .+");
-                    if (!p.matcher(e.getMessage().getContent().toLowerCase()).find()) {
+                    if (!tf.matcher(e.getMessage().getContent().toLowerCase()).find()) {
                         e.getMessage().deleteMessage();
                     }
                 }

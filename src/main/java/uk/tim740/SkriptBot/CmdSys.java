@@ -216,8 +216,10 @@ class CmdSys {
                         //x.printStackTrace();
                     }
                 } else if (e.getChannel().getId().equals("237960698854899713")) {
-                    if (!tf.matcher(e.getMessage().getContent().toLowerCase()).find()) {
-                        e.getMessage().deleteMessage();
+                    if (!e.getGuild().getRolesForUser(e.getMessage().getAuthor()).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
+                        if (!tf.matcher(e.getMessage().getContent().toLowerCase()).find()) {
+                            e.getMessage().deleteMessage();
+                        }
                     }
                 }
             }

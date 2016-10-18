@@ -36,7 +36,8 @@ public class SkriptBot {
                         String id = "";
                         for (TextChannel c : jda.getGuildById("138464183946575874").getTextChannels()) {
                             if (msg[1].equals(c.getName())) id = c.getId();
-                        } if (!id.equals("")) {
+                        }
+                        if (!id.equals("")) {
                             ArrayList<String> cl = new ArrayList<>();
                             Collections.addAll(cl, msg);
                             for (int n = 0; n < 2; n++) cl.remove(0);

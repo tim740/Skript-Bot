@@ -36,8 +36,7 @@ public class SkriptBot {
                         String id = "";
                         for (TextChannel c : jda.getGuildById("138464183946575874").getTextChannels()) {
                             if (msg[1].equals(c.getName())) id = c.getId();
-                        }
-                        if (!id.equals("")) {
+                        } if (!id.equals("")) {
                             ArrayList<String> cl = new ArrayList<>();
                             Collections.addAll(cl, msg);
                             for (int n = 0; n < 2; n++) cl.remove(0);
@@ -66,11 +65,9 @@ public class SkriptBot {
                             prSysI("[#" + msg[1] + "] Sent: '" + ns.replaceFirst(" ", "") + "'");
                         }
                         break;
-                    }
-                    case "rs": {
+                    } case "rs": {
                         System.exit(0);
-                    }
-                    default: {
+                    } default: {
                         System.out.println("> Restart: rs");
                         System.out.println("> Say: ! <channel> <text>");
                         break;
@@ -91,10 +88,10 @@ public class SkriptBot {
     }
 
     static void prSysI(String s) {
-        System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Info] [Skript-Bot]: " + s);
+        System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Info] " + s);
     }
 
     static void prSysE(String s) {
-        System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Error] [Skript-Bot]: " + s);
+        System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Error] " + s);
     }
 }

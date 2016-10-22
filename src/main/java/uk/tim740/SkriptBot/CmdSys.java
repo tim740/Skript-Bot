@@ -7,6 +7,7 @@ import net.dv8tion.jda.entities.*;
 import net.dv8tion.jda.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.events.guild.member.GuildMemberLeaveEvent;
 import net.dv8tion.jda.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.hooks.ListenerAdapter;
 import net.dv8tion.jda.managers.GuildManager;
 import net.dv8tion.jda.utils.InviteUtil;
@@ -28,7 +29,7 @@ import static uk.tim740.SkriptBot.SkriptBot.*;
  * Created by tim740 on 20/09/2016
  */
 class CmdSys {
-    private static Pattern tf = Pattern.compile("(true|false)(,)? the person below me .+");
+    private static Pattern tf = Pattern.compile("^(?:true|false),? +the +person +below +me +.+$");
 
     static void cmdSys(String[] args) {
         try {
@@ -229,6 +230,13 @@ class CmdSys {
                         prSysE("Exception: " + x.getMessage());
                         //x.printStackTrace();
                     }
+                }
+            }
+        }
+        public void onMessageUpdate(MessageUpdateEvent e) {
+            if (e.getChannel().getId().equals("237960698854899713")) {
+                if (!e.getGuild().getRolesForUser(e.getMessage().getAuthor()).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
+                    if (!tf.matcher(e.getMessage().getContent().toLowerCase()).find()) e.getMessage().deleteMessage();
                 }
             }
         }

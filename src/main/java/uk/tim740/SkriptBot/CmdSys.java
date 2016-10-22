@@ -1,11 +1,9 @@
 package uk.tim740.SkriptBot;
 
 import net.dv8tion.jda.JDABuilder;
+import net.dv8tion.jda.JDAInfo;
 import net.dv8tion.jda.OnlineStatus;
-import net.dv8tion.jda.entities.Emote;
-import net.dv8tion.jda.entities.Role;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.entities.*;
 import net.dv8tion.jda.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.events.guild.member.GuildMemberLeaveEvent;
 import net.dv8tion.jda.events.message.MessageReceivedEvent;
@@ -46,13 +44,17 @@ class CmdSys {
         @Override
         public void onMessageReceived(MessageReceivedEvent e) {
             if (!e.getMessage().getAuthor().getId().equals("227067574469394432")) {
-                if (e.getMessage().getContent().startsWith("@Skript-Bot")) {
+                if (e.getChannel().getId().equals("237960698854899713")) {
+                    if (!e.getGuild().getRolesForUser(e.getMessage().getAuthor()).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
+                        if (!tf.matcher(e.getMessage().getContent().toLowerCase()).find()) e.getMessage().deleteMessage();
+                    }
+                } else if (e.getMessage().getContent().startsWith("@Skript-Bot")) {
                     String[] msg = e.getMessage().getContent().split(" ");
                     String umsg = e.getMessage().getContent().replaceFirst(msg[0], "");
                     User u = e.getMessage().getAuthor();
-                    prSysI("@" + u.getUsername() + " executed: '" + e.getMessage().getContent() + "'");
+                    prSysI("(#" + jda.getTextChannelById(e.getChannel().getId()).getName() + ") @" + u.getUsername() + " executed: '" + e.getMessage().getContent() + "'");
                     try {
-                        switch (msg[1]) {
+                        switch (msg[1].toLowerCase()) {
                             case "help": {
                                 ArrayList<String> c = new ArrayList<>();
                                 c.add("**COMMANDS** (All Commands start with `@Skript-Bot`)");
@@ -72,6 +74,7 @@ class CmdSys {
                                 if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
                                     c.add("**ADMIN COMMANDS**");
                                     c.add("```");
+                                    c.add("   prune %integer% - (Removes x amount of msgs, 0 - 50)");
                                     c.add("   setgame %string% - (Sets my game)");
                                     c.add("   kick %player% - (kicks a user)");
                                     c.add("   say %string% - (Make me Speak)");
@@ -107,7 +110,7 @@ class CmdSys {
                                     c.add("Created: @tim740#1139 (18/09/2016)");
                                     c.add("Website: <https://tim740.github.io/>");
                                     c.add("Source: <https://github.com/tim740/Skript-Bot>");
-                                    c.add("JDA Api: <https://github.com/DV8FromTheWorld/JDA>");
+                                    c.add("JDA " + JDAInfo.VERSION +  ": <https://github.com/DV8FromTheWorld/JDA>");
                                 }
                                 e.getMessage().getChannel().sendMessage(msgBuilder(c));
                                 break;
@@ -190,6 +193,17 @@ class CmdSys {
                                     jda.getAccountManager().setGame(umsg.replaceFirst(msg[1] + " ", ""));
                                 }
                                 break;
+                            } case "prune": {
+                                e.getMessage().deleteMessage();
+                                if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
+                                    Integer i = Integer.parseInt(msg[2]);
+                                    if (i >= 0 && i <= 50) {
+                                        for (Message s : e.getChannel().getHistory().retrieve(i)) {
+                                            e.getChannel().deleteMessageById(s.getId());
+                                        }
+                                    }
+                                }
+                                break;
                             } case "kick": {
                                 e.getMessage().deleteMessage();
                                 if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
@@ -214,12 +228,6 @@ class CmdSys {
                     } catch (Exception x) {
                         prSysE("Exception: " + x.getMessage());
                         //x.printStackTrace();
-                    }
-                } else if (e.getChannel().getId().equals("237960698854899713")) {
-                    if (!e.getGuild().getRolesForUser(e.getMessage().getAuthor()).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-                        if (!tf.matcher(e.getMessage().getContent().toLowerCase()).find()) {
-                            e.getMessage().deleteMessage();
-                        }
                     }
                 }
             }

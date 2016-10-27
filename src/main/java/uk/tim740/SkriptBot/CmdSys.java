@@ -142,7 +142,7 @@ class CmdSys {
                                 long ts = (System.currentTimeMillis() - st) / 1000;
                                 long tm = ts / 60;
                                 long th = tm / 60;
-                                e.getMessage().getChannel().sendMessage(u.getAsMention() + " Uptime: `" + (th / 24 + "d " + th % 24 + "h " + tm % 60 + "m " + ts % 60 + "s`"));
+                                e.getMessage().getChannel().sendMessage(u.getAsMention() + " Uptime: `" + (th / 24 + "d " + th % 24 + "h " + tm % 60 + "m " + ts % 60 + "s` - `") + Math.abs(e.getMessage().getTime().until(OffsetDateTime.now(), ChronoUnit.MILLIS))  + "ms`");
                                 break;
                             } case "whois": {
                                 User wu = e.getMessage().getMentionedUsers().get(1);

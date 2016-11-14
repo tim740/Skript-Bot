@@ -251,4 +251,12 @@ class CmdSys {
             prSysI("@" + e.getUser().getUsername() + " has left Skript-Chat!");
         }
     }
+
+    private static String msgBuilder(ArrayList<String> s) {
+        String f = "";
+        for (String j : s) {
+            f += ("\n" + j);
+        }
+        return f;
+    }
 }

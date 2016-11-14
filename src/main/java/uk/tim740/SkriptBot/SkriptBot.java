@@ -80,14 +80,6 @@ public class SkriptBot {
         }
     }
 
-    static String msgBuilder(ArrayList<String> s) {
-        String f = "";
-        for (String j : s) {
-            f += ("\n" + j);
-        }
-        return f;
-    }
-
     static void prSysI(String s) {
         System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Info] " + s);
     }

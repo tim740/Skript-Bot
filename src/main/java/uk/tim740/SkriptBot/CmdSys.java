@@ -51,7 +51,7 @@ class CmdSys {
                     }
                 } else if (e.getMessage().getContent().startsWith("@Skript-Bot")) {
                     String[] msg = e.getMessage().getContent().split(" ");
-                    String umsg = e.getMessage().getContent().replaceFirst(msg[0], "");
+                    String umsg = e.getMessage().getContent().replaceFirst(msg[0] + " ", "");
                     User u = e.getMessage().getAuthor();
                     prSysI("(#" + jda.getTextChannelById(e.getChannel().getId()).getName() + ") @" + u.getUsername() + " executed: '" + e.getMessage().getContent() + "'");
                     try {
@@ -71,6 +71,7 @@ class CmdSys {
                                 c.add("   links - (Returns useful links)");
                                 c.add("   joinlink - (Returns the Join link for Skript-Chat)");
                                 c.add("   suggest %string% (Suggest an idea for me)");
+                                c.add("   convert (bin2txt|txt2bin) %string% (Convert things)");
                                 c.add("```");
                                 if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
                                     c.add("**ADMIN COMMANDS**");
@@ -188,6 +189,24 @@ class CmdSys {
                                 }
                                 e.getMessage().getChannel().sendMessage(msgBuilder(c));
                                 break;
+                            } case "convert": {
+                                switch (msg[2]) {
+                                    case "bin2txt": {
+                                        String cmsg = umsg.replaceFirst(msg[1] + " ", "").replaceFirst(msg[2] + " ", "");
+                                        String br = getBin2Txt(cmsg);
+                                        if (br.equals("ERROR")) {
+                                            e.getMessage().getChannel().sendMessage("ERROR: \n`Binary Strings can only contain 1's, 0's or spaces!`");
+                                        } else {
+                                            e.getMessage().getChannel().sendMessage("Binary to Text: \n```" + br + "```");
+                                        }
+                                        break;
+                                    } case "txt2bin": {
+                                        String cmsg = umsg.replaceFirst(msg[1] + " ", "").replaceFirst(msg[2] + " ", "");
+                                        e.getMessage().getChannel().sendMessage("Text to Binary: \n```" + getTxt2Bin(cmsg) + "```");
+                                        break;
+                                    }
+                                }
+                                break;
                             } case "setgame": {
                                 e.getMessage().deleteMessage();
                                 if (e.getGuild().getRolesForUser(u).stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
@@ -228,7 +247,7 @@ class CmdSys {
                         }
                     } catch (Exception x) {
                         prSysE("Exception: " + x.getMessage());
-                        //x.printStackTrace();
+                        x.printStackTrace();
                     }
                 }
             }
@@ -258,5 +277,32 @@ class CmdSys {
             f += ("\n" + j);
         }
         return f;
+    }
+
+    private static String getTxt2Bin(String s) {
+        byte[] by = s.getBytes();
+        StringBuilder bin = new StringBuilder();
+        for (byte b : by) {
+            int val = b;
+            for (int i = 0; i < 8; i++) {
+                bin.append((val & 128) == 0 ? 0 : 1);
+                val <<= 1;
+            }
+            bin.append(' ');
+        }
+        return bin.toString();
+    }
+    private static String getBin2Txt(String s) {
+        String binV = s.trim();
+        for (char character : binV.toCharArray()) {
+            if (character != '0' && character != '1' && character != ' ') {
+                return "ERROR";
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        for (String sc : s.split(" ")) {
+            sb.append((char) Integer.parseInt(sc, 2));
+        }
+        return sb.toString();
     }
 }

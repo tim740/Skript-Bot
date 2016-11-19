@@ -15,6 +15,7 @@ import net.dv8tion.jda.utils.MiscUtil;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -64,10 +65,10 @@ class CmdSys {
                                 c.add("   info (skript-chat|skc) - (Returns chat info)");
                                 c.add("   emotes - (Returns all the Emotes)");
                                 c.add("   version (aliases) - (Returns the latest version)");
-                                c.add("   ping - (Returns my ping)");
-                                c.add("   uptime - (Returns my uptime)");
+                                c.add("   uptime - (Returns my uptime & ping)");
                                 c.add("   whois %player% - (Returns User Info)");
                                 c.add("   skunity %string% - (Lookup on skUnity Docs)");
+                                c.add("   sku-status - (Checks if skUnity Forums is up)");
                                 c.add("   links - (Returns useful links)");
                                 c.add("   joinlink - (Returns the Join link for Skript-Chat)");
                                 c.add("   suggest %string% (Suggest an idea for me)");
@@ -136,9 +137,6 @@ class CmdSys {
                                     e.getMessage().getChannel().sendMessage(msgBuilder(c));
                                 }
                                 break;
-                            } case "ping": {
-                                e.getMessage().getChannel().sendMessage(u.getAsMention() + " Ping: `" + Math.abs(e.getMessage().getTime().until(OffsetDateTime.now(), ChronoUnit.MILLIS))  + "ms`");
-                                break;
                             } case "uptime": {
                                 long ts = (System.currentTimeMillis() - st) / 1000;
                                 long tm = ts / 60;
@@ -168,6 +166,18 @@ class CmdSys {
                                 break;
                             } case "skunity": {
                                 e.getMessage().getChannel().sendMessage("**Here's your link:** " + u.getAsMention() + "\n<http://skunity.com/search?search=" + (umsg.replace(msg[1] + " ", "").replaceAll(" ", "+")) + "#>");
+                                break;
+                            } case "sku-status": {
+                                HttpURLConnection.setFollowRedirects(false);
+                                HttpURLConnection c = (HttpURLConnection) new URL("https://forums.skunity.com/").openConnection();
+                                c.setRequestMethod("HEAD");
+                                int r = c.getResponseCode();
+                                c.disconnect();
+                                if (r == 403 || r == HttpURLConnection.HTTP_OK){
+                                    e.getMessage().getChannel().sendMessage("**skUnity is currently:** `Up` `" + r + "`");
+                                } else {
+                                    e.getMessage().getChannel().sendMessage("**skUnity is currently:** `Down` `" + r + "`");
+                                }
                                 break;
                             } case "links": {
                                 ArrayList<String> c = new ArrayList<>();

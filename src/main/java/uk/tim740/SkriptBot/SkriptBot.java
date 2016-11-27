@@ -1,8 +1,9 @@
 package uk.tim740.SkriptBot;
 
-import net.dv8tion.jda.JDA;
-import net.dv8tion.jda.entities.TextChannel;
-import net.dv8tion.jda.entities.User;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.TextChannel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,9 +24,9 @@ public class SkriptBot {
             System.exit(0);
         }
         CmdSys.cmdSys(args);
-        jda.getAccountManager().setGame("@Skript-Bot help");
+        jda.getPresence().setGame(Game.of("@Skript-Bot help"));
         prSysI("Successfully Connected to Skript-Chat, took " + (System.currentTimeMillis() - st) + "ms!");
-        jda.getTextChannelById("227146011812823052").sendMessage("Restarted!, new things may have been added: `@Skript-Bot help`");
+        jda.getTextChannelById("227146011812823052").sendMessage("Restarted!, new things may have been added: `@Skript-Bot help`").queue();
 
         try {
             //noinspection InfiniteLoopStatement
@@ -43,12 +44,12 @@ public class SkriptBot {
                             for (int n = 0; n < 2; n++) cl.remove(0);
                             for (int n = 0; n < cl.size(); n++) {
                                 if (cl.get(n).contains("@")) {
-                                    for (User ul : jda.getGuildById("138464183946575874").getUsers()) {
-                                        if (cl.get(n).equals("@" + ul.getUsername().toLowerCase())) {
+                                    for (Member ul : jda.getGuildById("138464183946575874").getMembers()) {
+                                        if (cl.get(n).equals("@" + ul.getUser().getName().toLowerCase())) {
                                             cl.set(n, ul.getAsMention());
                                             break;
                                         }
-                                        if (cl.get(n).equals("@" + ul.getUsername().toLowerCase() + ",")) {
+                                        if (cl.get(n).equals("@" + ul.getEffectiveName().toLowerCase() + ",")) {
                                             cl.set(n, ul.getAsMention() + ",");
                                             break;
                                         }

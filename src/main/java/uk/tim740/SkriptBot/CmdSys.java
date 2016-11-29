@@ -47,13 +47,13 @@ class CmdSys {
             if (!e.getMessage().getAuthor().getId().equals("227067574469394432")) {
                 if (e.getChannel().getId().equals("237960698854899713")) {
                     if (!e.getGuild().getMember(e.getMessage().getAuthor()).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-                        if (!tf.matcher(e.getMessage().getContent().toLowerCase()).find()) e.getMessage().deleteMessage();
+                        if (!tf.matcher(e.getMessage().getContent().toLowerCase()).find()) e.getMessage().deleteMessage().queue();
                     }
                 } else if (e.getMessage().getContent().startsWith("@Skript-Bot")) {
                     String[] msg = e.getMessage().getContent().split(" ");
                     String umsg = e.getMessage().getContent().replaceFirst(msg[0] + " ", "");
                     User u = e.getMessage().getAuthor();
-                    prSysI("(#" + jda.getTextChannelById(e.getChannel().getId()).getName() + ") @" + u.getName() + " executed: '" + e.getMessage().getContent() + "'");
+                    prSysI("[" + e.getGuild().getName() + "] (#" + jda.getTextChannelById(e.getChannel().getId()).getName() + ") @" + u.getName() + " executed: '" + e.getMessage().getContent() + "'");
                     try {
                         switch (msg[1].toLowerCase()) {
                             case "help": {
@@ -82,8 +82,11 @@ class CmdSys {
                                     c.add("   setgame %string% - (Sets my game)");
                                     c.add("```");
                                 }
+                                if (!u.hasPrivateChannel()) {
+                                    u.openPrivateChannel().block();
+                                }
                                 u.getPrivateChannel().sendMessage(msgBuilder(c)).queue();
-                                e.getMessage().getChannel().sendMessage("I've send you a list of commands " + u.getAsMention());
+                                e.getMessage().addReaction("\uD83D\uDC4D").queue();
                                 break;
                             } case "info": {
                                 ArrayList<String> c = new ArrayList<>();
@@ -223,7 +226,7 @@ class CmdSys {
                                 }
                                 break;
                             } case "prune": {
-                                e.getMessage().deleteMessage();
+                                e.getMessage().deleteMessage().queue();
                                 if (e.getGuild().getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
                                     Integer i = Integer.parseInt(msg[2]);
                                     if (i >= 0 && i <= 50) {
@@ -234,7 +237,7 @@ class CmdSys {
                                 }
                                 break;
                             /*} case "kick": {
-                                e.getMessage().deleteMessage();
+                                e.getMessage().deleteMessage().queue();
                                 if (e.getGuild().getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
                                     if (msg[1].contains("@")) {
                                         new GuildManager(e.getGuild()).kick(msg[1] + " ");
@@ -243,7 +246,7 @@ class CmdSys {
                                 }
                                 break;*/
                             } case "say": {
-                                e.getMessage().deleteMessage();
+                                e.getMessage().deleteMessage().queue();
                                 if (e.getGuild().getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
                                     String sc1 = umsg.replaceFirst(msg[1] + " ", "").replace("@everyone", "").replace("@here", "");
                                     for (User tu : e.getMessage().getMentionedUsers()) {
@@ -264,19 +267,23 @@ class CmdSys {
         public void onMessageUpdate(MessageUpdateEvent e) {
             if (e.getChannel().getId().equals("237960698854899713")) {
                 if (!e.getGuild().getMember(e.getMessage().getAuthor()).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-                    if (!tf.matcher(e.getMessage().getContent().toLowerCase()).find()) e.getMessage().deleteMessage();
+                    if (!tf.matcher(e.getMessage().getContent().toLowerCase()).find()) e.getMessage().deleteMessage().queue();
                 }
             }
         }
 
         @Override
         public void onGuildMemberJoin(GuildMemberJoinEvent e) {
-            jda.getTextChannelById("138464183946575874").sendMessage("Welcome " + e.getMember().getAsMention() + " to Skript-Chat!");
-            prSysI("@" + e.getMember().getUser().getName() + " has joined Skript-Chat!");
+            if (e.getGuild().getId().equals(skcid)) {
+                jda.getTextChannelById("138464183946575874").sendMessage("Welcome " + e.getMember().getAsMention() + " to Skript-Chat!").queue();
+                prSysI("@" + e.getMember().getUser().getName() + " has joined Skript-Chat!");
+            }
         }
         @Override
         public void onGuildMemberLeave(GuildMemberLeaveEvent e) {
-            prSysI("@" + e.getMember().getUser().getName() + " has left Skript-Chat!");
+            if (e.getGuild().getId().equals(skcid)) {
+                prSysI("@" + e.getMember().getUser().getName() + " has left Skript-Chat!");
+            }
         }
     }
 

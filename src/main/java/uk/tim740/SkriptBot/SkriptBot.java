@@ -16,6 +16,7 @@ import java.util.Date;
 
 public class SkriptBot {
     static JDA jda;
+    static String skcid = ("138464183946575874");
     static long st = System.currentTimeMillis();
 
     public static void main(String[] args) {
@@ -35,7 +36,7 @@ public class SkriptBot {
                 switch (msg[0]) {
                     case ("!"): {
                         String id = "";
-                        for (TextChannel c : jda.getGuildById("138464183946575874").getTextChannels()) {
+                        for (TextChannel c : jda.getGuildById(skcid).getTextChannels()) {
                             if (msg[1].equals(c.getName())) id = c.getId();
                         }
                         if (!id.equals("")) {
@@ -44,7 +45,7 @@ public class SkriptBot {
                             for (int n = 0; n < 2; n++) cl.remove(0);
                             for (int n = 0; n < cl.size(); n++) {
                                 if (cl.get(n).contains("@")) {
-                                    for (Member ul : jda.getGuildById("138464183946575874").getMembers()) {
+                                    for (Member ul : jda.getGuildById(skcid).getMembers()) {
                                         if (cl.get(n).equals("@" + ul.getUser().getName().toLowerCase())) {
                                             cl.set(n, ul.getAsMention());
                                             break;
@@ -55,7 +56,7 @@ public class SkriptBot {
                                         }
                                     }
                                 }
-                                for (TextChannel ch : jda.getGuildById("138464183946575874").getTextChannels()) {
+                                for (TextChannel ch : jda.getGuildById(skcid).getTextChannels()) {
                                     if (cl.get(n).equals("#" + ch.getName())) cl.set(n, ch.getAsMention());
                                 }
                             }
@@ -63,7 +64,7 @@ public class SkriptBot {
                             for (String clc : cl) {
                                 ns += (" " + clc);
                             }
-                            jda.getTextChannelById(id).sendMessage(ns);
+                            jda.getTextChannelById(id).sendMessage(ns).queue();
                             prSysI("[#" + msg[1] + "] Sent: '" + ns.replaceFirst(" ", "") + "'");
                         }
                         break;

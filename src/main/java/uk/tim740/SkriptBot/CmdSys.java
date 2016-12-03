@@ -276,13 +276,13 @@ class CmdSys {
         public void onGuildMemberJoin(GuildMemberJoinEvent e) {
             if (e.getGuild().getId().equals(skcid)) {
                 jda.getTextChannelById("138464183946575874").sendMessage("Welcome " + e.getMember().getAsMention() + " to Skript-Chat!").queue();
-                prSysI("@" + e.getMember().getUser().getName() + " joined Skript-Chat!");
+                prSysI("[" + e.getGuild().getName() + "] @" + e.getMember().getUser().getName() + " joined!");
             }
         }
         @Override
         public void onGuildMemberLeave(GuildMemberLeaveEvent e) {
             if (e.getGuild().getId().equals(skcid)) {
-                prSysI("@" + e.getMember().getUser().getName() + " left Skript-Chat!");
+                prSysI("[" + e.getGuild().getName() + "] @" + e.getMember().getUser().getName() + " left!");
             }
         }
     }

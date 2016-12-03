@@ -34,9 +34,7 @@ class CmdSys {
     static void cmdSys(String[] args) {
         try {
             jda = new JDABuilder(AccountType.BOT).setToken(args[0]).addListener(new MessageListener()).buildBlocking();
-            prSysI("Loaded: Command System!");
         } catch (Exception x) {
-            prSysE("Exception: " + x.getMessage());
             System.exit(0);
         }
     }
@@ -79,7 +77,6 @@ class CmdSys {
                                     c.add("   prune %integer% - (Removes x amount of msgs, 1-50)");
                                     c.add("   kick %player% - (kicks a user) BROKEN");
                                     c.add("   say %string% - (Make me Speak)");
-                                    c.add("   setgame %string% - (Sets my game)");
                                     c.add("```");
                                 }
                                 if (!u.hasPrivateChannel()) {
@@ -217,12 +214,6 @@ class CmdSys {
                                         e.getMessage().getChannel().sendMessage("Text to Binary: \n```" + getTxt2Bin(cmsg) + "```").queue();
                                         break;
                                     }
-                                }
-                                break;
-                            } case "setgame": {
-                                e.getMessage().deleteMessage();
-                                if (e.getGuild().getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-                                    jda.getPresence().setGame(Game.of(umsg.replaceFirst(msg[1] + " ", "")));
                                 }
                                 break;
                             } case "prune": {

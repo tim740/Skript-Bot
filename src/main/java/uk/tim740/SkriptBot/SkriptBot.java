@@ -21,7 +21,6 @@ public class SkriptBot {
 
     public static void main(String[] args) {
         if (args.length < 1) {
-            prSysE("No Token Specified");
             System.exit(0);
         }
         CmdSys.cmdSys(args);
@@ -32,9 +31,12 @@ public class SkriptBot {
         try {
             //noinspection InfiniteLoopStatement
             while (true) {
-                String[] msg = System.console().readLine().split(" ");
+                String umsg = System.console().readLine();
+                String[] msg = umsg.split(" ");
                 switch (msg[0]) {
-                    case ("!"): {
+                    case ("sg"): {
+                        jda.getPresence().setGame(Game.of(umsg.replaceFirst(msg[0] + "", "")));
+                    } case ("!"): {
                         String id = "";
                         for (TextChannel c : jda.getGuildById(skcid).getTextChannels()) {
                             if (msg[1].equals(c.getName())) id = c.getId();
@@ -71,8 +73,11 @@ public class SkriptBot {
                     } case "rs": {
                         System.exit(0);
                     } default: {
-                        System.out.println("> Restart: rs");
+                        System.out.println("------------------------------");
+                        System.out.println("> SetGame: sg <text>");
                         System.out.println("> Say: ! <channel> <text>");
+                        System.out.println("> Restart: rs");
+                        System.out.println("------------------------------");
                         break;
                     }
                 }

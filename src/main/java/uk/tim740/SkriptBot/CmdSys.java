@@ -1,18 +1,20 @@
 package uk.tim740.SkriptBot;
 
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.JDAInfo;
-import net.dv8tion.jda.core.OnlineStatus;
+import net.dv8tion.jda.core.*;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberLeaveEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
+import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import net.dv8tion.jda.core.utils.MiscUtil;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
+import java.awt.*;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -30,6 +32,7 @@ import static uk.tim740.SkriptBot.SkriptBot.*;
  */
 class CmdSys {
     private static Pattern tf = Pattern.compile("^(?:true|false),? +the +person +below +me +.+$");
+    private static Color dc = Color.CYAN;
 
     static void cmdSys(String[] args) {
         try {
@@ -55,38 +58,36 @@ class CmdSys {
                     try {
                         switch (msg[1].toLowerCase()) {
                             case "help": {
-                                ArrayList<String> c = new ArrayList<>();
-                                c.add("**COMMANDS** (All Commands start with `@Skript-Bot`)");
-                                c.add("```");
-                                c.add("   info - (Returns Info about me)");
-                                c.add("   info (skript-chat|skc) - (Returns chat info)");
-                                c.add("   emotes - (Returns all the Emotes)");
-                                c.add("   version (aliases) - (Returns the latest version)");
-                                c.add("   uptime - (Returns my uptime & ping)");
-                                c.add("   whois %player% - (Returns User Info)");
-                                c.add("   skunity %string% - (Lookup on skUnity Docs)");
-                                c.add("   sku-status - (Checks if skUnity Forums is up)");
-                                c.add("   links - (Returns useful links)");
-                                c.add("   joinlink - (Returns the Join link for Skript-Chat)");
-                                c.add("   suggest %string% (Suggest an idea for me)");
-                                c.add("   convert (bin2txt|txt2bin) %string% (Convert things)");
-                                c.add("```");
+                                EmbedBuilder eb = new EmbedBuilder();
+                                eb.setColor(dc);
+                                eb.setTitle("**COMMANDS** (All Commands start with `@Skript-Bot`)");
+                                eb.addField("info", "(Returns Info about me)", true);
+                                eb.addField("info (skript-chat|skc)", "(Returns chat info)", true);
+                                eb.addField("emotes", "(Returns all the Emotes)", true);
+                                eb.addField("version (aliases)", "(Returns the latest version)", true);
+                                eb.addField("whois %player%", "(Returns User Info)", true);
+                                eb.addField("skunity %string%", "(Lookup on skUnity Docs)", true);
+                                eb.addField("sku-status", "(Checks if skUnity Forums is up)", true);
+                                eb.addField("links", "(Returns useful links)", true);
+                                eb.addField("joinlink", "(Returns the Join link for Skript-Chat)", true);
+                                eb.addField("suggest %string%", "(Suggest an idea for me)", true);
+                                eb.addField("convert", "(bin2txt|txt2bin) %string% (Convert things)", true);
+                                eb.addField("stats", "(Returns my stats)", true);
+                                oPm(u, eb.build());
                                 if (e.getGuild().getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-                                    c.add("**ADMIN COMMANDS**");
-                                    c.add("```");
-                                    c.add("   prune %integer% - (Removes x amount of msgs, 1-50)");
-                                    c.add("   kick %player% - (kicks a user) BROKEN");
-                                    c.add("   say %string% - (Make me Speak)");
-                                    c.add("```");
+                                    EmbedBuilder eb2 = new EmbedBuilder();
+                                    eb2.setColor(dc);
+                                    eb2.setTitle("**ADMIN COMMANDS**");
+                                    eb2.addField("prune %integer%", "(Removes x amount of msgs, 1-50)", true);
+                                    eb2.addField("kick %player%", "(kicks a user) BROKEN", true);
+                                    eb2.addField("say %string%", "(Make me Speak)", true);
+                                    oPm(u, eb2.build());
                                 }
-                                if (!u.hasPrivateChannel()) {
-                                    u.openPrivateChannel().block();
-                                }
-                                u.getPrivateChannel().sendMessage(msgBuilder(c)).queue();
                                 e.getMessage().addReaction("\uD83D\uDC4D").queue();
                                 break;
                             } case "info": {
-                                ArrayList<String> c = new ArrayList<>();
+                                EmbedBuilder eb = new EmbedBuilder();
+                                eb.setColor(dc);
                                 if (umsg.contains("skript-chat") || umsg.contains("skc")) {
                                     int on = 0, off = 0, bot = 0;
                                     for (Member s : e.getGuild().getMembers()) {
@@ -99,119 +100,180 @@ class CmdSys {
                                             bot++;
                                         }
                                     }
-                                    c.add("**Here's the information on Skript-chat!**");
-                                    c.add("```");
-                                    c.add("Creator: " + e.getGuild().getOwner().getEffectiveName());
-                                    c.add("Online Users: " + on + "/" + e.getGuild().getMembers().size());
-                                    c.add("Offline Users: " + off + "/" + e.getGuild().getMembers().size());
-                                    c.add("Bots: " + bot + "/" + e.getGuild().getMembers().size());
-                                    c.add("Text/Voice Channels: " + e.getGuild().getTextChannels().size() + "/" + e.getGuild().getVoiceChannels().size());
-                                    c.add("```");
+                                    eb.setTitle("**Here's the information on Skript-chat!**");
+                                    eb.addField("Creator:", e.getGuild().getOwner().getEffectiveName(), true);
+                                    eb.addField("Online Users:", (on + "/" + e.getGuild().getMembers().size()), true);
+                                    eb.addField("Offline Users:", (off + "/" + e.getGuild().getMembers().size()), true);
+                                    eb.addField("Bots:", (bot + "/" + e.getGuild().getMembers().size()), true);
+                                    eb.addField("Text/Voice Channels:", (e.getGuild().getTextChannels().size() + "/" + e.getGuild().getVoiceChannels().size()), true);
                                 } else {
-                                    c.add("**Here's my information!**");
-                                    c.add("Created: @tim740#1139 (18/09/2016)");
-                                    c.add("Website: <https://tim740.github.io/>");
-                                    c.add("Source: <https://github.com/tim740/Skript-Bot>");
-                                    c.add("JDA " + JDAInfo.VERSION +  ": <https://github.com/DV8FromTheWorld/JDA>");
+                                    eb.setTitle("**Here's my information!**");
+                                    eb.addField("Created:", "@tim740#1139 (18/09/2016)", true);
+                                    eb.addField("Website:", "<https://tim740.github.io/>", true);
+                                    eb.addField("Source:", "<https://github.com/tim740/Skript-Bot>", true);
+                                    eb.addField("JDA " + JDAInfo.VERSION + ":", "<https://github.com/DV8FromTheWorld/JDA>", true);
                                 }
-                                e.getMessage().getChannel().sendMessage(msgBuilder(c)).queue();
+                                e.getMessage().getChannel().sendMessage(eb.build()).queue();
                                 break;
                             } case "emotes": {
-                                ArrayList<String> c = new ArrayList<>();
                                 String el = "";
                                 for (Emote em : e.getGuild().getEmotes()) {
                                     el = (el + " " + em.getAsMention());
                                 }
-                                c.add("**Here's a list of all the emotes in Skript-chat!**");
-                                c.add(el);
-                                e.getMessage().getChannel().sendMessage(msgBuilder(c)).queue();
+                                EmbedBuilder eb = new EmbedBuilder();
+                                eb.setColor(dc);
+                                eb.setTitle("**Here's a list of all the emotes in Skript-chat!**");
+                                e.getMessage().getChannel().sendMessage(eb.build()).queue();
+                                e.getMessage().getChannel().sendMessage(el).queue();
                                 break;
                             } case "version": {
                                 if (msg[2].equals("aliases")) {
-                                    ArrayList<String> c = new ArrayList<>();
+                                    EmbedBuilder eb = new EmbedBuilder();
+                                    eb.setColor(dc);
                                     BufferedReader ur = new BufferedReader(new InputStreamReader(new URL("https://raw.githubusercontent.com/tim740/skAliases/master/version.txt").openStream()));
-                                    c.add(u.getAsMention() + " Latest aliases version: `" + ("v" + ur.readLine()) + "`");
+                                    eb.addField("Latest aliases version:", ("v" + ur.readLine()) + " <https://forums.skunity.com/topic/31?u=tim740>", false);
                                     ur.close();
-                                    c.add("<https://forums.skunity.com/topic/31?u=tim740>");
-                                    e.getMessage().getChannel().sendMessage(msgBuilder(c)).queue();
+                                    e.getMessage().getChannel().sendMessage(eb.build()).queue();
                                 }
                                 break;
-                            } case "uptime": {
+                            } case "uptime": case "stats": {
                                 long ts = (System.currentTimeMillis() - st) / 1000;
                                 long tm = ts / 60;
                                 long th = tm / 60;
-                                e.getMessage().getChannel().sendMessage(u.getAsMention() + " Uptime: `" + (th / 24 + "d " + th % 24 + "h " + tm % 60 + "m " + ts % 60 + "s` - `") + Math.abs(e.getMessage().getCreationTime().until(OffsetDateTime.now(), ChronoUnit.MILLIS))  + "ms`").queue();
+                                EmbedBuilder eb = new EmbedBuilder();
+                                eb.setColor(dc);
+                                eb.addField("Ping:", Math.abs(e.getMessage().getCreationTime().until(OffsetDateTime.now(), ChronoUnit.MILLIS))  + "ms", false);
+                                eb.addField("Uptime:", (th / 24 + "d " + th % 24 + "h " + tm % 60 + "m " + ts % 60 + "s"), false);
+                                eb.addField("Ram (Used/Total):", ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000) + "/" + (Runtime.getRuntime().totalMemory() / 1000000) + "MB", false);
+                                e.getMessage().getChannel().sendMessage(eb.build()).queue();
                                 break;
                             } case "whois": {
                                 Member wu = e.getGuild().getMember(e.getMessage().getMentionedUsers().get(1));
-                                ArrayList<String> c = new ArrayList<>();
-                                c.add("**Here's the information on** " + wu.getAsMention());
-                                c.add("```");
-                                c.add("ID: " + wu.getUser().getId());
-                                c.add("Name: " + wu.getUser().getName());
-                                c.add("Discriminator: " + wu.getUser().getDiscriminator());
-                                c.add("Status: " + wu.getOnlineStatus());
-                                c.add("Game: " + (wu.getGame() != null ? wu.getGame().getName() : "None"));
-                                c.add("Bot: " + wu.getUser().isBot());
-                                c.add("Joined Discord: " + MiscUtil.getCreationTime(wu.getUser().getId()).format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")));
-                                c.add("Joined Skript-Chat: " + e.getGuild().getMember(wu.getUser()).getJoinDate().format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")));
-                                c.add("Roles: " + e.getGuild().getMember(wu.getUser()).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)));
-                                c.add("```");
-                                e.getMessage().getChannel().sendMessage(msgBuilder(c)).queue();
+                                EmbedBuilder eb = new EmbedBuilder();
+                                if (String.valueOf(wu.getOnlineStatus()).equals("ONLINE")) {
+                                    eb.setColor(Color.GREEN);
+                                } else {
+                                    eb.setColor(Color.RED);
+                                }
+                                eb.setTitle("**Here's the information on** " + wu.getAsMention());
+                                eb.addField("ID:", wu.getUser().getId(), true);
+                                eb.addField("Name:", wu.getUser().getName(), true);
+                                eb.addField("Discriminator:", wu.getUser().getDiscriminator(), true);
+                                eb.addField("Status:", String.valueOf(wu.getOnlineStatus()), true);
+                                eb.addField("Game:", (wu.getGame() != null ? wu.getGame().getName() : "None"), true);
+                                eb.addField("Bot:", String.valueOf(wu.getUser().isBot()), true);
+                                eb.addField("Joined Discord:", MiscUtil.getCreationTime(wu.getUser().getId()).format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")), true);
+                                eb.addField("Joined Skript-Chat:", e.getGuild().getMember(wu.getUser()).getJoinDate().format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")), true);
+                                eb.addField("Roles:", String.valueOf(e.getGuild().getMember(wu.getUser()).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new))), true);
+                                e.getMessage().getChannel().sendMessage(eb.build()).queue();
                                 break;
                             } case "suggest": {
-                                jda.getUserById("138441986314207232").getPrivateChannel().sendMessage("**Suggestion from**: " + u.getAsMention() + "\n\n" + (umsg.replace(msg[1] + " ", "")) + "").queue();
+                                EmbedBuilder eb = new EmbedBuilder();
+                                eb.setColor(dc);
+                                eb.addField("Suggestion from " + u.getAsMention() + "", (umsg.replace(msg[1] + " ", "")) + "", true);
+                                jda.getUserById("138441986314207232").getPrivateChannel().sendMessage(eb.build()).queue();
                                 e.getMessage().addReaction("\uD83D\uDC4D").queue();
                                 break;
                             } case "skunity": {
+                                /*EmbedBuilder eb = new EmbedBuilder();
+                                    eb.setColor(dc);
+                                    eb.setTitle("");
+                                    eb.addField(":", , true);
+                                    e.getMessage().getChannel().sendMessage(eb.build()).queue();*/
                                 e.getMessage().getChannel().sendMessage("**Here's your link:** " + u.getAsMention() + "\n<http://skunity.com/search?search=" + (umsg.replace(msg[1] + " ", "").replaceAll(" ", "+")) + "#>").queue();
                                 break;
                             } case "sku-status": {
-                                HttpURLConnection.setFollowRedirects(false);
-                                HttpURLConnection c = (HttpURLConnection) new URL("https://forums.skunity.com/").openConnection();
-                                c.setRequestMethod("HEAD");
-                                int r = c.getResponseCode();
-                                c.disconnect();
-                                if (r == 403 || r == HttpURLConnection.HTTP_OK){
-                                    e.getMessage().getChannel().sendMessage("**skUnity is currently:** `Up` `" + r + "`").queue();
-                                } else {
-                                    e.getMessage().getChannel().sendMessage("**skUnity is currently:** `Down` `" + r + "`").queue();
+                                e.getMessage().getChannel().sendMessage(cOs("https://www.skunity.com", "skUnity Docs")).queue();
+                                e.getMessage().getChannel().sendMessage(cOs("https://forums.skunity.com", "skUnity Forums")).queue();
+                                break;
+                            } case "embed": {
+                                if (msg[2].contains("{")) {
+                                    JSONObject j = (JSONObject) new JSONParser().parse(msg[2]);
+                                    EmbedBuilder eb = new EmbedBuilder();
+                                    System.out.println("color " + j.get("color"));
+                                    if (j.containsKey("color")) {
+                                        eb.setColor(Color.getColor(j.get("color").toString()));
+                                    }
+                                    if (j.containsKey("title")) {
+                                        eb.setTitle(j.get("title").toString());
+                                    }
+                                    if (j.containsKey("desc")) {
+                                        eb.setDescription(j.get("desc").toString());
+                                    }
+                                    String in = j.toJSONString();
+                                    int id = in.indexOf("fieldname");
+                                    int c = 0;
+                                    while (id != -1) {
+                                        c++;
+                                        in = in.substring(id + 1);
+                                        id = in.indexOf("fieldname");
+                                    }
+                                    for (int n = 0; n < c; n++) {
+                                        Boolean inline = false;
+                                        if (!j.get("inline" + n).toString().equals("")) {
+                                            inline = Boolean.getBoolean(j.get("inline" + n).toString());
+                                        }
+                                        eb.addField(j.get("fieldname" + n).toString(), j.get("field" + n).toString(), inline);
+                                    }
+                                    //{"color":"29,176,224","desc":"qqqqq","title":"title","fieldname0":"hello","field0":"hello","inline0":true,"fieldname1":"hello1","field1":"hello1","inline1":true,"fieldname2":"hello2","field2":"hello2","inline2":true,"fieldname3":"hello3","field3":"hello3","inline3":true,"fieldname4":"hello4","field4":"hello4","inline4":true,"fieldname5":"hello5","field5":"hello5","inline5":true}
+                                    e.getMessage().getChannel().sendMessage(eb.build()).queue();
+                                    break;
                                 }
                                 break;
                             } case "links": {
-                                ArrayList<String> c = new ArrayList<>();
-                                c.add("**Here's some links!**");
-                                c.add("Skript (bensku): <https://github.com/bensku/Skript/releases>");
-                                c.add("skQuery (VirusTotal): <https://github.com/SkriptLegacy/skquery/releases>");
-                                c.add("Formatting: <https://support.discordapp.com/hc/en-us/articles/210298617>");
-                                e.getMessage().getChannel().sendMessage(msgBuilder(c)).queue();
+                                EmbedBuilder eb = new EmbedBuilder();
+                                eb.setColor(dc);
+                                eb.setTitle("**Here's some links!**");
+                                eb.addField("Skript (bensku):", "<https://github.com/bensku/Skript/releases>", false);
+                                eb.addField("skQuery (VirusTotal):", "<https://github.com/SkriptLegacy/skquery/releases>", false);
+                                eb.addField("Formatting:", "<https://support.discordapp.com/hc/en-us/articles/210298617>", false);
+                                e.getMessage().getChannel().sendMessage(eb.build()).queue();
                                 break;
-                            /*} case "joinlink": {
-                                ArrayList<String> c = new ArrayList<>();
+                            } case "joinlink": {
+                                /*ArrayList<String> c = new ArrayList<>();
                                 c.add("**Here's the invites for Skript-Chat!**");
-                                for (Route.Invites s : ) {
+                                for (InviteUtil.AdvancedInvite s : e.getGuild().getInvites()) {
                                     String chm = null;
                                     for (TextChannel ch : e.getGuild().getTextChannels()) {
                                         if (ch.getName().equals(s.getChannelName())) chm = ch.getAsMention();
                                     }
                                     c.add("  <https://discord.gg/" + s.getCode() + "> - " + chm + " (" + s.getUses() + ")");
                                 }
-                                e.getMessage().getChannel().sendMessage(msgBuilder(c)).queue();
-                                break;*/
+                                e.getMessage().getChannel().sendMessage(msgBuilder(c));*/
+                                EmbedBuilder eb = new EmbedBuilder();
+                                eb.setColor(dc);
+                                eb.setTitle("**Here's the invites for Skript-Chat!**");
+                                eb.addField("Skript-Chat:", "https://discord.gg/0lx4QhQvwelCZbEX", false);
+                                eb.addField("Skript-Chat (Addons):", "https://discord.gg/vb9dGbu", false);
+                                e.getMessage().getChannel().sendMessage(eb.build()).queue();
+                                break;
                             } case "convert": {
+                                long ct = System.currentTimeMillis();
                                 switch (msg[2]) {
                                     case "bin2txt": {
                                         String cmsg = umsg.replaceFirst(msg[1] + " ", "").replaceFirst(msg[2] + " ", "");
                                         String br = getBin2Txt(cmsg);
+                                        EmbedBuilder eb = new EmbedBuilder();
+                                        eb.setColor(dc);
                                         if (br.equals("ERROR")) {
-                                            e.getMessage().getChannel().sendMessage("ERROR: \n`Binary Strings can only contain 1's, 0's or spaces!`").queue();
+                                            eb.addField("Error:", "Binary Strings can only contain 1's, 0's or spaces!", false);
+                                            eb.addField("Input:", "```" + cmsg + "```", false);
                                         } else {
-                                            e.getMessage().getChannel().sendMessage("Binary to Text: \n```" + br + "```").queue();
+                                            eb.addField("Input:", "```" + cmsg + "```", false);
+                                            eb.addField("Output:", "```" + br + "```", false);
                                         }
+                                        eb.addField("Took:", (System.currentTimeMillis() - ct) + "ms", false);
+                                        e.getMessage().getChannel().sendMessage(eb.build()).queue();
                                         break;
                                     } case "txt2bin": {
                                         String cmsg = umsg.replaceFirst(msg[1] + " ", "").replaceFirst(msg[2] + " ", "");
-                                        e.getMessage().getChannel().sendMessage("Text to Binary: \n```" + getTxt2Bin(cmsg) + "```").queue();
+                                        EmbedBuilder eb = new EmbedBuilder();
+                                        eb.setColor(dc);
+                                        eb.setTitle("**Text to Binary**");
+                                        eb.addField("Input:", "```" + cmsg + "```", false);
+                                        eb.addField("Output:", "```" + getTxt2Bin(cmsg) + "```", false);
+                                        eb.addField("Took:", (System.currentTimeMillis() - ct) + "ms", false);
+                                        e.getMessage().getChannel().sendMessage(eb.build()).queue();
                                         break;
                                     }
                                 }
@@ -278,12 +340,36 @@ class CmdSys {
         }
     }
 
-    private static String msgBuilder(ArrayList<String> s) {
+    /*private static String msgBuilder(ArrayList<String> s) {
         String f = "";
         for (String j : s) {
             f += ("\n" + j);
         }
         return f;
+    }*/
+    private static void oPm(User u, MessageEmbed c) throws RateLimitedException {
+        if (!u.hasPrivateChannel()) {
+            u.openPrivateChannel().block();
+        }
+        u.getPrivateChannel().sendMessage(c).queue();
+    }
+    private static MessageEmbed cOs(String u, String n) throws IOException {
+        HttpURLConnection.setFollowRedirects(true);
+        HttpURLConnection c = (HttpURLConnection) new URL(u).openConnection();
+        c.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+        c.setRequestMethod("GET");
+        c.connect();
+        int r = c.getResponseCode();
+        c.disconnect();
+        EmbedBuilder eb = new EmbedBuilder();
+        if (r == HttpURLConnection.HTTP_OK){
+            eb.setColor(Color.GREEN);
+            eb.addField(n + " Status:", "Online `" + r + "`", true);
+        } else {
+            eb.setColor(Color.RED);
+            eb.addField(n + " Status:", "Offline `" + r + "`", true);
+        }
+        return eb.build();
     }
 
     private static String getTxt2Bin(String s) {

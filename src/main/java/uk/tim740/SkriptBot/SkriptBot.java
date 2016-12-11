@@ -70,12 +70,16 @@ public class SkriptBot {
                             prSysI("[#" + msg[1] + "] Sent: '" + ns.replaceFirst(" ", "") + "'");
                         }
                         break;
+                    } case "m": {
+                        prSysI("Ram:" + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000) + "/" + (Runtime.getRuntime().totalMemory() / 1000000) + "MB");
+                        break;
                     } case "rs": {
                         System.exit(0);
                     } default: {
                         System.out.println("------------------------------");
                         System.out.println("> SetGame: sg <text>");
                         System.out.println("> Say: ! <channel> <text>");
+                        System.out.println("> Ram: m");
                         System.out.println("> Restart: rs");
                         System.out.println("------------------------------");
                         break;

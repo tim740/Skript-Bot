@@ -9,8 +9,6 @@ import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import net.dv8tion.jda.core.utils.MiscUtil;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -32,7 +30,7 @@ import static uk.tim740.SkriptBot.SkriptBot.*;
  */
 class CmdSys {
     private static Pattern tf = Pattern.compile("^(?:true|false),? +the +person +below +me +.+$");
-    private static Color dc = Color.CYAN;
+    private static Color dc = Color.decode("#2D9CE2");
 
     static void cmdSys(String[] args) {
         try {
@@ -150,21 +148,20 @@ class CmdSys {
                             } case "whois": {
                                 Member wu = e.getGuild().getMember(e.getMessage().getMentionedUsers().get(1));
                                 EmbedBuilder eb = new EmbedBuilder();
-                                if (String.valueOf(wu.getOnlineStatus()).equals("ONLINE")) {
-                                    eb.setColor(Color.GREEN);
-                                } else {
-                                    eb.setColor(Color.RED);
+                                if (wu.getOnlineStatus() == OnlineStatus.ONLINE) {
+                                    eb.setColor(Color.decode("#21D66F"));
+                                } else if (wu.getOnlineStatus() == OnlineStatus.IDLE) {
+                                    eb.setColor(Color.decode("#E97A18"));
+                                } else if (wu.getOnlineStatus() == OnlineStatus.DO_NOT_DISTURB) {
+                                    eb.setColor(Color.decode("#EF493A"));
                                 }
-                                eb.setTitle("**Here's the information on** " + wu.getAsMention());
+                                eb.setAuthor(wu.getEffectiveName(), wu.getUser().getAvatarUrl(), wu.getUser().getAvatarUrl());
                                 eb.addField("ID:", wu.getUser().getId(), true);
-                                eb.addField("Name:", wu.getUser().getName(), true);
-                                eb.addField("Discriminator:", wu.getUser().getDiscriminator(), true);
-                                eb.addField("Status:", String.valueOf(wu.getOnlineStatus()), true);
                                 eb.addField("Game:", (wu.getGame() != null ? wu.getGame().getName() : "None"), true);
-                                eb.addField("Bot:", String.valueOf(wu.getUser().isBot()), true);
                                 eb.addField("Joined Discord:", MiscUtil.getCreationTime(wu.getUser().getId()).format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")), true);
                                 eb.addField("Joined Skript-Chat:", e.getGuild().getMember(wu.getUser()).getJoinDate().format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")), true);
                                 eb.addField("Roles:", String.valueOf(e.getGuild().getMember(wu.getUser()).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new))), true);
+                                eb.setFooter( wu.getUser().getName() + "#" + wu.getUser().getDiscriminator(), wu.getUser().getAvatarUrl());
                                 e.getMessage().getChannel().sendMessage(eb.build()).queue();
                                 break;
                             } case "suggest": {
@@ -183,10 +180,10 @@ class CmdSys {
                                 e.getMessage().getChannel().sendMessage("**Here's your link:** " + u.getAsMention() + "\n<http://skunity.com/search?search=" + (umsg.replace(msg[1] + " ", "").replaceAll(" ", "+")) + "#>").queue();
                                 break;
                             } case "sku-status": {
-                                e.getMessage().getChannel().sendMessage(cOs("https://www.skunity.com", "skUnity Docs")).queue();
-                                e.getMessage().getChannel().sendMessage(cOs("https://forums.skunity.com", "skUnity Forums")).queue();
+                                e.getMessage().getChannel().sendMessage(cOs("https://www.skunity.com", "skUnity Docs", "https://www.skunity.com/favicon.ico")).queue();
+                                e.getMessage().getChannel().sendMessage(cOs("https://forums.skunity.com", "skUnity Forums", "https://forums.skunity.com/favicon.ico")).queue();
                                 break;
-                            } case "embed": {
+                            /*} case "embed": {
                                 if (msg[2].contains("{")) {
                                     JSONObject j = (JSONObject) new JSONParser().parse(msg[2]);
                                     EmbedBuilder eb = new EmbedBuilder();
@@ -219,7 +216,7 @@ class CmdSys {
                                     e.getMessage().getChannel().sendMessage(eb.build()).queue();
                                     break;
                                 }
-                                break;
+                                break;*/
                             } case "links": {
                                 EmbedBuilder eb = new EmbedBuilder();
                                 eb.setColor(dc);
@@ -255,6 +252,7 @@ class CmdSys {
                                         String br = getBin2Txt(cmsg);
                                         EmbedBuilder eb = new EmbedBuilder();
                                         eb.setColor(dc);
+                                        eb.setTitle("**Binary to Text**");
                                         if (br.equals("ERROR")) {
                                             eb.addField("Error:", "Binary Strings can only contain 1's, 0's or spaces!", false);
                                             eb.addField("Input:", "```" + cmsg + "```", false);
@@ -262,7 +260,7 @@ class CmdSys {
                                             eb.addField("Input:", "```" + cmsg + "```", false);
                                             eb.addField("Output:", "```" + br + "```", false);
                                         }
-                                        eb.addField("Took:", (System.currentTimeMillis() - ct) + "ms", false);
+                                        eb.setFooter("Processed in " + (System.currentTimeMillis() - ct) + "ms", e.getAuthor().getAvatarUrl());
                                         e.getMessage().getChannel().sendMessage(eb.build()).queue();
                                         break;
                                     } case "txt2bin": {
@@ -272,7 +270,7 @@ class CmdSys {
                                         eb.setTitle("**Text to Binary**");
                                         eb.addField("Input:", "```" + cmsg + "```", false);
                                         eb.addField("Output:", "```" + getTxt2Bin(cmsg) + "```", false);
-                                        eb.addField("Took:", (System.currentTimeMillis() - ct) + "ms", false);
+                                        eb.setFooter("Processed in " + (System.currentTimeMillis() - ct) + "ms", e.getAuthor().getAvatarUrl());
                                         e.getMessage().getChannel().sendMessage(eb.build()).queue();
                                         break;
                                     }
@@ -340,20 +338,13 @@ class CmdSys {
         }
     }
 
-    /*private static String msgBuilder(ArrayList<String> s) {
-        String f = "";
-        for (String j : s) {
-            f += ("\n" + j);
-        }
-        return f;
-    }*/
     private static void oPm(User u, MessageEmbed c) throws RateLimitedException {
         if (!u.hasPrivateChannel()) {
             u.openPrivateChannel().block();
         }
         u.getPrivateChannel().sendMessage(c).queue();
     }
-    private static MessageEmbed cOs(String u, String n) throws IOException {
+    private static MessageEmbed cOs(String u, String n, String ico) throws IOException {
         HttpURLConnection.setFollowRedirects(true);
         HttpURLConnection c = (HttpURLConnection) new URL(u).openConnection();
         c.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
@@ -363,11 +354,13 @@ class CmdSys {
         c.disconnect();
         EmbedBuilder eb = new EmbedBuilder();
         if (r == HttpURLConnection.HTTP_OK){
-            eb.setColor(Color.GREEN);
-            eb.addField(n + " Status:", "Online `" + r + "`", true);
+            eb.setColor(Color.decode("#21D66F"));
+            eb.setAuthor(n, u, ico);
+            eb.addField("Status:", "Online `" + r + "`", true);
         } else {
-            eb.setColor(Color.RED);
-            eb.addField(n + " Status:", "Offline `" + r + "`", true);
+            eb.setColor(Color.decode("#EF493A"));
+            eb.setAuthor(n, u, ico);
+            eb.addField("Status:", "Offline `" + r + "`", true);
         }
         return eb.build();
     }

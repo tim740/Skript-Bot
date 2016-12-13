@@ -6,7 +6,6 @@ import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberLeaveEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
-import net.dv8tion.jda.core.exceptions.RateLimitedException;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import net.dv8tion.jda.core.utils.MiscUtil;
 import org.json.simple.JSONArray;
@@ -49,29 +48,33 @@ class CmdSys {
         try {
             switch (args[0].toLowerCase()) {
                 case "help": {
+                    if (!u.hasPrivateChannel()) {
+                        u.openPrivateChannel().block();
+                    }
                     EmbedBuilder eb = new EmbedBuilder();
                     eb.setColor(dc);
                     eb.setTitle("**COMMANDS** (All Commands start with `@Skript-Bot`)");
-                    eb.addField("info", "(Returns chat info)", true);
-                    eb.addField("emotes", "(Returns all the Emotes)", true);
-                    eb.addField("version (aliases)", "(Returns the latest version)", true);
-                    eb.addField("whois %player%", "(Returns User Info)", true);
-                    eb.addField("skunity %string%", "(Lookup on skUnity Docs)", true);
-                    eb.addField("sku-status", "(Checks if skUnity Forums is up)", true);
-                    eb.addField("links", "(Returns useful links)", true);
-                    eb.addField("joinlink", "(Returns the Join link for Skript-Chat)", true);
-                    eb.addField("suggest %string%", "(Suggest an idea for me)", true);
-                    eb.addField("convert", "(bin2txt|txt2bin) %string% (Convert things)", true);
-                    eb.addField("stats", "(Returns my stats)", true);
-                    oPm(u, eb.build());
+                    eb.addField("info", "Gets Chat Info.", true);
+                    eb.addField("emotes", "List of Emotes.", true);
+                    eb.addField("version (aliases)", "Gets Aliases Info.", true);
+                    eb.addField("whois %player%", "Gets User Info.", true);
+                    eb.addField("skunity %string%", "Lookup on skUnity Docs.", true);
+                    eb.addField("sku-status", "Checks if skUnity is up.", true);
+                    eb.addField("links", "Gets Useful Links.", true);
+                    eb.addField("joinlink", "Gets Join Links for Skript-Chat.", true);
+                    eb.addField("suggest %string%", "Suggest an idea for me.", true);
+                    eb.addField("convert (bin2txt|txt2bin) %string%", "Convert things.", true);
+                    eb.addField("embed (help|%json%)", "Generates a Embed.", true);
+                    eb.addField("stats", "Returns Bot Stats.", true);
+                    u.getPrivateChannel().sendMessage(eb.build()).queue();
                     if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
                         EmbedBuilder eb2 = new EmbedBuilder();
                         eb2.setColor(dc);
                         eb2.setTitle("**ADMIN COMMANDS**");
-                        eb2.addField("prune %integer%", "(Removes x amount of msgs, 1-50)", true);
-                        eb2.addField("kick %player%", "(kicks a user) BROKEN", true);
-                        eb2.addField("say %string%", "(Make me Speak)", true);
-                        oPm(u, eb2.build());
+                        eb2.addField("prune %integer%", "Removes x amount of msgs. (1-50)", true);
+                        eb2.addField("kick %player%", "Kick a User. BROKEN", true);
+                        eb2.addField("say %string%", "Speak as the Bot.", true);
+                        u.getPrivateChannel().sendMessage(eb2.build()).queue();
                     }
                     m.addReaction("\uD83D\uDC4D").queue();
                     break;
@@ -140,56 +143,71 @@ class CmdSys {
                 } case "suggest": {
                     EmbedBuilder eb = new EmbedBuilder();
                     eb.setColor(dc);
-                    eb.addField("Suggestion from " + u.getAsMention() + "", umsg + "", true);
+                    eb.setAuthor(u.getName(), u.getAvatarUrl(), u.getAvatarUrl());
+                    eb.addField("Suggestion:", umsg + "", true);
                     jda.getUserById("138441986314207232").getPrivateChannel().sendMessage(eb.build()).queue();
                     m.addReaction("\uD83D\uDC4D").queue();
                     break;
                 } case "skunity": {
-                                /*EmbedBuilder eb = new EmbedBuilder();
-                                    eb.setColor(dc);
-                                    eb.setTitle("");
-                                    eb.addField(":", , true);
-                                    e.getMessage().getChannel().sendMessage(eb.build()).queue();*/
-                    m.getChannel().sendMessage("**Here's your link:** " + u.getAsMention() + "\n<http://skunity.com/search?search=" + (umsg.replaceAll(" ", "+")) + "#>").queue();
+                    EmbedBuilder eb = new EmbedBuilder();
+                    eb.setColor(dc);
+                    eb.setAuthor(u.getName(), u.getAvatarUrl(), u.getAvatarUrl());
+                    eb.addField("Link:", "<http://skUnity.com/search?search=" + (umsg.replaceAll(" ", "+")) + "#>", true);
+                    eb.setFooter("Result from skUnity.com", "https://www.skunity.com/favicon.ico");
+                    m.getChannel().sendMessage(eb.build()).queue();
                     break;
                 } case "sku-status": {
                     m.getChannel().sendMessage(cOs("https://www.skunity.com", "skUnity Docs", "https://www.skunity.com/favicon.ico")).queue();
                     m.getChannel().sendMessage(cOs("https://forums.skunity.com", "skUnity Forums", "https://forums.skunity.com/favicon.ico")).queue();
                     break;
-                /*} case "embed": {
-                    if (msg[2].contains("{")) {
-                        JSONObject j = (JSONObject) new JSONParser().parse(msg[2]);
+                } case "embed": {
+                    if (args[1].contains("{")) {
+                        JSONObject j = (JSONObject) new JSONParser().parse(umsg);
                         EmbedBuilder eb = new EmbedBuilder();
-                        System.out.println("color " + j.get("color"));
+                        if (j.containsKey("author")) {
+                            JSONObject jo = (JSONObject) j.get("author");
+                            eb.setAuthor((String) jo.get("content"), (String) jo.get("linkurl"), (String) jo.get("iconurl"));
+                        }
                         if (j.containsKey("color")) {
-                            eb.setColor(Color.getColor(j.get("color").toString()));
+                            eb.setColor(Color.decode((String) j.get("color")));
                         }
                         if (j.containsKey("title")) {
-                            eb.setTitle(j.get("title").toString());
+                            eb.setTitle((String) j.get("title"));
                         }
                         if (j.containsKey("desc")) {
-                            eb.setDescription(j.get("desc").toString());
+                            eb.setDescription((String) j.get("desc"));
                         }
                         String in = j.toJSONString();
-                        int id = in.indexOf("fieldname");
+                        int id = in.indexOf("field");
                         int c = 0;
                         while (id != -1) {
                             c++;
                             in = in.substring(id + 1);
-                            id = in.indexOf("fieldname");
+                            id = in.indexOf("field");
                         }
                         for (int n = 0; n < c; n++) {
-                            Boolean inline = false;
-                            if (!j.get("inline" + n).toString().equals("")) {
-                                inline = Boolean.getBoolean(j.get("inline" + n).toString());
-                            }
-                            eb.addField(j.get("fieldname" + n).toString(), j.get("field" + n).toString(), inline);
+                            JSONObject jo = (JSONObject) j.get("field" + n);
+                            eb.addField((String) jo.get("name"), (String) jo.get("content"), Boolean.TRUE.equals(jo.get("inline")));
                         }
-                        //{"color":"29,176,224","desc":"qqqqq","title":"title","fieldname0":"hello","field0":"hello","inline0":true,"fieldname1":"hello1","field1":"hello1","inline1":true,"fieldname2":"hello2","field2":"hello2","inline2":true,"fieldname3":"hello3","field3":"hello3","inline3":true,"fieldname4":"hello4","field4":"hello4","inline4":true,"fieldname5":"hello5","field5":"hello5","inline5":true}
-                        e.getMessage().getChannel().sendMessage(eb.build()).queue();
-                        break;
+                        if (j.containsKey("footer")) {
+                            JSONObject jo = (JSONObject) j.get("footer");
+                            eb.setFooter((String) jo.get("content"), (String) jo.get("iconurl"));
+                        }
+                        m.getChannel().sendMessage(eb.build()).queue();
+                    } else {
+                        EmbedBuilder eb = new EmbedBuilder();
+                        eb.setColor(dc);
+                        eb.setTitle("**Embed Help (Flags)**");
+                        eb.addField("Author:", "```json\n\"author\":{\"content\":\"%text%\",\"linkurl\":\"%url%\",\"iconurl\":\"%url%\"}```", false);
+                        eb.addField("Color:", "```json\n\"color\":\"#hexColor%\"```", false);
+                        eb.addField("Title:", "```json\n\"title\":\"%text%\"```", false);
+                        eb.addField("Description:", "```json\n\"desc\":\"%text%\"```", false);
+                        eb.addField("Field:", "```json\n\"field%int%\":{\"name\":\"%text%\",\"content\":\"%text%\",\"inline\":%boolean%}```", false);
+                        eb.addField("Footer:", "```json\n\"footer\":{\"content\":\"%text%\",\"iconurl\":\"%url%\"}```", false);
+                        eb.addField("Example:", "```json\n@Skript-Bot embed {\"author\":{\"content\":\"text\",\"linkurl\":\"https://www.google.com\",\"iconurl\":\"https://www.google.com/favicon.ico\"},\"color\":\"#FFFFFF\",\"desc\":\"qqqqq\",\"title\":\"title\",\"field0\":{\"name\":\"text\",\"content\":\"text\",\"inline\":false},\"footer\":{\"content\":\"text\",\"iconurl\":\"https://www.google.com/favicon.ico\"}}```", true);
+                        m.getChannel().sendMessage(eb.build()).queue();
                     }
-                    break;*/
+                    break;
                 } case "links": {
                     EmbedBuilder eb = new EmbedBuilder();
                     eb.setColor(dc);
@@ -200,16 +218,6 @@ class CmdSys {
                     m.getChannel().sendMessage(eb.build()).queue();
                     break;
                 } case "joinlink": {
-                                /*ArrayList<String> c = new ArrayList<>();
-                                c.add("**Here's the invites for Skript-Chat!**");
-                                for (InviteUtil.AdvancedInvite s : e.getGuild().getInvites()) {
-                                    String chm = null;
-                                    for (TextChannel ch : e.getGuild().getTextChannels()) {
-                                        if (ch.getName().equals(s.getChannelName())) chm = ch.getAsMention();
-                                    }
-                                    c.add("  <https://discord.gg/" + s.getCode() + "> - " + chm + " (" + s.getUses() + ")");
-                                }
-                                e.getMessage().getChannel().sendMessage(msgBuilder(c));*/
                     EmbedBuilder eb = new EmbedBuilder();
                     eb.setColor(dc);
                     eb.setTitle("**Here's the invites for Skript-Chat!**");
@@ -219,11 +227,11 @@ class CmdSys {
                     break;
                 } case "convert": {
                     long ct = System.currentTimeMillis();
+                    String cmsg = umsg.replaceFirst(args[1] + " ", "");
                     EmbedBuilder eb = new EmbedBuilder();
                     eb.setColor(dc);
                     switch (args[1]) {
                         case "bin2txt": {
-                            String cmsg = umsg.replaceFirst(args[1] + " ", "");
                             String br = getBin2Txt(cmsg);
                             eb.setTitle("**Binary to Text**");
                             if (br.equals("ERROR")) {
@@ -235,7 +243,6 @@ class CmdSys {
                             }
                             break;
                         } case "txt2bin": {
-                            String cmsg = umsg.replaceFirst(args[1] + " ", "");
                             eb.setTitle("**Text to Binary**");
                             eb.addField("Input:", "```" + cmsg + "```", false);
                             eb.addField("Output:", "```" + getTxt2Bin(cmsg) + "```", false);
@@ -344,12 +351,6 @@ class CmdSys {
         }
     }
 
-    private static void oPm(User u, MessageEmbed c) throws RateLimitedException {
-        if (!u.hasPrivateChannel()) {
-            u.openPrivateChannel().block();
-        }
-        u.getPrivateChannel().sendMessage(c).queue();
-    }
     private static MessageEmbed cOs(String u, String n, String ico) throws IOException {
         HttpURLConnection.setFollowRedirects(true);
         HttpURLConnection c = (HttpURLConnection) new URL(u).openConnection();

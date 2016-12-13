@@ -12,7 +12,6 @@ import net.dv8tion.jda.core.utils.MiscUtil;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -118,22 +117,6 @@ class CmdSys {
                         ur.close();
                         m.getChannel().sendMessage(eb.build()).queue();
                     }
-                    break;
-                } case "uptime": case "stats": {
-                    long ts = (System.currentTimeMillis() - st) / 1000;
-                    long tm = ts / 60;
-                    long th = tm / 60;
-                    EmbedBuilder eb = new EmbedBuilder();
-                    eb.setColor(dc);
-                    eb.setAuthor("tim740", "https://tim740.github.io", g.getMemberById("138441986314207232").getUser().getAvatarUrl());
-                    eb.addField("Created:", "@tim740#1139 (18/09/2016)", true);
-                    eb.addField("Source:", "<https://github.com/tim740/Skript-Bot>", true);
-                    eb.addField("Library:", "JDA " + JDAInfo.VERSION, true);
-                    eb.addField("Ram (Used/Total):", ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000) + "/" + (Runtime.getRuntime().totalMemory() / 1000000) + "MB", true);
-                    eb.addField("Ping:", Math.abs(m.getCreationTime().until(OffsetDateTime.now(), ChronoUnit.MILLIS))  + "ms", true);
-                    eb.addField("Uptime:", (th / 24 + "d " + th % 24 + "h " + tm % 60 + "m " + ts % 60 + "s"), true);
-                    eb.setFooter(getCommit(), "https://github.com/favicon.ico");
-                    m.getChannel().sendMessage(eb.build()).queue();
                     break;
                 } case "whois": {
                     Member wu = g.getMember(m.getMentionedUsers().get(1));
@@ -292,6 +275,27 @@ class CmdSys {
                         m.getChannel().sendMessage(sc1).queue();
                     }
                     break;
+                } case "uptime": case "stats": {
+                    long ts = (System.currentTimeMillis() - st) / 1000;
+                    long tm = ts / 60;
+                    long th = tm / 60;
+                    BufferedReader ur = new BufferedReader(new InputStreamReader(new URL("https://api.github.com/repos/tim740/Skript-Bot/commits").openStream()));
+                    String[] s = ur.lines().toArray(String[]::new);
+                    ur.close();
+                    JSONArray j = (JSONArray) new JSONParser().parse(s[0]);
+                    JSONObject jo = (JSONObject) j.get(0);
+                    EmbedBuilder eb = new EmbedBuilder();
+                    eb.setColor(dc);
+                    eb.setAuthor("tim740", "https://tim740.github.io", g.getMemberById("138441986314207232").getUser().getAvatarUrl());
+                    eb.addField("Created:", "@tim740#1139 (18/09/2016)", true);
+                    eb.addField("Source:", "[GitHub](https://github.com/tim740/Skript-Bot) - [" + jo.get("sha").toString().substring(0, 7) + "](" + "https://github.com/tim740/Skript-Bot/commit/" + jo.get("sha").toString() + ")", true);
+                    eb.addField("Library:", "[JDA](https://github.com/DV8FromTheWorld/JDA) " + JDAInfo.VERSION, true);
+                    eb.addField("Ram (Used/Total):", ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000) + "/" + (Runtime.getRuntime().totalMemory() / 1000000) + "MB", true);
+                    eb.addField("Ping:", Math.abs(m.getCreationTime().until(OffsetDateTime.now(), ChronoUnit.MILLIS))  + "ms", true);
+                    eb.addField("Uptime:", (th / 24 + "d " + th % 24 + "h " + tm % 60 + "m " + ts % 60 + "s"), true);
+                    eb.setFooter(jo.get("sha").toString().substring(0, 7) + " - " + ((JSONObject) jo.get("commit")).get("message"), "https://github.com/favicon.ico");
+                    m.getChannel().sendMessage(eb.build()).queue();
+                    break;
                 }
             }
         } catch (Exception x) {
@@ -362,15 +366,6 @@ class CmdSys {
             eb.addField("Status:", "Offline `" + r + "`", true);
         }
         return eb.build();
-    }
-
-    private static String getCommit() throws ParseException, IOException {
-        BufferedReader ur = new BufferedReader(new InputStreamReader(new URL("https://api.github.com/repos/tim740/Skript-Bot/commits").openStream()));
-        String[] s = ur.lines().toArray(String[]::new);
-        ur.close();
-        JSONArray j = (JSONArray) new JSONParser().parse(s[0]);
-        JSONObject jo = (JSONObject) j.get(0);
-        return (jo.get("sha").toString().substring(0, 7) + " - " + ((JSONObject) jo.get("commit")).get("message"));
     }
 
     private static String getTxt2Bin(String s) {

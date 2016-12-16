@@ -49,7 +49,7 @@
 
                     <archive>
                         <manifest>
-                            <mainClass>SkriptBot</mainClass>
+                            <mainClass>uk.tim740.SkriptBot.SkriptBot</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -99,7 +99,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>3.0.BETA_103</version>
+            <version>3.0.BETA_106</version>
         </dependency>
 
         <dependency>

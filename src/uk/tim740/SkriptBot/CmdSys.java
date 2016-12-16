@@ -146,8 +146,7 @@ class CmdSys {
                     EmbedBuilder eb = new EmbedBuilder();
                     eb.setColor(dc);
                     eb.setAuthor(u.getName(), u.getAvatarUrl(), u.getAvatarUrl());
-                    eb.addField("Suggestion:", umsg + "", true);
-                    jda.getUserById("138441986314207232").getPrivateChannel().sendMessage(eb.build()).queue();
+                    g.getOwner().getUser().getPrivateChannel().sendMessage(eb.addField("Suggestion:", umsg + "", true).build()).queue();
                     m.addReaction("\uD83D\uDC4D").queue();
                     break;
                 } case "skunity": {

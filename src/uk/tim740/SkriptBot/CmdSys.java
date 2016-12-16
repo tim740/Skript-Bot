@@ -22,6 +22,7 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -42,9 +43,10 @@ class CmdSys {
         }
     }
 
-    private static void cmd(String[] args, Guild g, Message m) {
+    private static void cmd(String[] args, String gi, Message m) {
         String umsg = m.getContent().replaceFirst("@Skript-Bot ", "").replaceFirst(args[0] + " ", "");
         User u = m.getAuthor();
+        Guild g = jda.getGuildById((!Objects.equals(gi, "") ? gi : "138464183946575874"));
         try {
             switch (args[0].toLowerCase()) {
                 case "help": {
@@ -93,17 +95,17 @@ class CmdSys {
                         }
                     }
                     eb.setTitle("**Here's the information on Skript-chat!**");
-                    eb.addField("Creator:", g.getOwner().getEffectiveName(), true);
                     eb.addField("Online Users:", (on + "/" + g.getMembers().size()), true);
                     eb.addField("Offline Users:", (off + "/" + g.getMembers().size()), true);
                     eb.addField("Bots:", (bot + "/" + g.getMembers().size()), true);
                     eb.addField("Text/Voice Channels:", (g.getTextChannels().size() + "/" + g.getVoiceChannels().size()), true);
+                    eb.setFooter("Creator: " + g.getOwner().getEffectiveName(), g.getOwner().getUser().getAvatarUrl());
                     m.getChannel().sendMessage(eb.build()).queue();
                     break;
                 } case "emotes": {
                     String el = "";
                     for (Emote em : g.getEmotes()) {
-                        el = (el + " " + em.getAsMention());
+                        el += (" " + em.getAsMention());
                     }
                     EmbedBuilder eb = new EmbedBuilder();
                     eb.setColor(dc);
@@ -137,7 +139,7 @@ class CmdSys {
                     eb.addField("Joined Discord:", MiscUtil.getCreationTime(wu.getUser().getId()).format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")), true);
                     eb.addField("Joined Skript-Chat:", g.getMember(wu.getUser()).getJoinDate().format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")), true);
                     eb.addField("Roles:", String.valueOf(g.getMember(wu.getUser()).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new))), true);
-                    eb.setFooter( wu.getUser().getName() + "#" + wu.getUser().getDiscriminator(), wu.getUser().getAvatarUrl());
+                    eb.setFooter(wu.getUser().getName() + "#" + wu.getUser().getDiscriminator(), wu.getUser().getAvatarUrl());
                     m.getChannel().sendMessage(eb.build()).queue();
                     break;
                 } case "suggest": {
@@ -315,13 +317,18 @@ class CmdSys {
         @Override
         public void onMessageReceived(MessageReceivedEvent e) {
             if (!e.getMessage().getAuthor().getId().equals("227067574469394432")) {
-                if (e.getChannel().getId().equals("237960698854899713")) {
-                    if (!e.getGuild().getMember(e.getMessage().getAuthor()).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-                        if (!tf.matcher(e.getMessage().getContent().toLowerCase()).find()) e.getMessage().deleteMessage().queue();
+                if (!e.getMessage().isFromType(ChannelType.PRIVATE)) {
+                    if (e.getChannel().getId().equals("237960698854899713")) {
+                        if (!e.getGuild().getMember(e.getMessage().getAuthor()).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
+                            if (!tf.matcher(e.getMessage().getContent().toLowerCase()).find()) e.getMessage().deleteMessage().queue();
+                        }
+                    } else if (e.getMessage().getContent().startsWith("@Skript-Bot")) {
+                        prSysI("[" + e.getGuild().getName() + "] (#" + jda.getTextChannelById(e.getChannel().getId()).getName() + ") @" + e.getMessage().getAuthor().getName() + " executed: '" + e.getMessage().getContent() + "'");
+                        cmd(e.getMessage().getContent().replaceFirst("@Skript-Bot ", "").split(" "), e.getGuild().getId(), e.getMessage());
                     }
-                } else if (e.getMessage().getContent().startsWith("@Skript-Bot")) {
-                    prSysI("[" + e.getGuild().getName() + "] (#" + jda.getTextChannelById(e.getChannel().getId()).getName() + ") @" + e.getMessage().getAuthor().getName() + " executed: '" + e.getMessage().getContent() + "'");
-                    cmd(e.getMessage().getContent().replaceFirst("@Skript-Bot ", "").split(" "), e.getGuild(), e.getMessage());
+                } else {
+                    prSysI("[Private] @" + e.getMessage().getAuthor().getName() + " executed: '" + e.getMessage().getContent() + "'");
+                    cmd(e.getMessage().getContent().replaceFirst("@Skript-Bot ", "").replaceFirst("<@227067574469394432> ", "").split(" "), "", e.getMessage());
                 }
             }
         }
@@ -332,7 +339,7 @@ class CmdSys {
                 }
             } else if (e.getMessage().getContent().startsWith("@Skript-Bot")) {
                 prSysI("[" + e.getGuild().getName() + "] (#" + jda.getTextChannelById(e.getChannel().getId()).getName() + ") @" + e.getMessage().getAuthor().getName() + " executed: '" + e.getMessage().getContent() + "'");
-                cmd(e.getMessage().getContent().replaceFirst("@Skript-Bot ", "").split(" "), e.getGuild(), e.getMessage());
+                cmd(e.getMessage().getContent().replaceFirst("@Skript-Bot ", "").split(" "), e.getGuild().getId(), e.getMessage());
             }
         }
 

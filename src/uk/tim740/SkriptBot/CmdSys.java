@@ -358,7 +358,6 @@ class CmdSys {
     }
 
     private static MessageEmbed cOs(String u, String n, String ico) throws IOException {
-        HttpURLConnection.setFollowRedirects(true);
         HttpURLConnection c = (HttpURLConnection) new URL(u).openConnection();
         c.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
         int r = c.getResponseCode();
@@ -391,9 +390,7 @@ class CmdSys {
     private static String getBin2Txt(String s) {
         String binV = s.trim();
         for (char character : binV.toCharArray()) {
-            if (character != '0' && character != '1' && character != ' ') {
-                return "ERROR";
-            }
+            if (character != '0' && character != '1' && character != ' ') return "ERROR";
         }
         StringBuilder sb = new StringBuilder();
         for (String sc : s.split(" ")) {

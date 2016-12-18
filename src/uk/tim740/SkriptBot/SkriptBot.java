@@ -90,7 +90,6 @@ public class SkriptBot {
     static void prSysI(String s) {
         System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Info] " + s);
     }
-
     static void prSysE(String s) {
         System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Error] " + s);
     }

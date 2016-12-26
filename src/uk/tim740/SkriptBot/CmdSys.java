@@ -13,9 +13,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.OffsetDateTime;
@@ -35,10 +33,11 @@ class CmdSys {
     private static Pattern tf = Pattern.compile("^(?:true|false),? +the +person +below +me +.+$");
     private static Color dc = Color.decode("#2D9CE2");
 
-    static void cmdSys(String[] args) {
+    static void cmdSys(String tk) {
         try {
-            jda = new JDABuilder(AccountType.BOT).setToken(args[0]).addListener(new MessageListener()).buildBlocking();
+            jda = new JDABuilder(AccountType.BOT).setToken(tk).addListener(new MessageListener()).buildBlocking();
         } catch (Exception x) {
+            writeDebug(x);
             System.exit(0);
         }
     }
@@ -307,8 +306,7 @@ class CmdSys {
                 }
             }
         } catch (Exception x) {
-            prSysE("Exception: " + x.getMessage());
-            x.printStackTrace();
+            writeDebug(x);
         }
     }
 
@@ -346,13 +344,13 @@ class CmdSys {
         public void onGuildMemberJoin(GuildMemberJoinEvent e) {
             if (e.getGuild().getId().equals(skcid)) {
                 jda.getTextChannelById("138464183946575874").sendMessage("Welcome " + e.getMember().getAsMention() + " to Skript-Chat!").queue();
-                prSysI("[" + e.getGuild().getName() + "] @" + e.getMember().getUser().getName() + " joined!");
+                prSysI("[" + e.getGuild().getName() + "] @" + e.getMember().getUser().getName() + "#" + e.getMember().getUser().getDiscriminator() + " joined!");
             }
         }
         @Override
         public void onGuildMemberLeave(GuildMemberLeaveEvent e) {
             if (e.getGuild().getId().equals(skcid)) {
-                prSysI("[" + e.getGuild().getName() + "] @" + e.getMember().getUser().getName() + " left!");
+                prSysI("[" + e.getGuild().getName() + "] @" + e.getMember().getUser().getName() + "#" + e.getMember().getUser().getDiscriminator() + " left!");
             }
         }
     }
@@ -366,10 +364,10 @@ class CmdSys {
         eb.setAuthor(n, u, ico);
         if (r == HttpURLConnection.HTTP_OK){
             eb.setColor(Color.decode("#21D66F"));
-            eb.addField("Status:", "Online `" + r + "`", true);
+            eb.setDescription("**Online**: `" + r + "`");
         } else {
             eb.setColor(Color.decode("#EF493A"));
-            eb.addField("Status:", "Offline `" + r + "`", true);
+            eb.setDescription("**Offline**: `" + r + "`");
         }
         return eb.build();
     }

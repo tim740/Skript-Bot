@@ -73,8 +73,8 @@ public class SkriptBot extends Application {
             ta.setEditable(false);
             ta.setWrapText(true);
             PrintStream pss = new PrintStream(new Redirect(ta), true);
-            //System.setOut(pss);
-            //System.setErr(pss);
+            System.setOut(pss);
+            System.setErr(pss);
             ta.setId("ta");
             ap.getChildren().add(ta);
 
@@ -89,7 +89,6 @@ public class SkriptBot extends Application {
             cb.setPrefSize(102, 25);
             cb.getSelectionModel().select("#bot-testing");
             cb.setId("cb");
-            cb.getContextMenu().setStyle("{hello{");
             ap.getChildren().add(cb);
 
             TextField tf = new TextField();

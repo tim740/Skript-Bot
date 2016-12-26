@@ -64,7 +64,7 @@ public class SkriptBot extends Application {
             ta.setPrefSize(790, 435);
             ta.setEditable(false);
             ta.setWrapText(true);
-            PrintStream pss = new PrintStream(new Redir(ta), true);
+            PrintStream pss = new PrintStream(new Redirect(ta), true);
             System.setOut(pss);
             System.setErr(pss);
             ta.setId("ta");
@@ -194,18 +194,5 @@ public class SkriptBot extends Application {
         } catch (Exception xe) {
             xe.printStackTrace();
         }
-    }
-}
-
-class Redir extends OutputStream {
-    private TextArea output;
-
-    Redir(TextArea ta) {
-        output = ta;
-    }
-
-    @Override
-    public void write(int b) throws IOException {
-        output.appendText(String.valueOf((char) b));
     }
 }

@@ -15,11 +15,19 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 
 import java.awt.Desktop;
-import java.io.*;
+import java.io.File;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.Array;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 
@@ -65,8 +73,8 @@ public class SkriptBot extends Application {
             ta.setEditable(false);
             ta.setWrapText(true);
             PrintStream pss = new PrintStream(new Redirect(ta), true);
-            System.setOut(pss);
-            System.setErr(pss);
+            //System.setOut(pss);
+            //System.setErr(pss);
             ta.setId("ta");
             ap.getChildren().add(ta);
 
@@ -81,6 +89,7 @@ public class SkriptBot extends Application {
             cb.setPrefSize(102, 25);
             cb.getSelectionModel().select("#bot-testing");
             cb.setId("cb");
+            cb.getContextMenu().setStyle("{hello{");
             ap.getChildren().add(cb);
 
             TextField tf = new TextField();
@@ -113,7 +122,7 @@ public class SkriptBot extends Application {
             b.setOnAction(e -> {
                 try {
                     Desktop.getDesktop().open(new File("debug.log"));
-                } catch (IOException x) {
+                } catch (Exception x) {
                     writeDebug(x);
                 }
             });
@@ -176,21 +185,14 @@ public class SkriptBot extends Application {
 
     static void writeDebug(Exception x) {
         try {
-            System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Exception] " + x.getMessage() + " (Click 'View Debug')");
+            System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Exception] " + x.getMessage() + " (Click 'Debug')");
             StringWriter sw = new StringWriter();
             x.printStackTrace(new PrintWriter(sw));
-            String s = sw.toString();
+            String s = ("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Info] " + sw.toString());
             sw.close();
-            File pth = new File("debug.log");
-            ArrayList<String> cl = new ArrayList<>();
-            cl.addAll(Files.readAllLines(pth.toPath(), Charset.defaultCharset()));
-            cl.add("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Info] " + s);
-            BufferedWriter bw = new BufferedWriter(new FileWriter(pth));
-            for (String aCl : cl.toArray(new String[cl.size()])) {
-                bw.write(aCl);
-                bw.newLine();
-            }
-            bw.close();
+            Path pth = Paths.get("debug.log");
+            if (Files.readAllLines(pth).get(Math.toIntExact(Files.lines(pth, Charset.defaultCharset()).count()) -1).equals("")) s = ("\n" + s);
+            Files.write(pth, (s).getBytes(), StandardOpenOption.APPEND);
         } catch (Exception xe) {
             xe.printStackTrace();
         }

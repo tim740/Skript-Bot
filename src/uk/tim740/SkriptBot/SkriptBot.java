@@ -47,8 +47,8 @@ public class SkriptBot extends Application {
             ps.setOnCloseRequest(e -> System.exit(0));
             AnchorPane ap = new AnchorPane();
             ap.setPrefSize(800,475);
-            ap.setId("ap");
             ap.getStylesheets().add(this.getClass().getResource("/resources/main.css").toExternalForm());
+            ap.setId("ap");
             ps.setScene(new Scene(ap));
 
             ScrollPane sp = new ScrollPane();
@@ -64,7 +64,7 @@ public class SkriptBot extends Application {
             ta.setPrefSize(790, 435);
             ta.setEditable(false);
             ta.setWrapText(true);
-            PrintStream pss = new PrintStream(new Console(ta), true);
+            PrintStream pss = new PrintStream(new Redir(ta), true);
             System.setOut(pss);
             System.setErr(pss);
             ta.setId("ta");
@@ -79,8 +79,8 @@ public class SkriptBot extends Application {
             cb.setLayoutX(5);
             cb.setLayoutY(445);
             cb.setPrefSize(102, 25);
-            cb.setId("cb");
             cb.getSelectionModel().select("#bot-testing");
+            cb.setId("cb");
             ap.getChildren().add(cb);
 
             TextField tf = new TextField();
@@ -197,10 +197,10 @@ public class SkriptBot extends Application {
     }
 }
 
-class Console extends OutputStream {
+class Redir extends OutputStream {
     private TextArea output;
 
-    Console(TextArea ta) {
+    Redir(TextArea ta) {
         output = ta;
     }
 

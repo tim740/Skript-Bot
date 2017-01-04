@@ -1,5 +1,6 @@
 package uk.tim740.SkriptBot;
 
+import javafx.application.Platform;
 import javafx.scene.control.TextArea;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ class Redirect extends OutputStream {
 
     @Override
     public void write(int b) throws IOException {
-        output.appendText(String.valueOf((char) b));
+        Platform.runLater(() -> output.appendText(String.valueOf((char) b)));
+        //output.appendText(String.valueOf((char) b));
     }
 }

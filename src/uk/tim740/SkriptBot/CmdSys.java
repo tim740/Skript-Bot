@@ -212,8 +212,8 @@ class CmdSys {
                     EmbedBuilder eb = new EmbedBuilder();
                     eb.setColor(dc);
                     eb.setTitle("**Here's some links!**");
-                    eb.addField("Skript (bensku):", "<https://github.com/bensku/Skript/releases>", false);
-                    eb.addField("skQuery (VirusTotal):", "<https://github.com/SkriptLegacy/skquery/releases>", false);
+                    eb.addField("Skript:", "[Bensku](https://github.com/bensku/Skript/releases) - [Mirre](https://github.com/Mirreski/Skript/wiki) - [Nfell](http://nfell2009.uk/skript/downloads)", false);
+                    eb.addField("skQuery:", "[VirusTotal](https://github.com/SkriptLegacy/skquery/releases)", false);
                     eb.addField("Formatting:", "<https://support.discordapp.com/hc/en-us/articles/210298617>", false);
                     m.getChannel().sendMessage(eb.build()).queue();
                     break;

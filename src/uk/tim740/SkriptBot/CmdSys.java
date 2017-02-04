@@ -175,7 +175,7 @@ class CmdSys {
                             eb.setTitle((String) j.get("title"));
                         }
                         if (j.containsKey("desc")) {
-                            eb.setDescription((String) j.get("desc"));
+                            eb.setDescription(((String) j.get("desc")).replaceAll("%nl%", System.lineSeparator()));
                         }
                         String in = j.toJSONString();
                         int id = in.indexOf("field");
@@ -187,7 +187,7 @@ class CmdSys {
                         }
                         for (int n = 0; n < c; n++) {
                             JSONObject jo = (JSONObject) j.get("field" + n);
-                            eb.addField((String) jo.get("name"), (String) jo.get("content"), Boolean.TRUE.equals(jo.get("inline")));
+                            eb.addField((String) jo.get("name"), ((String) jo.get("content")).replaceAll("%nl%", System.lineSeparator()), Boolean.TRUE.equals(jo.get("inline")));
                         }
                         if (j.containsKey("footer")) {
                             JSONObject jo = (JSONObject) j.get("footer");
@@ -211,8 +211,7 @@ class CmdSys {
                 } case "links": {
                     EmbedBuilder eb = new EmbedBuilder();
                     eb.setColor(dc);
-                    eb.setTitle("**Here's some links!**");
-                    eb.addField("Skript:", "[Bensku](https://github.com/bensku/Skript/releases) - [Mirre](https://github.com/Mirreski/Skript/wiki) - [Nfell](http://nfell2009.uk/skript/downloads)", false);
+                    eb.addField("Skript:", "[Aliases](https://github.com/tim740/skAliases/releases/latest) - [Bensku](https://github.com/bensku/Skript/releases) - [Mirre](https://github.com/Mirreski/Skript/wiki) - [Nfell](http://nfell2009.uk/skript/downloads)", false);
                     eb.addField("skQuery:", "[VirusTotal](https://github.com/SkriptLegacy/skquery/releases)", false);
                     eb.addField("Formatting:", "<https://support.discordapp.com/hc/en-us/articles/210298617>", false);
                     m.getChannel().sendMessage(eb.build()).queue();

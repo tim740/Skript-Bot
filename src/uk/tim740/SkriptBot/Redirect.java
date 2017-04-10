@@ -19,6 +19,5 @@ class Redirect extends OutputStream {
     @Override
     public void write(int b) throws IOException {
         Platform.runLater(() -> output.appendText(String.valueOf((char) b)));
-        //output.appendText(String.valueOf((char) b));
     }
 }

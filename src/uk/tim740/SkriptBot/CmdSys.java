@@ -64,7 +64,7 @@ class CmdSys {
           eb.addField("skunity %string%", "Lookup on skUnity Docs.", true);
           eb.addField("sku-status", "Checks if skUnity is up.", true);
           eb.addField("links", "Gets Useful Links.", true);
-          eb.addField("joinlink", "Gets Join Links for Skript-Chat.", true);
+          eb.addField("invite", "Gets Join Links for Skript-Chat.", true);
           eb.addField("suggest %string%", "Suggest an idea for me.", true);
           eb.addField("convert (bin2txt|txt2bin) %string%", "Convert things.", true);
           eb.addField("embed (help|%json%)", "Generates a Embed.", true);
@@ -74,7 +74,7 @@ class CmdSys {
             EmbedBuilder eb2 = new EmbedBuilder();
             eb2.setColor(dc);
             eb2.setTitle("**ADMIN COMMANDS**", "https://tim740.github.io");
-            eb2.addField("prune %integer%", "Removes x amount of msgs. (1-50)", true);
+            eb2.addField("prune %integer%", "Removes x amount of msgs. (1-100)", true);
             eb2.addField("kick %player%", "Kick a User. BROKEN", true);
             eb2.addField("say %string%", "Speak as the Bot.", true);
             u.getPrivateChannel().sendMessage(eb2.build()).queue();
@@ -86,7 +86,7 @@ class CmdSys {
           eb.setColor(dc);
           int on = 0, off = 0, bot = 0;
           for (Member s : g.getMembers()) {
-            if (s.getOnlineStatus().equals(OnlineStatus.ONLINE) || s.getOnlineStatus().equals(OnlineStatus.IDLE)) {
+            if (s.getOnlineStatus().equals(OnlineStatus.ONLINE) || s.getOnlineStatus().equals(OnlineStatus.IDLE) || s.getOnlineStatus().equals(OnlineStatus.DO_NOT_DISTURB)) {
               on++;
             } else if (s.getOnlineStatus().equals(OnlineStatus.OFFLINE)) {
               off++;
@@ -240,7 +240,7 @@ class CmdSys {
           eb.addField("Formatting:", "<https://support.discordapp.com/hc/en-us/articles/210298617>", false);
           m.getChannel().sendMessage(eb.build()).queue();
           break;
-        } case "joinlink": {
+        } case "invite": case "invites": case "joinlink": {
           EmbedBuilder eb = new EmbedBuilder();
           eb.setColor(dc);
           eb.setAuthor(jda.getGuildById(skcid).getName() + " - Invites.", jda.getGuildById(skcid).getIconUrl(), jda.getGuildById(skcid).getIconUrl());
@@ -292,7 +292,7 @@ class CmdSys {
           m.delete();
           if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
             Integer i = Integer.parseInt(args[1]);
-            if (i >= 0 && i <= 50) {
+            if (i >= 0 && i <= 100) {
               for (Message s : m.getChannel().getHistory().retrievePast(i).complete()) {
                 m.getChannel().deleteMessageById(s.getId()).queue();
               }

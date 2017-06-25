@@ -8,7 +8,6 @@ import net.dv8tion.jda.core.events.guild.member.GuildMemberLeaveEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import net.dv8tion.jda.core.utils.MiscUtil;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -20,8 +19,7 @@ import java.net.URL;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -33,18 +31,18 @@ import static uk.tim740.SkriptBot.SkriptBot.*;
 class CmdSys {
   private static Pattern tf = Pattern.compile("^(?:true|false),? +the +person +below +me +.+$");
   private static Color dc = Color.decode("#2D9CE2");
+  private static Set<String> cmds = new HashSet<>(Arrays.asList("help", "info", "bots", "emotes", "version", "whois", "skunity", "sku-status", "links", "invite", "invites", "bin2txt", "txt2bin", "embed", "stats", "prune", "say"));
 
   static void cmdSys(String tk) {
     try {
       jda = new JDABuilder(AccountType.BOT).setToken(tk).addEventListener(new MessageListener()).buildBlocking();
     } catch (Exception x) {
-      writeDebug(x);
       System.exit(0);
     }
   }
 
   private static void cmd(String[] args, String gi, Message m) {
-    String umsg = m.getContent().replaceFirst("@Skript-Bot ", "").replaceFirst(args[0] + " ", "");
+    String umsg = m.getContent().replaceFirst(args[0] + " ", "").replaceFirst("@Skript-Bot", "");
     User u = m.getAuthor();
     Guild g = jda.getGuildById((!Objects.equals(gi, "") ? gi : "138464183946575874"));
     try {
@@ -65,8 +63,8 @@ class CmdSys {
           eb.addField("sku-status", "Checks if skUnity is up.", true);
           eb.addField("links", "Gets Useful Links.", true);
           eb.addField("invite", "Gets Join Links for Skript-Chat.", true);
-          eb.addField("suggest %string%", "Suggest an idea for me.", true);
-          eb.addField("convert (bin2txt|txt2bin) %string%", "Convert things.", true);
+          eb.addField("bin2txt %string%", "Convert binary to text.", true);
+          eb.addField("txt2bin %string%", "Convert text to binary.", true);
           eb.addField("embed (help|%json%)", "Generates a Embed.", true);
           eb.addField("stats", "Returns Bot Stats.", true);
           u.getPrivateChannel().sendMessage(eb.build()).queue();
@@ -74,8 +72,7 @@ class CmdSys {
             EmbedBuilder eb2 = new EmbedBuilder();
             eb2.setColor(dc);
             eb2.setTitle("**ADMIN COMMANDS**", "https://tim740.github.io");
-            eb2.addField("prune %integer%", "Removes x amount of msgs. (1-100)", true);
-            eb2.addField("kick %player%", "Kick a User. BROKEN", true);
+            eb2.addField("prune %integer%", "Removes (1-100) amount of msgs.", true);
             eb2.addField("say %string%", "Speak as the Bot.", true);
             u.getPrivateChannel().sendMessage(eb2.build()).queue();
           }
@@ -95,7 +92,7 @@ class CmdSys {
               bot++;
             }
           }
-          eb.setTitle("**Here's the information on " + g.getName() + "!**", g.getIconUrl());
+          eb.setTitle("**Here's the information in " + g.getName() + "**", g.getIconUrl());
           eb.addField("Online Users:", (on + "/" + g.getMembers().size()), true);
           eb.addField("Offline Users:", (off + "/" + g.getMembers().size()), true);
           eb.addField("Bots:", (bot + "/" + g.getMembers().size()), true);
@@ -118,7 +115,7 @@ class CmdSys {
               }
             }
           }
-          eb.setTitle("**Here's the bot information in " + g.getName() + "!**", "https://tim740.github.io");
+          eb.setTitle("**Here's the bot information in " + g.getName() + "**", "https://tim740.github.io");
           eb.setDescription(bots);
           eb.addField("Online Bots:", (on + "/" + (on + off)), true);
           eb.addField("Offline Bots:", (off + "/" + (on + off)), true);
@@ -159,18 +156,11 @@ class CmdSys {
           eb.setAuthor("@" + mu.getName() + "#" + mu.getDiscriminator() + " - (" + wu.getEffectiveName() + ")", mu.getAvatarUrl(), mu.getAvatarUrl());
           eb.addField("ID:", mu.getId(), true);
           eb.addField("Game:", (wu.getGame() != null ? wu.getGame().getName() : "None"), true);
-          eb.addField("Joined Discord:", MiscUtil.getCreationTime(mu.getId()).format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")), true);
+          eb.addField("Joined Discord:", mu.getCreationTime().format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")), true);
           eb.addField("Joined Skript-Chat:", g.getMember(mu).getJoinDate().format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")), true);
           eb.addField("Roles:", String.valueOf(g.getMember(mu).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new))), true);
           eb.setFooter(g.getName(), g.getIconUrl());
           m.getChannel().sendMessage(eb.build()).queue();
-          break;
-        } case "suggest": {
-          EmbedBuilder eb = new EmbedBuilder();
-          eb.setColor(dc);
-          eb.setAuthor(u.getName(), u.getAvatarUrl(), u.getAvatarUrl());
-          g.getOwner().getUser().getPrivateChannel().sendMessage(eb.addField("Suggestion:", umsg + "", true).build()).queue();
-          m.addReaction("\uD83D\uDC4D").queue();
           break;
         } case "skunity": {
           EmbedBuilder eb = new EmbedBuilder();
@@ -240,7 +230,7 @@ class CmdSys {
           eb.addField("Formatting:", "<https://support.discordapp.com/hc/en-us/articles/210298617>", false);
           m.getChannel().sendMessage(eb.build()).queue();
           break;
-        } case "invite": case "invites": case "joinlink": {
+        } case "invite": case "invites":{
           EmbedBuilder eb = new EmbedBuilder();
           eb.setColor(dc);
           eb.setAuthor(jda.getGuildById(skcid).getName() + " - Invites.", jda.getGuildById(skcid).getIconUrl(), jda.getGuildById(skcid).getIconUrl());
@@ -261,27 +251,26 @@ class CmdSys {
           eb1.setDescription(desc1.replaceFirst(",", ""));
           m.getChannel().sendMessage(eb1.build()).queue();
           break;
-        } case "convert": {
+        } case "bin2txt": case "txt2bin": {
           long ct = System.currentTimeMillis();
-          String cmsg = umsg.replaceFirst(args[1] + " ", "");
           EmbedBuilder eb = new EmbedBuilder();
           eb.setColor(dc);
-          switch (args[1]) {
+          switch (args[0]) {
             case "bin2txt": {
-              String br = getBin2Txt(cmsg);
+              String br = getBin2Txt(umsg);
               eb.setTitle("**Binary to Text**", "https://tim740.github.io");
               if (br.equals("ERROR")) {
                 eb.addField("Error:", "Binary Strings can only contain 1's, 0's or spaces!", false);
-                eb.addField("Input:", "```" + cmsg + "```", false);
+                eb.addField("Input:", "```" + umsg + "```", false);
               } else {
-                eb.addField("Input:", "```" + cmsg + "```", false);
+                eb.addField("Input:", "```" + umsg + "```", false);
                 eb.addField("Output:", "```" + br + "```", false);
               }
               break;
             } case "txt2bin": {
               eb.setTitle("**Text to Binary**", "https://tim740.github.io");
-              eb.addField("Input:", "```" + cmsg + "```", false);
-              eb.addField("Output:", "```" + getTxt2Bin(cmsg) + "```", false);
+              eb.addField("Input:", "```" + umsg + "```", false);
+              eb.addField("Output:", "```" + getTxt2Bin(umsg) + "```", false);
               break;
             }
           }
@@ -299,18 +288,9 @@ class CmdSys {
             }
           }
           break;
-                /*} case "kick": {
-                    e.getMessage().deleteMessage().queue();
-                    if (e.getGuild().getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-                        if (msg[1].contains("@")) {
-                            new GuildManager(e.getGuild()).kick(msg[1] + " ");
-                            e.getMessage().getChannel().sendMessage("Kicked: " + e.getMessage().getMentionedUsers().get(1)).queue();
-                            }
-                        }
-                    break;*/
         } case "say": {
-          m.delete().queue();
           if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
+            m.delete().queue();
             String sc1 = umsg.replace("@everyone", "").replace("@here", "");
             for (User tu : m.getMentionedUsers()) {
               sc1 = sc1.replace("@" + tu.getName(), tu.getAsMention());
@@ -329,8 +309,7 @@ class CmdSys {
           JSONObject jo = (JSONObject) j.get(0);
           EmbedBuilder eb = new EmbedBuilder();
           eb.setColor(dc);
-          eb.setAuthor("tim740", "https://tim740.github.io", g.getMemberById("138441986314207232").getUser().getAvatarUrl());
-          eb.addField("Created:", "@tim740#1139 (18/09/2016)", true);
+          eb.setAuthor("tim740 (18/09/2016)", "https://tim740.github.io", g.getMemberById("138441986314207232").getUser().getAvatarUrl());
           eb.addField("Source:", "[GitHub](https://github.com/tim740/Skript-Bot) - [" + jo.get("sha").toString().substring(0, 7) + "](" + "https://github.com/tim740/Skript-Bot/commit/" + jo.get("sha").toString() + ")", true);
           eb.addField("Library:", "[JDA](https://github.com/DV8FromTheWorld/JDA) " + JDAInfo.VERSION, true);
           eb.addField("Ram (Used/Total):", ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000) + "/" + (Runtime.getRuntime().totalMemory() / 1000000) + "MB", true);
@@ -342,7 +321,7 @@ class CmdSys {
         }
       }
     } catch (Exception x) {
-      writeDebug(x);
+      x.printStackTrace();
     }
   }
 
@@ -357,16 +336,14 @@ class CmdSys {
 
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent e) {
+      prSysI(e.getGuild(), e.getMember().getUser(), "joined!");
       if (e.getGuild().getId().equals(skcid)) {
         jda.getTextChannelById("138464183946575874").sendMessage("Welcome " + e.getMember().getAsMention() + " to Skript-Chat!").queue();
-        prSysI("[" + e.getGuild().getName() + "] @" + e.getMember().getUser().getName() + "#" + e.getMember().getUser().getDiscriminator() + " joined!");
       }
     }
     @Override
     public void onGuildMemberLeave(GuildMemberLeaveEvent e) {
-      if (e.getGuild().getId().equals(skcid)) {
-        prSysI("[" + e.getGuild().getName() + "] @" + e.getMember().getUser().getName() + "#" + e.getMember().getUser().getDiscriminator() + " left!");
-      }
+        prSysI(e.getGuild(), e.getMember().getUser(), "left!");
     }
     @Override
     public void onGuildBan(GuildBanEvent e) {
@@ -382,19 +359,30 @@ class CmdSys {
   private static void cmdEx(Guild g, Message m) {
     if (!m.getAuthor().getId().equals("227067574469394432")) {
       if (!m.isFromType(ChannelType.PRIVATE)) {
-        if (m.getChannel().getId().equals("237960698854899713")) {
-          if (!g.getMember(m.getAuthor()).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-            if (!tf.matcher(m.getContent().toLowerCase()).find()) m.delete().queue();
+        if (!m.getChannel().getId().equals(lcid)) {
+          if (m.getChannel().getId().equals("237960698854899713")) {
+            if (!g.getMember(m.getAuthor()).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
+              if (!tf.matcher(m.getContent().toLowerCase()).find()) m.delete().queue();
+            }
+          } else if (m.getContent().toLowerCase().startsWith("@skript-bot")) {
+            if (validCmd(m.getContent().replaceFirst("@Skript-Bot ", "").replaceFirst("<@227067574469394432> ", "").split(" ")).equals(true)) {
+              prSysI(g, (TextChannel) m.getChannel(), m.getAuthor(), "executed: '" + m.getContent() + "'");
+              cmd(m.getContent().replaceFirst("@Skript-Bot ", "").replaceFirst("<@227067574469394432> ", "").split(" "), g.getId(), m);
+            }
           }
-        } else if (m.getContent().toLowerCase().startsWith("@skript-bot")) {
-          prSysI("[" + g.getName() + "] (#" + jda.getTextChannelById(m.getChannel().getId()).getName() + ") @" + m.getAuthor().getName() + " executed: '" + m.getContent() + "'");
-          cmd(m.getContent().replaceFirst("@Skript-Bot ", "").replaceFirst("<@227067574469394432> ", "").split(" "), g.getId(), m);
+        } else {
+          m.delete().queue();
         }
       } else {
-        prSysI("[Private] @" + m.getAuthor().getName() + " executed: '" + m.getContent().replaceFirst("<@227067574469394432>", "@Skript-Bot") + "'");
-        cmd(m.getContent().replaceFirst("@Skript-Bot ", "").replaceFirst("<@227067574469394432> ", "").split(" "), "", m);
+        if (validCmd(m.getContent().replaceFirst("@Skript-Bot ", "").replaceFirst("<@227067574469394432> ", "").split(" ")).equals(true)) {
+          prSysI(m.getAuthor(), "executed: '" + m.getContent().replaceFirst("<@227067574469394432> ", "") + "'");
+          cmd(m.getContent().replaceFirst("@Skript-Bot ", "").replaceFirst("<@227067574469394432> ", "").split(" "), "", m);
+        }
       }
     }
+  }
+  private static Boolean validCmd(String[] args) {
+    return (cmds.contains(args[0].toLowerCase()));
   }
 
   private static MessageEmbed cOs(String u, String n, String ico) throws Exception {
@@ -402,14 +390,11 @@ class CmdSys {
     c.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
     int r = c.getResponseCode();
     c.disconnect();
-    EmbedBuilder eb = new EmbedBuilder();
-    eb.setAuthor(n, u, ico);
+    EmbedBuilder eb = new EmbedBuilder().setAuthor(n, u, ico);
     if (r == HttpURLConnection.HTTP_OK){
-      eb.setColor(Color.decode("#21D66F"));
-      eb.setDescription("**Online**: `" + r + "`");
+      eb.setDescription("**Online**: `" + r + "`").setColor(Color.decode("#21D66F"));
     } else {
-      eb.setColor(Color.decode("#EF493A"));
-      eb.setDescription("**Offline**: `" + r + "`");
+      eb.setDescription("**Offline**: `" + r + "`").setColor(Color.decode("#EF493A"));
     }
     return eb.build();
   }

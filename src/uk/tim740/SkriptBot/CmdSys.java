@@ -31,7 +31,75 @@ import static uk.tim740.SkriptBot.SkriptBot.*;
 class CmdSys {
   private static Pattern tf = Pattern.compile("^(?:true|false),? +the +person +below +me +.+$");
   private static Color dc = Color.decode("#2D9CE2");
-  private static Set<String> cmds = new HashSet<>(Arrays.asList("help", "info", "bots", "emotes", "version", "whois", "skunity", "sku-status", "links", "invite", "invites", "bin2txt", "txt2bin", "embed", "stats", "prune", "say"));
+  private static ArrayList<String> cmds = new ArrayList<>();
+  private static ArrayList<String> cmdDes = new ArrayList<>();
+  private static ArrayList<String> cmdRank = new ArrayList<>();
+  
+  static void reg() {
+    cmds.add("help");
+    cmdDes.add("Help Command");
+    cmdRank.add("user");
+
+    cmds.add("info");
+    cmdDes.add("Chat Info.");
+    cmdRank.add("user");
+
+    cmds.add("bots");
+    cmdDes.add("Bots in Skript-Chat.");
+    cmdRank.add("user");
+
+    cmds.add("emotes");
+    cmdDes.add("List of Emotes.");
+    cmdRank.add("user");
+
+    cmds.add("aliases");
+    cmdDes.add("Aliases version.");
+    cmdRank.add("user");
+
+    cmds.add("whois");
+    cmdDes.add("User Lookup.");
+    cmdRank.add("user");
+
+    cmds.add("skunity");
+    cmdDes.add("Lookup on skUnity Docs.");
+    cmdRank.add("user");
+
+    cmds.add("sku-status");
+    cmdDes.add("Checks if skUnity is up.");
+    cmdRank.add("user");
+
+    cmds.add("links");
+    cmdDes.add("Useful Links.");
+    cmdRank.add("user");
+
+    cmds.add("invites");
+    cmdDes.add("Invites for Skript-Chat.");
+    cmdRank.add("user");
+
+    cmds.add("bin2txt");
+    cmdDes.add("Convert binary to text.");
+    cmdRank.add("user");
+
+    cmds.add("txt2bin");
+    cmdDes.add("Convert text to binary.");
+    cmdRank.add("user");
+
+    cmds.add("embed");
+    cmdDes.add("Generates a Embed.");
+    cmdRank.add("user");
+
+    cmds.add("stats");
+    cmdDes.add("Returns Bot Stats.");
+    cmdRank.add("user");
+
+    cmds.add("purge");
+    cmdDes.add("Remove (1-100) msgs.");
+    cmdRank.add("admin");
+
+    cmds.add("say");
+    cmdDes.add("Speak as the Bot.");
+    cmdRank.add("admin");
+  }
 
   static void cmdSys(String tk) {
     try {
@@ -54,28 +122,14 @@ class CmdSys {
           EmbedBuilder eb = new EmbedBuilder();
           eb.setColor(dc);
           eb.setTitle("**COMMANDS** (All Commands start with `@Skript-Bot`)", "https://tim740.github.io");
-          eb.addField("info", "Gets Chat Info.", true);
-          eb.addField("bots", "Gets Bots Info.", true);
-          eb.addField("emotes", "List of Emotes.", true);
-          eb.addField("version (aliases)", "Gets Aliases Info.", true);
-          eb.addField("whois %player%", "Gets User Info.", true);
-          eb.addField("skunity %string%", "Lookup on skUnity Docs.", true);
-          eb.addField("sku-status", "Checks if skUnity is up.", true);
-          eb.addField("links", "Gets Useful Links.", true);
-          eb.addField("invite", "Gets Join Links for Skript-Chat.", true);
-          eb.addField("bin2txt %string%", "Convert binary to text.", true);
-          eb.addField("txt2bin %string%", "Convert text to binary.", true);
-          eb.addField("embed (help|%json%)", "Generates a Embed.", true);
-          eb.addField("stats", "Returns Bot Stats.", true);
-          u.getPrivateChannel().sendMessage(eb.build()).queue();
-          if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-            EmbedBuilder eb2 = new EmbedBuilder();
-            eb2.setColor(dc);
-            eb2.setTitle("**ADMIN COMMANDS**", "https://tim740.github.io");
-            eb2.addField("prune %integer%", "Removes (1-100) amount of msgs.", true);
-            eb2.addField("say %string%", "Speak as the Bot.", true);
-            u.getPrivateChannel().sendMessage(eb2.build()).queue();
+          for (int i = 0; i < cmds.size(); i++) {
+            if (cmdRank.get(i).equals("user")) {
+              eb.addField(cmds.get(i), cmdDes.get(i), true);
+            } else if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
+              eb.addField(cmds.get(i), cmdDes.get(i), true);
+            }
           }
+          u.getPrivateChannel().sendMessage(eb.build()).queue();
           m.addReaction("\uD83D\uDC4D").queue();
           break;
         } case "info": {
@@ -132,15 +186,13 @@ class CmdSys {
           m.getChannel().sendMessage(eb.build()).queue();
           m.getChannel().sendMessage(el).queue();
           break;
-        } case "version": {
-          if (args[1].equals("aliases")) {
-            EmbedBuilder eb = new EmbedBuilder();
-            eb.setColor(dc);
-            BufferedReader ur = new BufferedReader(new InputStreamReader(new URL("https://raw.githubusercontent.com/tim740/skAliases/master/version.txt").openStream()));
-            eb.addField("Latest aliases version:", ("v" + ur.readLine()) + " <https://forums.skunity.com/topic/31?u=tim740>", false);
-            ur.close();
-            m.getChannel().sendMessage(eb.build()).queue();
-          }
+        } case "aliases": {
+          EmbedBuilder eb = new EmbedBuilder();
+          eb.setColor(dc);
+          BufferedReader ur = new BufferedReader(new InputStreamReader(new URL("https://raw.githubusercontent.com/tim740/skAliases/master/version.txt").openStream()));
+          eb.addField("Latest aliases version:", ("v" + ur.readLine()) + " <https://forums.skunity.com/topic/31?u=tim740>", false);
+          ur.close();
+          m.getChannel().sendMessage(eb.build()).queue();
           break;
         } case "whois": {
           Member wu = g.getMember(m.getMentionedUsers().get(1));
@@ -230,7 +282,7 @@ class CmdSys {
           eb.addField("Formatting:", "<https://support.discordapp.com/hc/en-us/articles/210298617>", false);
           m.getChannel().sendMessage(eb.build()).queue();
           break;
-        } case "invite": case "invites":{
+        } case "invites":{
           EmbedBuilder eb = new EmbedBuilder();
           eb.setColor(dc);
           eb.setAuthor(jda.getGuildById(skcid).getName() + " - Invites.", jda.getGuildById(skcid).getIconUrl(), jda.getGuildById(skcid).getIconUrl());
@@ -277,7 +329,7 @@ class CmdSys {
           eb.setFooter("Processed in " + (System.currentTimeMillis() - ct) + "ms", u.getAvatarUrl());
           m.getChannel().sendMessage(eb.build()).queue();
           break;
-        } case "prune": {
+        } case "purge": {
           m.delete();
           if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
             Integer i = Integer.parseInt(args[1]);
@@ -288,6 +340,17 @@ class CmdSys {
             }
           }
           break;
+        /*} case "reactclear": {
+          m.delete();
+          if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
+            Integer i = Integer.parseInt(args[1]);
+            if (i >= 0 && i <= 100) {
+              for (Message s : m.getChannel().getHistory().retrievePast(i).complete()) {
+                m.getChannel().deleteMessageById(s.getId()).queue();
+              }
+            }
+          }
+          break;*/
         } case "say": {
           if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
             m.delete().queue();
@@ -298,7 +361,7 @@ class CmdSys {
             m.getChannel().sendMessage(sc1).queue();
           }
           break;
-        } case "uptime": case "stats": {
+        } case "stats": {
           long ts = (System.currentTimeMillis() - st) / 1000;
           long tm = ts / 60;
           long th = tm / 60;
@@ -366,7 +429,7 @@ class CmdSys {
             }
           } else if (m.getContent().toLowerCase().startsWith("@skript-bot")) {
             if (validCmd(m.getContent().replaceFirst("@Skript-Bot ", "").replaceFirst("<@227067574469394432> ", "").split(" ")).equals(true)) {
-              prSysI(g, (TextChannel) m.getChannel(), m.getAuthor(), "executed: '" + m.getContent() + "'");
+              prSysI(g, (TextChannel) m.getChannel(), m.getAuthor(), "executed: '" + m.getContent().replaceFirst("@Skript-Bot ", "") + "'");
               cmd(m.getContent().replaceFirst("@Skript-Bot ", "").replaceFirst("<@227067574469394432> ", "").split(" "), g.getId(), m);
             }
           }

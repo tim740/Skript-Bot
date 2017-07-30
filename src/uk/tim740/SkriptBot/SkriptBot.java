@@ -20,6 +20,7 @@ public class SkriptBot {
     CmdSys.cmdSys(args[0]);
     jda.getPresence().setGame(Game.of("@Skript-Bot help"));
     CmdSys.reg();
+    //jda.getGuildById(skcid).getTextChannelById(lcid).getTopic().se
     jda.getGuildById(skcid).getTextChannelById(lcid).sendMessage("**Successfully reconnected to Skript-Chat, took " + (System.currentTimeMillis() - st) + "ms!**").queue();
     while (true) {
       switch (System.console().readLine()) {

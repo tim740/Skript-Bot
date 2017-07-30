@@ -20,9 +20,13 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static net.dv8tion.jda.core.Permission.MANAGE_CHANNEL;
+import static net.dv8tion.jda.core.Permission.MANAGE_WEBHOOKS;
+import static net.dv8tion.jda.core.Permission.MESSAGE_MANAGE;
 import static uk.tim740.SkriptBot.SkriptBot.*;
 
 /**
@@ -32,71 +36,93 @@ class CmdSys {
   private static Pattern tf = Pattern.compile("^(?:true|false),? +the +person +below +me +.+$");
   private static Color dc = Color.decode("#2D9CE2");
   private static ArrayList<String> cmds = new ArrayList<>();
+  private static ArrayList<String> cmdargs = new ArrayList<>();
   private static ArrayList<String> cmdDes = new ArrayList<>();
   private static ArrayList<String> cmdRank = new ArrayList<>();
   
   static void reg() {
     cmds.add("help");
+    cmdargs.add("");
     cmdDes.add("Help Command");
     cmdRank.add("user");
 
     cmds.add("info");
+    cmdargs.add("");
     cmdDes.add("Chat Info.");
     cmdRank.add("user");
 
     cmds.add("bots");
+    cmdargs.add("");
     cmdDes.add("Bots in Skript-Chat.");
     cmdRank.add("user");
 
-    cmds.add("emotes");
-    cmdDes.add("List of Emotes.");
-    cmdRank.add("user");
-
     cmds.add("aliases");
+    cmdargs.add("");
     cmdDes.add("Aliases version.");
     cmdRank.add("user");
 
     cmds.add("whois");
+    cmdargs.add("%user%");
     cmdDes.add("User Lookup.");
     cmdRank.add("user");
 
     cmds.add("skunity");
+    cmdargs.add("%string%");
     cmdDes.add("Lookup on skUnity Docs.");
     cmdRank.add("user");
 
     cmds.add("sku-status");
+    cmdargs.add("");
     cmdDes.add("Checks if skUnity is up.");
     cmdRank.add("user");
 
     cmds.add("links");
+    cmdargs.add("");
     cmdDes.add("Useful Links.");
     cmdRank.add("user");
 
     cmds.add("invites");
+    cmdargs.add("");
     cmdDes.add("Invites for Skript-Chat.");
     cmdRank.add("user");
 
     cmds.add("bin2txt");
+    cmdargs.add("%binary%");
     cmdDes.add("Convert binary to text.");
     cmdRank.add("user");
 
     cmds.add("txt2bin");
+    cmdargs.add("%string%");
     cmdDes.add("Convert text to binary.");
     cmdRank.add("user");
 
     cmds.add("embed");
+    cmdargs.add("%json string%");
     cmdDes.add("Generates a Embed.");
     cmdRank.add("user");
 
     cmds.add("stats");
+    cmdargs.add("");
     cmdDes.add("Returns Bot Stats.");
     cmdRank.add("user");
 
+    cmds.add("request-addon");
+    cmdargs.add("%name% %link%");
+    cmdDes.add("Request a Channel for your addon.");
+    cmdRank.add("user");
+
+    cmds.add("reg-addon");
+    cmdargs.add("%name% %author% %link%");
+    cmdDes.add("Create an addon channel.");
+    cmdRank.add("admin");
+
     cmds.add("purge");
+    cmdargs.add("%number%");
     cmdDes.add("Remove (1-100) msgs.");
     cmdRank.add("admin");
 
     cmds.add("say");
+    cmdargs.add("%string%");
     cmdDes.add("Speak as the Bot.");
     cmdRank.add("admin");
   }
@@ -124,9 +150,9 @@ class CmdSys {
           eb.setTitle("**COMMANDS** (All Commands start with `@Skript-Bot`)", "https://tim740.github.io");
           for (int i = 0; i < cmds.size(); i++) {
             if (cmdRank.get(i).equals("user")) {
-              eb.addField(cmds.get(i), cmdDes.get(i), true);
+              eb.addField(cmds.get(i) + " " + cmdargs.get(i), cmdDes.get(i), true);
             } else if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-              eb.addField(cmds.get(i), cmdDes.get(i), true);
+              eb.addField(cmds.get(i) + " " + cmdargs.get(i), cmdDes.get(i), true);
             }
           }
           u.getPrivateChannel().sendMessage(eb.build()).queue();
@@ -175,22 +201,11 @@ class CmdSys {
           eb.addField("Offline Bots:", (off + "/" + (on + off)), true);
           m.getChannel().sendMessage(eb.build()).queue();
           break;
-        } case "emotes": {
-          String el = "";
-          for (Emote em : g.getEmotes()) {
-            el += (" " + em.getAsMention());
-          }
-          EmbedBuilder eb = new EmbedBuilder();
-          eb.setColor(dc);
-          eb.setTitle("**Here's a list of all the emotes in " + g.getName() + "!**", "https://tim740.github.io");
-          m.getChannel().sendMessage(eb.build()).queue();
-          m.getChannel().sendMessage(el).queue();
-          break;
         } case "aliases": {
           EmbedBuilder eb = new EmbedBuilder();
           eb.setColor(dc);
           BufferedReader ur = new BufferedReader(new InputStreamReader(new URL("https://raw.githubusercontent.com/tim740/skAliases/master/version.txt").openStream()));
-          eb.addField("Latest aliases version:", ("v" + ur.readLine()) + " <https://forums.skunity.com/topic/31?u=tim740>", false);
+          eb.addField("Latest aliases version:", ("v" + ur.readLine()) + " <https://forums.skunity.com/resources/aliases.27/>", false);
           ur.close();
           m.getChannel().sendMessage(eb.build()).queue();
           break;
@@ -329,28 +344,49 @@ class CmdSys {
           eb.setFooter("Processed in " + (System.currentTimeMillis() - ct) + "ms", u.getAvatarUrl());
           m.getChannel().sendMessage(eb.build()).queue();
           break;
+        } case "request-addon": {
+          EmbedBuilder eb = new EmbedBuilder();
+          eb.setColor(dc);
+          eb.setTitle("Addon Channel Request");
+          eb.addField("Command:", "`@Skript-Bot reg-addon " + args[1] + " @" + m.getAuthor().getName() + " " + args[2] + "`", false);
+          jda.getGuildById(skcid).getTextChannelsByName("staff", false).get(0).sendMessage(eb.build()).queue();
+          break;
+        } case "reg-addon": {
+          if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
+            for (TextChannel tci: jda.getGuildById(skcaid).getTextChannels()) {
+              if (tci.getName().equals(args[1])) {
+                jda.getGuildById(skcid).getTextChannelsByName("staff", false).get(0).sendMessage("**Addon Channel:** `#" + args[1] + "` already exists!").queue();
+                break;
+              }
+            }
+            Member gm = jda.getGuildById(skcaid).getMemberById(m.getMentionedUsers().get(1).getId());
+            if (!gm.getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Addon Dev")) {
+              jda.getGuildById(skcaid).getController().addRolesToMember(gm, jda.getGuildById(skcaid).getRoleById("252875979477745665")).queue();
+            }
+            if (!jda.getGuildById(skcid).getMember(gm.getUser()).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Addon Dev")) {
+              jda.getGuildById(skcid).getController().addRolesToMember(jda.getGuildById(skcid).getMemberById(m.getMentionedUsers().get(1).getId()), g.getRoleById("138470986809999360")).queue();
+            }
+            jda.getGuildById(skcaid).getController().createTextChannel(args[1]).setTopic(args[1] + " related stuff: " + args[3]).queue(grac -> {
+              grac.createPermissionOverride(gm).setAllow(MANAGE_WEBHOOKS, MANAGE_CHANNEL, MESSAGE_MANAGE).queue();
+              grac.createInvite().setTemporary(false).queue();
+              ((TextChannel)grac).sendMessage("This is a Temporary message please remove this after you have read and understand it.\n" +
+                  "This is your channel for related chat about your addon, you can manage this channel, change the topic, create WebHooks, and remove messages, if this is abused this permission can be removed!\n" +
+                  "You also now have access to #addon-updates (In Skript-Chat) where you can post updates for your addon, please make sure to stick to the format, and only use this channel for posting addon or tool updates.\n" +
+                  "Don't know what a WebHook is? You can create a WebHook that allows you to link this channel and your addon's Github repo so when you get an issue, or commit on github it will be posted in this channel.\n" +
+                  "If you have any other questions ask a member of Staff!").queue();
+            });
+            jda.getGuildById(skcid).getTextChannelsByName("staff", false).get(0).sendMessage("**Addon Channel:** `#" + args[1] + "` has been created!").queue();
+          }
+          break;
         } case "purge": {
           m.delete();
           if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
             Integer i = Integer.parseInt(args[1]);
             if (i >= 0 && i <= 100) {
-              for (Message s : m.getChannel().getHistory().retrievePast(i).complete()) {
-                m.getChannel().deleteMessageById(s.getId()).queue();
-              }
+              ((TextChannel) m.getChannel()).deleteMessages(m.getChannel().getHistory().retrievePast(i).complete()).complete();
             }
           }
           break;
-        /*} case "reactclear": {
-          m.delete();
-          if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-            Integer i = Integer.parseInt(args[1]);
-            if (i >= 0 && i <= 100) {
-              for (Message s : m.getChannel().getHistory().retrievePast(i).complete()) {
-                m.getChannel().deleteMessageById(s.getId()).queue();
-              }
-            }
-          }
-          break;*/
         } case "say": {
           if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
             m.delete().queue();
@@ -375,6 +411,7 @@ class CmdSys {
           eb.setAuthor("tim740 (18/09/2016)", "https://tim740.github.io", g.getMemberById("138441986314207232").getUser().getAvatarUrl());
           eb.addField("Source:", "[GitHub](https://github.com/tim740/Skript-Bot) - [" + jo.get("sha").toString().substring(0, 7) + "](" + "https://github.com/tim740/Skript-Bot/commit/" + jo.get("sha").toString() + ")", true);
           eb.addField("Library:", "[JDA](https://github.com/DV8FromTheWorld/JDA) " + JDAInfo.VERSION, true);
+          eb.addField("Commands:", "`@Skript-Bot help` - " + cmds.size(), true);
           eb.addField("Ram (Used/Total):", ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000) + "/" + (Runtime.getRuntime().totalMemory() / 1000000) + "MB", true);
           eb.addField("Ping:", Math.abs(m.getCreationTime().until(OffsetDateTime.now(), ChronoUnit.MILLIS))  + "ms", true);
           eb.addField("Uptime:", (th / 24 + "d " + th % 24 + "h " + tm % 60 + "m " + ts % 60 + "s"), true);

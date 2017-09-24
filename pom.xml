@@ -99,7 +99,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>3.1.1_219</version>
+            <version>3.3.0_275</version>
         </dependency>
 
         <dependency>

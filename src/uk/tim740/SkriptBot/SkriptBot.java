@@ -13,11 +13,12 @@ public class SkriptBot {
   static JDA jda;
   static String skcid = "138464183946575874";
   static String mcid = "138464183946575874";
+  static String scid = "139843895063347201";
   static String lcid = "327617436713091072";
   static long st = System.currentTimeMillis();
 
-  public static void main(String[] args) {
-    CmdSys.cmdSys(args[0]);
+  public void main(String[] args) {
+    CmdSys.reg(args[0]);
     jda.getPresence().setGame(Game.of("@Skript-Bot help"));
     jda.getGuildById(skcid).getTextChannelById(lcid).getManager().setTopic("Last Restart: (" + new SimpleDateFormat("dd/MM/yy - HH:mm:ss").format(new Date()) + ") - took (" + (System.currentTimeMillis() - st) + "ms)").queue();
     jda.getGuildById(skcid).getTextChannelById(lcid).sendMessage("**Successfully reconnected to Skript-Chat, took " + (System.currentTimeMillis() - st) + "ms!**").queue();

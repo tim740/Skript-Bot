@@ -40,85 +40,28 @@ class CmdSys {
   private static ArrayList<String> cmdDes = new ArrayList<>();
   private static ArrayList<String> cmdRank = new ArrayList<>();
   
-  private static void reg() {
-    cmds.add("help");
-    cmdargs.add("");
-    cmdDes.add("Help Command");
-    cmdRank.add("user");
-
-    cmds.add("info");
-    cmdargs.add("");
-    cmdDes.add("Chat Info.");
-    cmdRank.add("user");
-
-    cmds.add("bots");
-    cmdargs.add("");
-    cmdDes.add("Bots in Skript-Chat.");
-    cmdRank.add("user");
-
-    cmds.add("aliases");
-    cmdargs.add("");
-    cmdDes.add("Aliases version.");
-    cmdRank.add("user");
-
-    cmds.add("whois");
-    cmdargs.add("%user%");
-    cmdDes.add("User Lookup.");
-    cmdRank.add("user");
-
-    cmds.add("sku-status");
-    cmdargs.add("");
-    cmdDes.add("Checks if skUnity is up.");
-    cmdRank.add("user");
-
-    cmds.add("links");
-    cmdargs.add("");
-    cmdDes.add("Useful Links.");
-    cmdRank.add("user");
-
-    cmds.add("invites");
-    cmdargs.add("");
-    cmdDes.add("Invites for Skript-Chat.");
-    cmdRank.add("user");
-
-    cmds.add("embed");
-    cmdargs.add("%json string%");
-    cmdDes.add("Generates a Embed.");
-    cmdRank.add("user");
-
-    cmds.add("stats");
-    cmdargs.add("");
-    cmdDes.add("Returns Bot Stats.");
-    cmdRank.add("user");
-
-    cmds.add("request-addon");
-    cmdargs.add("%name% %link%");
-    cmdDes.add("Request a Channel for your addon.");
-    cmdRank.add("user");
-
-    cmds.add("reg-addon");
-    cmdargs.add("%name% %author% %link%");
-    cmdDes.add("Create an addon channel.");
-    cmdRank.add("admin");
-
-    cmds.add("purge");
-    cmdargs.add("%number%");
-    cmdDes.add("Remove (1-100) msgs.");
-    cmdRank.add("admin");
-
-    cmds.add("say");
-    cmdargs.add("%string%");
-    cmdDes.add("Speak as the Bot.");
-    cmdRank.add("admin");
-  }
-
-  static void cmdSys(String tk) {
+  static void reg(String tk) {
     try {
       jda = new JDABuilder(AccountType.BOT).setToken(tk).addEventListener(new MessageListener()).buildBlocking();
     } catch (Exception x) {
       System.exit(0);
     }
-    reg();
+    cmdBuilder("help", "", "Help Command", "user");
+    cmdBuilder("info", "" , "Chat Info", "user");
+    cmdBuilder("bots", "", "Bots in Skript-Chat", "user");
+    cmdBuilder("whois", "%user%", "User Lookup", "user");
+    cmdBuilder("sku-status", "", "Checks if skUnity is Up", "user");
+    cmdBuilder("invites", "", "Invites for Skript-Chat", "user");
+    cmdBuilder("embed", "help | %json string%", "Generates a Embed", "user");
+    cmdBuilder("stats", "", "Returns Bot Stats", "user");
+    cmdBuilder("request-addon", "%name% %link%", "Request a Addon Channel", "user");
+    cmdBuilder("warn", "%name% %reason%", "Warn a User", "admin");
+    cmdBuilder("reg-addon", "%name% %author% %link%", "Create an Addon Channel", "admin");
+    cmdBuilder("purge", "%number%", "Remove 1-100 msgs", "admin");
+  }
+
+  private static void cmdBuilder(String cmd, String args, String desc, String rank) {
+    cmds.add(cmd); cmdargs.add(args); cmdDes.add(desc); cmdRank.add(rank);
   }
 
   private static void cmd(String[] args, String gi, Message m) {
@@ -133,7 +76,7 @@ class CmdSys {
           }
           EmbedBuilder eb = new EmbedBuilder();
           eb.setColor(dc);
-          eb.setTitle("**COMMANDS** (All Commands start with `@Skript-Bot`)", "https://tim740.github.io");
+          eb.setTitle("**COMMANDS** (All Commands start with `@Skript-Bot`)");
           for (int i = 0; i < cmds.size(); i++) {
             if (cmdRank.get(i).equals("user")) {
               eb.addField(cmds.get(i) + " " + cmdargs.get(i), cmdDes.get(i), true);
@@ -158,7 +101,7 @@ class CmdSys {
               bot++;
             }
           }
-          eb.setTitle("**Here's the information in " + g.getName() + "**", g.getIconUrl());
+          eb.setTitle("**Here's the information in " + g.getName() + "**");
           eb.addField("Online Users:", (on + "/" + g.getMembers().size()), true);
           eb.addField("Offline Users:", (off + "/" + g.getMembers().size()), true);
           eb.addField("Bots:", (bot + "/" + g.getMembers().size()), true);
@@ -170,10 +113,10 @@ class CmdSys {
           EmbedBuilder eb = new EmbedBuilder();
           eb.setColor(dc);
           int on = 0, off = 0;
-          String bots = "";
+          StringBuilder bots = new StringBuilder();
           for (Member s : g.getMembers()) {
             if (s.getUser().isBot()) {
-              bots += "@" + s.getUser().getName() + ":" + s.getUser().getDiscriminator() + ", ";
+              bots.append("@").append(s.getUser().getName()).append(":").append(s.getUser().getDiscriminator()).append(", ");
               if (s.getOnlineStatus().equals(OnlineStatus.ONLINE) || s.getOnlineStatus().equals(OnlineStatus.IDLE)) {
                 on++;
               } else if (s.getOnlineStatus().equals(OnlineStatus.OFFLINE)) {
@@ -181,18 +124,10 @@ class CmdSys {
               }
             }
           }
-          eb.setTitle("**Here's the bot information in " + g.getName() + "**", "https://tim740.github.io");
-          eb.setDescription(bots);
+          eb.setTitle("**Here's the bot information in " + g.getName() + "**");
+          eb.setDescription(bots.toString());
           eb.addField("Online Bots:", (on + "/" + (on + off)), true);
           eb.addField("Offline Bots:", (off + "/" + (on + off)), true);
-          m.getChannel().sendMessage(eb.build()).queue();
-          break;
-        } case "aliases": {
-          EmbedBuilder eb = new EmbedBuilder();
-          eb.setColor(dc);
-          BufferedReader ur = new BufferedReader(new InputStreamReader(new URL("https://raw.githubusercontent.com/tim740/skAliases/master/version.txt").openStream()));
-          eb.addField("Latest aliases version:", ("v" + ur.readLine()) + " <https://forums.skunity.com/resources/aliases.27/>", false);
-          ur.close();
           m.getChannel().sendMessage(eb.build()).queue();
           break;
         } case "whois": {
@@ -233,7 +168,7 @@ class CmdSys {
           } else {
             EmbedBuilder eb = new EmbedBuilder();
             eb.setColor(dc);
-            eb.setTitle("**Embed Help (Flags)**", "https://tim740.github.io");
+            eb.setTitle("**Embed Help (Flags)**");
             eb.addField("Author:", "```json\n\"author\":{\"content\":\"%text%\",\"linkurl\":\"%url%\",\"iconurl\":\"%url%\"}```", false);
             eb.addField("Color:", "```json\n\"color\":\"#hexColor%\"```", false);
             eb.addField("Title:", "```json\n\"title\":{\"title\":\"%text%\",\"titleurl\":\"%optional-url%\"}```", false);
@@ -245,14 +180,6 @@ class CmdSys {
             m.getChannel().sendMessage(eb.build()).queue();
           }
           break;
-        } case "links": {
-          EmbedBuilder eb = new EmbedBuilder();
-          eb.setColor(dc);
-          eb.addField("Skript:", "[Aliases](https://github.com/tim740/skAliases/releases/latest) - [Bensku](https://github.com/bensku/Skript/releases) - [Mirre](https://github.com/Mirreski/Skript/wiki) - [Nfell](http://nfell2009.uk/skript/downloads)", false);
-          eb.addField("skQuery:", "[VirusTotal](https://github.com/SkriptLegacy/skquery/releases)", false);
-          eb.addField("Formatting:", "<https://support.discordapp.com/hc/en-us/articles/210298617>", false);
-          m.getChannel().sendMessage(eb.build()).queue();
-          break;
         } case "invites":{
           EmbedBuilder eb = new EmbedBuilder();
           eb.setColor(dc);
@@ -263,36 +190,43 @@ class CmdSys {
         } case "request-addon": {
           EmbedBuilder eb = new EmbedBuilder();
           eb.setColor(dc);
-          eb.setTitle("Addon Channel Request: " + args[1], m.getAuthor().getAvatarUrl());
+          eb.setTitle("Addon Channel Request: " + args[1]);
           eb.addField("Command:", "`@Skript-Bot reg-addon " + args[1] + " @" + m.getAuthor().getName() + " " + args[2] + "`", false);
-          jda.getGuildById(skcid).getTextChannelsByName("staff", false).get(0).sendMessage(eb.build()).queue();
+          jda.getGuildById(skcid).getTextChannelById(scid).sendMessage(eb.build()).queue();
           m.addReaction("\uD83D\uDC4D").queue();
           break;
         } case "reg-addon": {
           if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-            for (TextChannel tci: jda.getGuildById(skcid).getTextChannels()) {
+            for (TextChannel tci : jda.getGuildById(skcid).getTextChannels()) {
               if (tci.getName().equals(args[1])) {
-                jda.getGuildById(skcid).getTextChannelsByName("staff", false).get(0).sendMessage("**Addon Channel:** `#" + args[1] + "` already exists!").queue();
-                break;
+                jda.getGuildById(skcid).getTextChannelById(scid).sendMessage("**Addon Channel:** `#" + args[1] + "` already exists!").queue();
               }
             }
             Member gm = g.getMemberById(m.getMentionedUsers().get(1).getId());
             if (!g.getMember(gm.getUser()).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Addon Dev")) {
               g.getController().addRolesToMember(g.getMemberById(m.getMentionedUsers().get(1).getId()), g.getRoleById("138470986809999360")).queue();
             }
-            g.getController().createTextChannel(args[1]).setTopic(args[1] + " related stuff: " + args[2]).queue(grac -> {
+            g.getController().createTextChannel(args[1]).setTopic("v0.0.0 | Forums: " + args[3] + "|\n\nOnly use this channel for " + args[1] + " related chat.").queue(grac -> {
               grac.createPermissionOverride(gm).setAllow(MANAGE_WEBHOOKS, MANAGE_CHANNEL, MESSAGE_MANAGE).queue();
               grac.createInvite().setTemporary(false).queue();
               //grac.getGuild().getController().modifyTextChannelPositions().
-              ((TextChannel)grac).sendMessage(gm.getAsMention() + " This is a Temporary message please remove this after you have read and understand it.\n" +
+              ((TextChannel) grac).sendMessage(gm.getAsMention() + " This is a Temporary message please remove this after you have read and understand it.\n" +
                   "This is your channel for related chat about your addon, you can manage this channel, change the topic, create WebHooks, and remove messages, if this is abused this permission can be removed!\n" +
-                  "You also now have access to #addon-updates (In Skript-Chat) where you can post updates for your addon, please make sure to stick to the format, and only use this channel for posting addon or tool updates.\n" +
+                  "You also now have access to #addon-updates where you can post updates for your addon, please make sure to stick to the format, and only use this channel for posting addon or tool updates.\n" +
                   "Don't know what a WebHook is? You can create a WebHook that allows you to link this channel and your addon's Github repo so when you get an issue, or commit on github it will be posted in this channel, Help link: https://support.discordapp.com/hc/en-us/articles/228383668-Intro-to-Webhooks\n" +
                   "If you have any other questions ask a member of Staff!").queue();
-              });
-            g.getTextChannelsByName("staff", false).get(0).sendMessage("**Addon Channel:** `#" + args[1] + "` has been created!").queue();
+            });
+            g.getTextChannelById(scid).sendMessage("**Addon Channel:** `#" + args[1] + "` has been created!").queue();
             jda.getTextChannelById(mcid).sendMessage("Addon Channel: **" + args[1] + "** has just been created!").queue();
           }
+          break;
+        } case "warn": {
+          User mu = m.getMentionedUsers().get(1);
+          EmbedBuilder eb = new EmbedBuilder();
+          eb.setColor(Color.decode("#EF493A"));
+          eb.addField("Warned: " + mu.getAsMention(), "Reason: `" + args[2] + "` (**" +  "**/**5**)", false);
+          jda.getGuildById(skcid).getTextChannelById(scid).sendMessage(eb.build()).queue();
+          jda.getGuildById(skcid).getTextChannelById(mcid).sendMessage(eb.build()).queue();
           break;
         } case "purge": {
           if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
@@ -300,16 +234,6 @@ class CmdSys {
             if (i >= 0 && i <= 100) {
               ((TextChannel) m.getChannel()).deleteMessages(m.getChannel().getHistory().retrievePast(i).complete()).complete();
             }
-          }
-          break;
-        } case "say": {
-          if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-            m.delete().queue();
-            String sc1 = umsg.replace("@everyone", "").replace("@here", "");
-            for (User tu : m.getMentionedUsers()) {
-              sc1 = sc1.replace("@" + tu.getName(), tu.getAsMention());
-            }
-            m.getChannel().sendMessage(sc1).queue();
           }
           break;
         } case "stats": {
@@ -340,8 +264,34 @@ class CmdSys {
     }
   }
 
+  private static void cmdEx(Guild g, Message m) {
+    if (!m.getAuthor().getId().equals("227067574469394432")) {
+      String mc = m.getContent().replaceFirst("@Skript-Bot ", "").replaceFirst("<@227067574469394432> ", "");
+      if (!m.isFromType(ChannelType.PRIVATE)) {
+        if (!m.getChannel().getId().equals(lcid)) {
+          if (m.getChannel().getId().equals("237960698854899713")) {
+            if (!g.getMember(m.getAuthor()).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
+              if (!tf.matcher(m.getContent().toLowerCase()).find()) m.delete().queue();
+            }
+          } else if (m.getContent().toLowerCase().startsWith("@skript-bot")) {
+            if (validCmd(mc.split(" ")).equals(true)) {
+              prSysI(g, (TextChannel) m.getChannel(), m.getAuthor(), "executed: '" + mc + "'");
+              cmd(mc.split(" "), g.getId(), m);
+            }
+          }
+        } else {
+          m.delete().queue();
+        }
+      } else {
+        if (validCmd(mc.split(" ")).equals(true)) {
+          prSysI("Private", m.getAuthor(), "executed: '" + mc + "'");
+          cmd(mc.split(" "), "", m);
+        }
+      }
+    }
+  }
+
   private static class MessageListener extends ListenerAdapter {
-    @Override
     public void onMessageReceived(MessageReceivedEvent e) {
       cmdEx(e.getGuild(), e.getMessage());
     }
@@ -352,9 +302,6 @@ class CmdSys {
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent e) {
       prSysI(e.getGuild().getName(), e.getMember().getUser(), "joined!");
-      if (e.getGuild().getId().equals(skcid)) {
-        jda.getTextChannelById(mcid).sendMessage("Welcome " + e.getMember().getAsMention() + " to Skript-Chat!").queue();
-      }
     }
     @Override
     public void onGuildMemberLeave(GuildMemberLeaveEvent e) {
@@ -367,33 +314,7 @@ class CmdSys {
       eb.setAuthor("@" + e.getUser().getName() + "#" + e.getUser().getDiscriminator() + " (" + e.getGuild().getMember(e.getUser()).getEffectiveName() + ")", e.getUser().getAvatarUrl(), e.getUser().getAvatarUrl());
       eb.setDescription("Banned!");
       eb.setFooter(e.getGuild().getName(), e.getGuild().getIconUrl());
-      jda.getGuildById(skcid).getTextChannelsByName("staff", false).get(0).sendMessage(eb.build()).queue();
-    }
-  }
-
-  private static void cmdEx(Guild g, Message m) {
-    if (!m.getAuthor().getId().equals("227067574469394432")) {
-      if (!m.isFromType(ChannelType.PRIVATE)) {
-        if (!m.getChannel().getId().equals(lcid)) {
-          if (m.getChannel().getId().equals("237960698854899713")) {
-            if (!g.getMember(m.getAuthor()).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-              if (!tf.matcher(m.getContent().toLowerCase()).find()) m.delete().queue();
-            }
-          } else if (m.getContent().toLowerCase().startsWith("@skript-bot")) {
-            if (validCmd(m.getContent().replaceFirst("@Skript-Bot ", "").replaceFirst("<@227067574469394432> ", "").split(" ")).equals(true)) {
-              prSysI(g, (TextChannel) m.getChannel(), m.getAuthor(), "executed: '" + m.getContent().replaceFirst("@Skript-Bot ", "") + "'");
-              cmd(m.getContent().replaceFirst("@Skript-Bot ", "").replaceFirst("<@227067574469394432> ", "").split(" "), g.getId(), m);
-            }
-          }
-        } else {
-          m.delete().queue();
-        }
-      } else {
-        if (validCmd(m.getContent().replaceFirst("@Skript-Bot ", "").replaceFirst("<@227067574469394432> ", "").split(" ")).equals(true)) {
-          prSysI("Private", m.getAuthor(), "executed: '" + m.getContent().replaceFirst("<@227067574469394432> ", "") + "'");
-          cmd(m.getContent().replaceFirst("@Skript-Bot ", "").replaceFirst("<@227067574469394432> ", "").split(" "), "", m);
-        }
-      }
+      jda.getGuildById(skcid).getTextChannelById(scid).sendMessage(eb.build()).queue();
     }
   }
 
@@ -460,15 +381,14 @@ class CmdSys {
   }
 
   private static String invBuilder(Guild g) {
-    String desc = "";
+    StringBuilder desc = new StringBuilder();
     try {
       for (Invite i : g.getInvites().submit().get()) {
-        desc += (", [#" + i.getChannel().getName() + "](https://discord.gg/" + i.getCode() + ") (" + i.getUses() + ")");
+        desc.append(", [#").append(i.getChannel().getName()).append("](https://discord.gg/").append(i.getCode()).append(") (").append(i.getUses()).append(")");
       }
     } catch (Exception x) {
       x.printStackTrace();
     }
-    return desc.replaceFirst(",", "");
+    return desc.toString().replaceFirst(",", "");
   }
-
 }

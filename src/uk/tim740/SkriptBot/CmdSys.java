@@ -33,14 +33,18 @@ import static uk.tim740.SkriptBot.SkriptBot.*;
  * Created by tim740 on 20/09/2016
  */
 class CmdSys {
-  private static Pattern tf = Pattern.compile("^(?:true|false),? +the +person +below +me +.+$");
-  private static Color dc = Color.decode("#2D9CE2");
-  private static ArrayList<String> cmds = new ArrayList<>();
-  private static ArrayList<String> cmdargs = new ArrayList<>();
-  private static ArrayList<String> cmdDes = new ArrayList<>();
-  private static ArrayList<String> cmdRank = new ArrayList<>();
+  private Pattern tf = Pattern.compile("^(?:true|false),? +the +person +below +me +.+$");
+  private Color dc = Color.decode("#2D9CE2");
+  final String SKC_ID = "138464183946575874";
+  final String LC_ID = "327617436713091072";
+  private final String MC_ID = "138464183946575874";
+  private final String SC_ID = "139843895063347201";
+  private ArrayList<String> cmds = new ArrayList<>();
+  private ArrayList<String> cargs = new ArrayList<>();
+  private ArrayList<String> cdesc = new ArrayList<>();
+  private ArrayList<String> crank = new ArrayList<>();
   
-  static void reg(String tk) {
+  void reg(String tk) {
     try {
       jda = new JDABuilder(AccountType.BOT).setToken(tk).addEventListener(new MessageListener()).buildBlocking();
     } catch (Exception x) {
@@ -60,14 +64,14 @@ class CmdSys {
     cmdBuilder("purge", "%number%", "Remove 1-100 msgs", "admin");
   }
 
-  private static void cmdBuilder(String cmd, String args, String desc, String rank) {
-    cmds.add(cmd); cmdargs.add(args); cmdDes.add(desc); cmdRank.add(rank);
+  private void cmdBuilder(String cmd, String args, String desc, String rank) {
+    cmds.add(cmd); cargs.add(args); cdesc.add(desc); crank.add(rank);
   }
 
-  private static void cmd(String[] args, String gi, Message m) {
+  private void cmd(String[] args, String gi, Message m) {
     String umsg = m.getContent().replaceFirst(args[0] + " ", "").replaceFirst("@Skript-Bot", "");
     User u = m.getAuthor();
-    Guild g = jda.getGuildById((!Objects.equals(gi, "") ? gi : mcid));
+    Guild g = jda.getGuildById((!Objects.equals(gi, "") ? gi : MC_ID));
     try {
       switch (args[0].toLowerCase()) {
         case "help": {
@@ -78,10 +82,10 @@ class CmdSys {
           eb.setColor(dc);
           eb.setTitle("**COMMANDS** (All Commands start with `@Skript-Bot`)");
           for (int i = 0; i < cmds.size(); i++) {
-            if (cmdRank.get(i).equals("user")) {
-              eb.addField(cmds.get(i) + " " + cmdargs.get(i), cmdDes.get(i), true);
+            if (crank.get(i).equals("user")) {
+              eb.addField(cmds.get(i) + " " + cargs.get(i), cdesc.get(i), true);
             } else if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-              eb.addField(cmds.get(i) + " " + cmdargs.get(i), cmdDes.get(i), true);
+              eb.addField(cmds.get(i) + " " + cargs.get(i), cdesc.get(i), true);
             }
           }
           u.openPrivateChannel().queue(c -> c.sendMessage(eb.build()).queue());
@@ -183,8 +187,8 @@ class CmdSys {
         } case "invites":{
           EmbedBuilder eb = new EmbedBuilder();
           eb.setColor(dc);
-          eb.setAuthor(jda.getGuildById(skcid).getName() + " - Invites.", jda.getGuildById(skcid).getIconUrl(), jda.getGuildById(skcid).getIconUrl());
-          eb.setDescription(invBuilder(jda.getGuildById(skcid)));
+          eb.setAuthor(jda.getGuildById(SKC_ID).getName() + " - Invites.", jda.getGuildById(SKC_ID).getIconUrl(), jda.getGuildById(SKC_ID).getIconUrl());
+          eb.setDescription(invBuilder(jda.getGuildById(SKC_ID)));
           m.getChannel().sendMessage(eb.build()).queue();
           break;
         } case "request-addon": {
@@ -192,14 +196,14 @@ class CmdSys {
           eb.setColor(dc);
           eb.setTitle("Addon Channel Request: " + args[1]);
           eb.addField("Command:", "`@Skript-Bot reg-addon " + args[1] + " @" + m.getAuthor().getName() + " " + args[2] + "`", false);
-          jda.getGuildById(skcid).getTextChannelById(scid).sendMessage(eb.build()).queue();
+          jda.getGuildById(SKC_ID).getTextChannelById(SC_ID).sendMessage(eb.build()).queue();
           m.addReaction("\uD83D\uDC4D").queue();
           break;
         } case "reg-addon": {
           if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-            for (TextChannel tci : jda.getGuildById(skcid).getTextChannels()) {
+            for (TextChannel tci : jda.getGuildById(SKC_ID).getTextChannels()) {
               if (tci.getName().equals(args[1])) {
-                jda.getGuildById(skcid).getTextChannelById(scid).sendMessage("**Addon Channel:** `#" + args[1] + "` already exists!").queue();
+                jda.getGuildById(SKC_ID).getTextChannelById(SC_ID).sendMessage("**Addon Channel:** `#" + args[1] + "` already exists!").queue();
               }
             }
             Member gm = g.getMemberById(m.getMentionedUsers().get(1).getId());
@@ -216,8 +220,8 @@ class CmdSys {
                   "Don't know what a WebHook is? You can create a WebHook that allows you to link this channel and your addon's Github repo so when you get an issue, or commit on github it will be posted in this channel, Help link: https://support.discordapp.com/hc/en-us/articles/228383668-Intro-to-Webhooks\n" +
                   "If you have any other questions ask a member of Staff!").queue();
             });
-            g.getTextChannelById(scid).sendMessage("**Addon Channel:** `#" + args[1] + "` has been created!").queue();
-            jda.getTextChannelById(mcid).sendMessage("Addon Channel: **" + args[1] + "** has just been created!").queue();
+            g.getTextChannelById(SC_ID).sendMessage("**Addon Channel:** `#" + args[1] + "` has been created!").queue();
+            jda.getTextChannelById(MC_ID).sendMessage("Addon Channel: **" + args[1] + "** has just been created!").queue();
           }
           break;
         } case "warn": {
@@ -225,8 +229,8 @@ class CmdSys {
           EmbedBuilder eb = new EmbedBuilder();
           eb.setColor(Color.decode("#EF493A"));
           eb.addField("Warned: " + mu.getAsMention(), "Reason: `" + args[2] + "` (**" +  "**/**5**)", false);
-          jda.getGuildById(skcid).getTextChannelById(scid).sendMessage(eb.build()).queue();
-          jda.getGuildById(skcid).getTextChannelById(mcid).sendMessage(eb.build()).queue();
+          jda.getGuildById(SKC_ID).getTextChannelById(SC_ID).sendMessage(eb.build()).queue();
+          jda.getGuildById(SKC_ID).getTextChannelById(MC_ID).sendMessage(eb.build()).queue();
           break;
         } case "purge": {
           if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
@@ -264,11 +268,11 @@ class CmdSys {
     }
   }
 
-  private static void cmdEx(Guild g, Message m) {
+  private void cmdEx(Guild g, Message m) {
     if (!m.getAuthor().getId().equals("227067574469394432")) {
       String mc = m.getContent().replaceFirst("@Skript-Bot ", "").replaceFirst("<@227067574469394432> ", "");
       if (!m.isFromType(ChannelType.PRIVATE)) {
-        if (!m.getChannel().getId().equals(lcid)) {
+        if (!m.getChannel().getId().equals(LC_ID)) {
           if (m.getChannel().getId().equals("237960698854899713")) {
             if (!g.getMember(m.getAuthor()).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
               if (!tf.matcher(m.getContent().toLowerCase()).find()) m.delete().queue();
@@ -291,7 +295,7 @@ class CmdSys {
     }
   }
 
-  private static class MessageListener extends ListenerAdapter {
+  private class MessageListener extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent e) {
       cmdEx(e.getGuild(), e.getMessage());
     }
@@ -314,15 +318,15 @@ class CmdSys {
       eb.setAuthor("@" + e.getUser().getName() + "#" + e.getUser().getDiscriminator() + " (" + e.getGuild().getMember(e.getUser()).getEffectiveName() + ")", e.getUser().getAvatarUrl(), e.getUser().getAvatarUrl());
       eb.setDescription("Banned!");
       eb.setFooter(e.getGuild().getName(), e.getGuild().getIconUrl());
-      jda.getGuildById(skcid).getTextChannelById(scid).sendMessage(eb.build()).queue();
+      jda.getGuildById(SKC_ID).getTextChannelById(SC_ID).sendMessage(eb.build()).queue();
     }
   }
 
-  private static Boolean validCmd(String[] args) {
+  private Boolean validCmd(String[] args) {
     return cmds.contains(args[0].toLowerCase());
   }
 
-  private static MessageEmbed cOs(String u, String n, String ico) throws Exception {
+  private MessageEmbed cOs(String u, String n, String ico) throws Exception {
     HttpURLConnection c = (HttpURLConnection) new URL(u).openConnection();
     c.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
     int r = c.getResponseCode();
@@ -336,7 +340,7 @@ class CmdSys {
     return eb.build();
   }
 
-  private static MessageEmbed embedBuilder(String text) {
+  private MessageEmbed embedBuilder(String text) {
     EmbedBuilder eb = new EmbedBuilder();
     try {
       JSONObject j = (JSONObject) new JSONParser().parse(text);
@@ -380,7 +384,7 @@ class CmdSys {
     return eb.build();
   }
 
-  private static String invBuilder(Guild g) {
+  private String invBuilder(Guild g) {
     StringBuilder desc = new StringBuilder();
     try {
       for (Invite i : g.getInvites().submit().get()) {

@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8f93b0fe-f5cd-4238-88b0-0f0f526bd76f" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/uk/tim740/SkriptBot/CmdSys.java" afterPath="$PROJECT_DIR$/src/uk/tim740/SkriptBot/CmdSys.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/uk/tim740/SkriptBot/SkriptBot.java" afterPath="$PROJECT_DIR$/src/uk/tim740/SkriptBot/SkriptBot.java" />
-    </list>
+    <list default="true" id="8f93b0fe-f5cd-4238-88b0-0f0f526bd76f" name="Default" comment="" />
     <ignored path="Skript-Bot.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -564,13 +560,6 @@
       <option name="presentableId" value="Default" />
       <updated>1474208562810</updated>
     </task>
-    <task id="LOCAL-00056" summary="things may of changed">
-      <created>1475094892930</created>
-      <option name="number" value="00056" />
-      <option name="presentableId" value="LOCAL-00056" />
-      <option name="project" value="LOCAL" />
-      <updated>1475094892931</updated>
-    </task>
     <task id="LOCAL-00057" summary="public">
       <created>1475095171721</created>
       <option name="number" value="00057" />
@@ -907,7 +896,14 @@
       <option name="project" value="LOCAL" />
       <updated>1506269653623</updated>
     </task>
-    <option name="localTasksCounter" value="105" />
+    <task id="LOCAL-00105" summary="optimize">
+      <created>1506448439819</created>
+      <option name="number" value="00105" />
+      <option name="presentableId" value="LOCAL-00105" />
+      <option name="project" value="LOCAL" />
+      <updated>1506448439821</updated>
+    </task>
+    <option name="localTasksCounter" value="106" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -922,7 +918,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.7990033" sideWeight="0.50807637" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32966226" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.0" sideWeight="0.438326" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0" sideWeight="0.438326" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32905483" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -972,7 +968,6 @@
     <MESSAGE value="loads" />
     <MESSAGE value="optimize, change icon" />
     <MESSAGE value="embedBuilder, optimize" />
-    <MESSAGE value="optimize" />
     <MESSAGE value="gui update" />
     <MESSAGE value="optimise" />
     <MESSAGE value="fixes" />
@@ -981,7 +976,8 @@
     <MESSAGE value="dynamic help command" />
     <MESSAGE value="req reg addon" />
     <MESSAGE value="embed builder updates" />
-    <option name="LAST_COMMIT_MESSAGE" value="embed builder updates" />
+    <MESSAGE value="optimize" />
+    <option name="LAST_COMMIT_MESSAGE" value="optimize" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

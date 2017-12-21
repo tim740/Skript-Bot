@@ -15,7 +15,6 @@ import org.json.simple.parser.ParseException;
 
 import java.awt.*;
 import java.io.*;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -38,6 +37,7 @@ class CmdSys {
   final String SKC_ID = "138464183946575874";
   final String LC_ID = "327617436713091072";
   private final String MC_ID = "138464183946575874";
+  private final String AC_ID = "393172371806355466";
   private final String SC_ID = "139843895063347201";
   private ArrayList<String> cmds = new ArrayList<>();
   private ArrayList<String> cargs = new ArrayList<>();
@@ -54,7 +54,6 @@ class CmdSys {
     cmdBuilder("info", "" , "Chat Info", "user");
     cmdBuilder("bots", "", "Bots in Skript-Chat", "user");
     cmdBuilder("whois", "%user%", "User Lookup", "user");
-    cmdBuilder("sku-status", "", "Checks if skUnity is Up", "user");
     cmdBuilder("invites", "", "Invites for Skript-Chat", "user");
     cmdBuilder("embed", "help | %json string%", "Generates a Embed", "user");
     cmdBuilder("stats", "", "Returns Bot Stats", "user");
@@ -68,6 +67,7 @@ class CmdSys {
     cmds.add(cmd); cargs.add(args); cdesc.add(desc); crank.add(rank);
   }
 
+  @SuppressWarnings("unchecked")
   private void cmd(String[] args, String gi, Message m) {
     String umsg = m.getContent().replaceFirst(args[0] + " ", "").replaceFirst("@Skript-Bot", "");
     User u = m.getAuthor();
@@ -154,10 +154,6 @@ class CmdSys {
           eb.setFooter(g.getName(), g.getIconUrl());
           m.getChannel().sendMessage(eb.build()).queue();
           break;
-        } case "sku-status": {
-          m.getChannel().sendMessage(cOs("https://www.skunity.com", "skUnity Docs", "https://www.skunity.com/favicon.ico")).queue();
-          m.getChannel().sendMessage(cOs("https://forums.skunity.com", "skUnity Forums", "https://forums.skunity.com/favicon.ico")).queue();
-          break;
         } case "embed": {
           if (args[1].contains("{")) {
             if (umsg.contains("|&|")) {
@@ -194,9 +190,11 @@ class CmdSys {
         } case "request-addon": {
           EmbedBuilder eb = new EmbedBuilder();
           eb.setColor(dc);
-          eb.setTitle("Addon Channel Request: " + args[1]);
-          eb.addField("Command:", "`@Skript-Bot reg-addon " + args[1] + " @" + m.getAuthor().getName() + " " + args[2] + "`", false);
+          eb.setAuthor(m.getAuthor().getName() + " - (Addon Channel Request)", m.getAuthor().getAvatarUrl(), m.getAuthor().getAvatarUrl());
+          eb.addField("Addon:", args[1], false);
+          eb.addField("Link:", args[2], false);
           jda.getGuildById(SKC_ID).getTextChannelById(SC_ID).sendMessage(eb.build()).queue();
+          jda.getGuildById(SKC_ID).getTextChannelById(SC_ID).sendMessage("`@Skript-Bot reg-addon " + args[1] + " @" + m.getAuthor().getName() + " " + args[2] + "`").queue();
           m.addReaction("\uD83D\uDC4D").queue();
           break;
         } case "reg-addon": {
@@ -204,33 +202,45 @@ class CmdSys {
             for (TextChannel tci : jda.getGuildById(SKC_ID).getTextChannels()) {
               if (tci.getName().equals(args[1])) {
                 jda.getGuildById(SKC_ID).getTextChannelById(SC_ID).sendMessage("**Addon Channel:** `#" + args[1] + "` already exists!").queue();
+                break;
               }
             }
             Member gm = g.getMemberById(m.getMentionedUsers().get(1).getId());
             if (!g.getMember(gm.getUser()).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Addon Dev")) {
               g.getController().addRolesToMember(g.getMemberById(m.getMentionedUsers().get(1).getId()), g.getRoleById("138470986809999360")).queue();
             }
-            g.getController().createTextChannel(args[1]).setTopic("v0.0.0 | Forums: " + args[3] + "|\n\nOnly use this channel for " + args[1] + " related chat.").queue(grac -> {
+            g.getController().createTextChannel(args[1]).setTopic("v0.0.0 | Forums: " + args[3] + " |\n\nOnly use this channel for " + args[1] + " related chat.").queue(grac -> {
               grac.createPermissionOverride(gm).setAllow(MANAGE_WEBHOOKS, MANAGE_CHANNEL, MESSAGE_MANAGE).queue();
-              grac.createInvite().setTemporary(false).queue();
+              grac.createInvite().setTemporary(false).setMaxAge(0).queue();
               //grac.getGuild().getController().modifyTextChannelPositions().
               ((TextChannel) grac).sendMessage(gm.getAsMention() + " This is a Temporary message please remove this after you have read and understand it.\n" +
                   "This is your channel for related chat about your addon, you can manage this channel, change the topic, create WebHooks, and remove messages, if this is abused this permission can be removed!\n" +
                   "You also now have access to #addon-updates where you can post updates for your addon, please make sure to stick to the format, and only use this channel for posting addon or tool updates.\n" +
                   "Don't know what a WebHook is? You can create a WebHook that allows you to link this channel and your addon's Github repo so when you get an issue, or commit on github it will be posted in this channel, Help link: https://support.discordapp.com/hc/en-us/articles/228383668-Intro-to-Webhooks\n" +
                   "If you have any other questions ask a member of Staff!").queue();
+              jda.getTextChannelById(AC_ID).sendMessage("Addon Channel: " + jda.getTextChannelById(grac.getId()).getAsMention() + " has just been created!").queue();
             });
-            g.getTextChannelById(SC_ID).sendMessage("**Addon Channel:** `#" + args[1] + "` has been created!").queue();
-            jda.getTextChannelById(MC_ID).sendMessage("Addon Channel: **" + args[1] + "** has just been created!").queue();
+            m.addReaction("\uD83D\uDC4D").queue();
           }
           break;
         } case "warn": {
-          User mu = m.getMentionedUsers().get(1);
-          EmbedBuilder eb = new EmbedBuilder();
-          eb.setColor(Color.decode("#EF493A"));
-          eb.addField("Warned: " + mu.getAsMention(), "Reason: `" + args[2] + "` (**" +  "**/**5**)", false);
-          jda.getGuildById(SKC_ID).getTextChannelById(SC_ID).sendMessage(eb.build()).queue();
-          jda.getGuildById(SKC_ID).getTextChannelById(MC_ID).sendMessage(eb.build()).queue();
+          if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
+            User mu = m.getMentionedUsers().get(1);
+            EmbedBuilder eb = new EmbedBuilder();
+            eb.setColor(Color.decode("#EF493A"));
+            JSONObject j = (JSONObject) new JSONParser().parse(new FileReader("warning.json"));
+            long warnCount = 1;
+            if (j.containsKey(mu.getId())) {
+              warnCount += (long) j.get(mu.getId());
+            }
+            j.put(mu.getId(), warnCount);
+            try (FileWriter jf = new FileWriter("warning.json")) {
+              jf.write(j.toJSONString());
+            }
+            eb.addField("@" + u.getName() + " warned @" + mu.getName() + "#" + mu.getDiscriminator(), "Reason: `" + umsg.replaceFirst(args[1], "") + "` (**" + warnCount + "**/**5**)", false);
+            jda.getGuildById(SKC_ID).getTextChannelById(AC_ID).sendMessage(eb.build()).queue();
+            m.addReaction("\uD83D\uDC4D").queue();
+          }
           break;
         } case "purge": {
           if (g.getMember(u).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
@@ -302,7 +312,6 @@ class CmdSys {
     public void onMessageUpdate(MessageUpdateEvent e) {
       cmdEx(e.getGuild(), e.getMessage());
     }
-
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent e) {
       prSysI(e.getGuild().getName(), e.getMember().getUser(), "joined!");
@@ -318,26 +327,12 @@ class CmdSys {
       eb.setAuthor("@" + e.getUser().getName() + "#" + e.getUser().getDiscriminator() + " (" + e.getGuild().getMember(e.getUser()).getEffectiveName() + ")", e.getUser().getAvatarUrl(), e.getUser().getAvatarUrl());
       eb.setDescription("Banned!");
       eb.setFooter(e.getGuild().getName(), e.getGuild().getIconUrl());
-      jda.getGuildById(SKC_ID).getTextChannelById(SC_ID).sendMessage(eb.build()).queue();
+      jda.getGuildById(SKC_ID).getTextChannelById(AC_ID).sendMessage(eb.build()).queue();
     }
   }
 
   private Boolean validCmd(String[] args) {
     return cmds.contains(args[0].toLowerCase());
-  }
-
-  private MessageEmbed cOs(String u, String n, String ico) throws Exception {
-    HttpURLConnection c = (HttpURLConnection) new URL(u).openConnection();
-    c.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
-    int r = c.getResponseCode();
-    c.disconnect();
-    EmbedBuilder eb = new EmbedBuilder().setAuthor(n, u, ico);
-    if (r == HttpURLConnection.HTTP_OK){
-      eb.setDescription("**Online**: `" + r + "`").setColor(Color.decode("#21D66F"));
-    } else {
-      eb.setDescription("**Offline**: `" + r + "`").setColor(Color.decode("#EF493A"));
-    }
-    return eb.build();
   }
 
   private MessageEmbed embedBuilder(String text) {

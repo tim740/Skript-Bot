@@ -21,8 +21,8 @@ public class SkriptBot {
   public SkriptBot(String[] args) {
     cmdSys.reg(args[0]);
     jda.getPresence().setGame(Game.of("@Skript-Bot help"));
+    jda.getGuildById(cmdSys.SKC_ID).getTextChannelById(cmdSys.LC_ID).sendMessage("**Successfully reconnected to Skript-Chat**").queue();
     jda.getGuildById(cmdSys.SKC_ID).getTextChannelById(cmdSys.LC_ID).getManager().setTopic("Last Restart: (" + new SimpleDateFormat("dd/MM/yy - HH:mm:ss").format(new Date()) + ") - took (" + (System.currentTimeMillis() - st) + "ms)").queue();
-    jda.getGuildById(cmdSys.SKC_ID).getTextChannelById(cmdSys.LC_ID).sendMessage("**Successfully reconnected to Skript-Chat, took " + (System.currentTimeMillis() - st) + "ms!**").queue();
     while (true) {
       switch (System.console().readLine()) {
         case "rs":

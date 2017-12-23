@@ -20,9 +20,9 @@ public class SkriptBot {
 
   public SkriptBot(String[] args) {
     cmdSys.reg(args[0]);
-    jda.getPresence().setGame(Game.of("@Skript-Bot help"));
-    jda.getGuildById(cmdSys.SKC_ID).getTextChannelById(cmdSys.LC_ID).sendMessage("**Successfully reconnected to Skript-Chat**").queue();
-    jda.getGuildById(cmdSys.SKC_ID).getTextChannelById(cmdSys.LC_ID).getManager().setTopic("Last Restart: (" + new SimpleDateFormat("dd/MM/yy - HH:mm:ss").format(new Date()) + ") - took (" + (System.currentTimeMillis() - st) + "ms)").queue();
+    jda.getPresence().setGame(Game.watching("@Skript-Bot help"));
+    cmdSys.GO.getTextChannelById(cmdSys.LC_ID).sendMessage("**Successfully reconnected to Skript-Chat**").queue();
+    cmdSys.GO.getTextChannelById(cmdSys.LC_ID).getManager().setTopic("Last Restart: (" + new SimpleDateFormat("dd/MM/yy - HH:mm:ss").format(new Date()) + ") - took (" + (System.currentTimeMillis() - st) + "ms)").queue();
     while (true) {
       switch (System.console().readLine()) {
         case "rs":
@@ -36,10 +36,10 @@ public class SkriptBot {
 
   static void prSysI(Guild g, TextChannel c, User u, String s) {
     System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Info] " + "[" + g.getName() + "] (#" + c.getName() + ") @" + u.getName() + "#" + u.getDiscriminator() + " - "  + s);
-    jda.getGuildById(cmdSys.SKC_ID).getTextChannelById(cmdSys.LC_ID).sendMessage("**" + g.getName() + "**: " + c.getAsMention() + " - " + u.getAsMention() + " - " + s).queue();
+    cmdSys.GO.getTextChannelById(cmdSys.LC_ID).sendMessage("**" + g.getName() + "**: " + c.getAsMention() + " - " + u.getAsMention() + " - " + s).queue();
   }
   static void prSysI(String g, User u, String s) {
     System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Info] " + "[" + g + "] @" + u.getName() + "#" + u.getDiscriminator() + " - "  + s);
-    jda.getGuildById(cmdSys.SKC_ID).getTextChannelById(cmdSys.LC_ID).sendMessage("**" + g + "**: " + u.getAsMention() + " - " + s).queue();
+    cmdSys.GO.getTextChannelById(cmdSys.LC_ID).sendMessage("**" + g + "**: " + u.getAsMention() + " - " + s).queue();
   }
 }

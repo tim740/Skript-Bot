@@ -5,6 +5,7 @@ import net.dv8tion.jda.core.entities.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
 
 /**
  * Created by tim740 on 18/09/2016
@@ -23,8 +24,9 @@ public class SkriptBot {
     jda.getPresence().setGame(Game.watching("@Skript-Bot help"));
     cmdSys.GO.getTextChannelById(cmdSys.LC_ID).sendMessage("**Successfully reconnected to Skript-Chat**").queue();
     cmdSys.GO.getTextChannelById(cmdSys.LC_ID).getManager().setTopic("Last Restart: (" + new SimpleDateFormat("dd/MM/yy - HH:mm:ss").format(new Date()) + ") - took (" + (System.currentTimeMillis() - st) + "ms)").queue();
-    while (true) {
-      switch (System.console().readLine()) {
+    Scanner s = new Scanner(System.in);
+    while (s.hasNext()) {
+      switch (s.nextLine()) {
         case "rs":
           System.exit(0);
         default:
@@ -35,11 +37,9 @@ public class SkriptBot {
   }
 
   static void prSysI(Guild g, TextChannel c, User u, String s) {
-    System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Info] " + "[" + g.getName() + "] (#" + c.getName() + ") @" + u.getName() + "#" + u.getDiscriminator() + " - "  + s);
-    cmdSys.GO.getTextChannelById(cmdSys.LC_ID).sendMessage("**" + g.getName() + "**: " + c.getAsMention() + " - " + u.getAsMention() + " - " + s).queue();
+    cmdSys.GO.getTextChannelById(cmdSys.LC_ID).sendMessage("`" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "` - **" + g.getName() + "**: " + c.getAsMention() + " - " + u.getAsMention() + " - " + s).queue();
   }
   static void prSysI(String g, User u, String s) {
-    System.out.println("[" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "] [Info] " + "[" + g + "] @" + u.getName() + "#" + u.getDiscriminator() + " - "  + s);
-    cmdSys.GO.getTextChannelById(cmdSys.LC_ID).sendMessage("**" + g + "**: " + u.getAsMention() + " - " + s).queue();
+    cmdSys.GO.getTextChannelById(cmdSys.LC_ID).sendMessage("`" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "` - **" + g + "**: " + u.getAsMention() + " - " + s).queue();
   }
 }

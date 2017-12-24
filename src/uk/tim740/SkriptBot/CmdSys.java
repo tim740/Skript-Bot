@@ -234,39 +234,29 @@ class CmdSys {
     }
   }
 
-  private void cmdEx(Guild g, Message m) {
+  private void cmdX(Guild g, Message m) {
     if (!m.getAuthor().getId().equals("227067574469394432")) {
       String mc = m.getContentStripped().replaceFirst("@Skript-Bot ", "").replaceFirst("<@227067574469394432> ", "");
       if (!m.isFromType(ChannelType.PRIVATE)) {
-        if (!m.getChannel().getId().equals(LC_ID)) {
-          if (m.getChannel().getId().equals("237960698854899713")) {
-            if (!g.getMember(m.getAuthor()).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new)).contains("Staff")) {
-              if (!tf.matcher(m.getContentStripped().toLowerCase()).find()) m.delete().queue();
-            }
-          } else if (m.getContentStripped().toLowerCase().startsWith("@skript-bot")) {
-            if (validCmd(mc.split(" "))) {
-              prSysI(g, (TextChannel) m.getChannel(), m.getAuthor(), "executed: '" + mc + "'");
-              cmd(mc.split(" "), g.getId(), m);
-            }
-          }
-        } else {
+        if (m.getChannel().getId().equals(LC_ID) || (m.getChannel().getId().equals("237960698854899713") && !(g.getMember(m.getAuthor()).getRoles().stream().filter(r -> r.getName().equals("Staff")).collect(Collectors.toList()).size() > 0) && !tf.matcher(m.getContentStripped().toLowerCase()).find())) {
           m.delete().queue();
+        } else if (m.getContentStripped().toLowerCase().startsWith("@skript-bot") && validCmd(mc.split(" "))) {
+          prSysI(g, (TextChannel) m.getChannel(), m.getAuthor(), "executed: `" + mc + "`");
+          cmd(mc.split(" "), g.getId(), m);
         }
-      } else {
-        if (validCmd(mc.split(" "))) {
-          prSysI("Private", m.getAuthor(), "executed: '" + mc + "'");
-          cmd(mc.split(" "), "", m);
-        }
+      } else if (validCmd(mc.split(" "))) {
+        prSysI("Private", m.getAuthor(), "executed: `" + mc + "`");
+        cmd(mc.split(" "), "", m);
       }
     }
   }
 
   private class MessageListener extends ListenerAdapter {
     public void onMessageReceived(MessageReceivedEvent e) {
-      cmdEx(e.getGuild(), e.getMessage());
+      cmdX(e.getGuild(), e.getMessage());
     }
     public void onMessageUpdate(MessageUpdateEvent e) {
-      cmdEx(e.getGuild(), e.getMessage());
+      cmdX(e.getGuild(), e.getMessage());
     }
     public void onMessageReactionAdd(MessageReactionAddEvent e) {
       if (e.getChannel().getId().equals(SC.getId())) {

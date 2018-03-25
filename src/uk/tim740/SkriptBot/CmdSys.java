@@ -52,7 +52,7 @@ class CmdSys {
       System.exit(0);
     }
     GO = jda.getGuildById("138464183946575874");
-    AC = GO.getTextChannelById("393172371806355466");
+    AC = GO.getTextChannelById("394179773234020362");
     SC = GO.getTextChannelById("139843895063347201");
     cmdBuilder("help", "", "Help Command", "user");
     cmdBuilder("info", "" , "Chat Info", "user");
@@ -131,7 +131,7 @@ class CmdSys {
           eb.addField("Game:", (wu.getGame() != null ? wu.getGame().getName() : "None"), true);
           eb.addField("Joined Discord:", mu.getCreationTime().format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")), true);
           eb.addField("Joined Skript-Chat:", g.getMember(mu).getJoinDate().format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm")), true);
-          eb.addField("Roles:", String.valueOf(g.getMember(mu).getRoles().stream().map(Role::getName).collect(Collectors.toCollection(ArrayList::new))), true);
+          eb.addField("Roles:", String.valueOf(g.getMember(mu).getRoles().stream().map(Role::getName).collect(Collectors.toList())), true);
           eb.setFooter(g.getName(), g.getIconUrl());
           m.getChannel().sendMessage(eb.build()).queue();
           break;
@@ -194,7 +194,7 @@ class CmdSys {
               jf.write(j.toJSONString());
             }
             eb.addField("@" + u.getName() + " warned @" + mu.getName() + "#" + mu.getDiscriminator(), "Reason: `" + umsg.replaceFirst(args[1], "") + "` (**" + warnCount + "**/**5**)", false);
-            AC.sendMessage(eb.build()).queue();
+            GO.getTextChannelById(LC_ID).sendMessage(eb.build()).queue();
             m.addReaction("\uD83D\uDC4D").queue();
           }
           break;
@@ -319,12 +319,11 @@ class CmdSys {
     EmbedBuilder eb = new EmbedBuilder();
     try {
       JSONObject j = (JSONObject) new JSONParser().parse(text);
+      if (j.containsKey("color")) eb.setColor(Color.decode((String) j.get("color")));
+      if (j.containsKey("desc")) eb.setDescription(((String) j.get("desc")).replaceAll("%nl%", System.lineSeparator()));
       if (j.containsKey("author")) {
         JSONObject jo = (JSONObject) j.get("author");
         eb.setAuthor((String) jo.get("content"), (String) jo.get("linkurl"), (String) jo.get("iconurl"));
-      }
-      if (j.containsKey("color")) {
-        eb.setColor(Color.decode((String) j.get("color")));
       }
       if (j.containsKey("title")) {
         JSONObject jo = (JSONObject) j.get("title");
@@ -333,9 +332,6 @@ class CmdSys {
         } else {
           eb.setTitle((String) jo.get("title"));
         }
-      }
-      if (j.containsKey("desc")) {
-        eb.setDescription(((String) j.get("desc")).replaceAll("%nl%", System.lineSeparator()));
       }
       String in = j.toJSONString();
       int id = in.indexOf("field");

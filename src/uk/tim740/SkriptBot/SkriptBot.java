@@ -1,7 +1,10 @@
 package uk.tim740.SkriptBot;
 
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.User;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,7 +25,6 @@ public class SkriptBot {
   public SkriptBot(String[] args) {
     cmdSys.reg(args[0]);
     jda.getPresence().setGame(Game.watching("@Skript-Bot help"));
-    cmdSys.GO.getTextChannelById(cmdSys.LC_ID).sendMessage("**Successfully reconnected to Skript-Chat**").queue();
     cmdSys.GO.getTextChannelById(cmdSys.LC_ID).getManager().setTopic("Last Restart: (" + new SimpleDateFormat("dd/MM/yy - HH:mm:ss").format(new Date()) + ") - took (" + (System.currentTimeMillis() - st) + "ms)").queue();
     Scanner s = new Scanner(System.in);
     while (s.hasNext()) {

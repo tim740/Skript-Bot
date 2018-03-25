@@ -2,7 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8f93b0fe-f5cd-4238-88b0-0f0f526bd76f" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__net_dv8tion_JDA_3_5_0_327.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__net_dv8tion_JDA_3_4_0_318.xml" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Skript-Bot.iml" afterPath="$PROJECT_DIR$/Skript-Bot.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/uk/tim740/SkriptBot/CmdSys.java" afterPath="$PROJECT_DIR$/src/uk/tim740/SkriptBot/CmdSys.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/uk/tim740/SkriptBot/SkriptBot.java" afterPath="$PROJECT_DIR$/src/uk/tim740/SkriptBot/SkriptBot.java" />
     </list>
@@ -29,13 +33,13 @@
       <file leaf-file-name="CmdSys.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/uk/tim740/SkriptBot/CmdSys.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="189">
-              <caret line="236" column="0" lean-forward="false" selection-start-line="236" selection-start-column="0" selection-end-line="236" selection-end-column="0" />
+            <state relative-caret-position="102">
+              <caret line="208" column="25" lean-forward="false" selection-start-line="208" selection-start-column="25" selection-end-line="208" selection-end-column="25" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="method#reg#0;class#CmdSys#0" expanded="false" />
                 <element signature="method#cmdBuilder#0;class#CmdSys#0" expanded="false" />
                 <element signature="method#cmdX#0;class#CmdSys#0" expanded="false" />
+                <element signature="class#MessageListener#0;class#CmdSys#0" expanded="false" />
                 <element signature="method#onGuildBan#0;class#MessageListener#0;class#CmdSys#0" expanded="false" />
                 <element signature="method#embedBuilder#0;class#CmdSys#0" expanded="false" />
                 <element signature="method#invBuilder#0;class#CmdSys#0" expanded="false" />
@@ -47,9 +51,11 @@
       <file leaf-file-name="SkriptBot.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/uk/tim740/SkriptBot/SkriptBot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="14" column="21" lean-forward="false" selection-start-line="14" selection-start-column="21" selection-end-line="14" selection-end-column="21" />
-              <folding />
+            <state relative-caret-position="204">
+              <caret line="22" column="3" lean-forward="false" selection-start-line="22" selection-start-column="3" selection-end-line="22" selection-end-column="3" />
+              <folding>
+                <element signature="method#SkriptBot#0;class#SkriptBot#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -57,10 +63,10 @@
       <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1717">
-              <caret line="101" column="30" lean-forward="false" selection-start-line="101" selection-start-column="30" selection-end-line="101" selection-end-column="30" />
+            <state relative-caret-position="248">
+              <caret line="95" column="34" lean-forward="false" selection-start-line="95" selection-start-column="34" selection-end-line="95" selection-end-column="34" />
               <folding>
-                <marker date="1513998873606" expanded="true" signature="3676:3688" ph="..." />
+                <marker date="1521983861830" expanded="true" signature="3676:3688" ph="..." />
               </folding>
             </state>
           </provider>
@@ -155,9 +161,9 @@
         <option value="$PROJECT_DIR$/src/uk/tim740/SkriptBot/CmdBuilder.java" />
         <option value="$USER_HOME$/Desktop/sku-status.java" />
         <option value="$PROJECT_DIR$/skb-exe/warning.json" />
-        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/uk/tim740/SkriptBot/SkriptBot.java" />
         <option value="$PROJECT_DIR$/src/uk/tim740/SkriptBot/CmdSys.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
   </component>
@@ -583,13 +589,6 @@
       <option name="presentableId" value="Default" />
       <updated>1474208562810</updated>
     </task>
-    <task id="LOCAL-00060" summary="fixes">
-      <created>1475458910128</created>
-      <option name="number" value="00060" />
-      <option name="presentableId" value="LOCAL-00060" />
-      <option name="project" value="LOCAL" />
-      <updated>1475458910128</updated>
-    </task>
     <task id="LOCAL-00061" summary="changed info txt">
       <created>1475459018479</created>
       <option name="number" value="00061" />
@@ -926,7 +925,14 @@
       <option name="project" value="LOCAL" />
       <updated>1514065144156</updated>
     </task>
-    <option name="localTasksCounter" value="109" />
+    <task id="LOCAL-00109" summary="Optimize, Bug Fixes">
+      <created>1514118905200</created>
+      <option name="number" value="00109" />
+      <option name="presentableId" value="LOCAL-00109" />
+      <option name="project" value="LOCAL" />
+      <updated>1514118905200</updated>
+    </task>
+    <option name="localTasksCounter" value="110" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -976,7 +982,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="things" />
     <MESSAGE value="emotes and help edit" />
     <MESSAGE value="remove nickname" />
     <MESSAGE value="edit" />
@@ -1001,19 +1006,12 @@
     <MESSAGE value="embed builder updates" />
     <MESSAGE value="optimize" />
     <MESSAGE value="Optimize, Bug Fixes + more" />
-    <option name="LAST_COMMIT_MESSAGE" value="Optimize, Bug Fixes + more" />
+    <MESSAGE value="Optimize, Bug Fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Optimize, Bug Fixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/uk/tim740/SkriptBot/CmdSys.java</url>
-          <line>68</line>
-          <properties />
-          <option name="timeStamp" value="41" />
-        </line-breakpoint>
-      </breakpoints>
-      <option name="time" value="46" />
+      <option name="time" value="48" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1228,31 +1226,33 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1717">
-          <caret line="101" column="30" lean-forward="false" selection-start-line="101" selection-start-column="30" selection-end-line="101" selection-end-column="30" />
+        <state relative-caret-position="248">
+          <caret line="95" column="34" lean-forward="false" selection-start-line="95" selection-start-column="34" selection-end-line="95" selection-end-column="34" />
           <folding>
-            <marker date="1513998873606" expanded="true" signature="3676:3688" ph="..." />
+            <marker date="1521983861830" expanded="true" signature="3676:3688" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/uk/tim740/SkriptBot/SkriptBot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="14" column="21" lean-forward="false" selection-start-line="14" selection-start-column="21" selection-end-line="14" selection-end-column="21" />
-          <folding />
+        <state relative-caret-position="204">
+          <caret line="22" column="3" lean-forward="false" selection-start-line="22" selection-start-column="3" selection-end-line="22" selection-end-column="3" />
+          <folding>
+            <element signature="method#SkriptBot#0;class#SkriptBot#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/uk/tim740/SkriptBot/CmdSys.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="189">
-          <caret line="236" column="0" lean-forward="false" selection-start-line="236" selection-start-column="0" selection-end-line="236" selection-end-column="0" />
+        <state relative-caret-position="102">
+          <caret line="208" column="25" lean-forward="false" selection-start-line="208" selection-start-column="25" selection-end-line="208" selection-end-column="25" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#reg#0;class#CmdSys#0" expanded="false" />
             <element signature="method#cmdBuilder#0;class#CmdSys#0" expanded="false" />
             <element signature="method#cmdX#0;class#CmdSys#0" expanded="false" />
+            <element signature="class#MessageListener#0;class#CmdSys#0" expanded="false" />
             <element signature="method#onGuildBan#0;class#MessageListener#0;class#CmdSys#0" expanded="false" />
             <element signature="method#embedBuilder#0;class#CmdSys#0" expanded="false" />
             <element signature="method#invBuilder#0;class#CmdSys#0" expanded="false" />

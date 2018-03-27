@@ -27,7 +27,7 @@ public class SkriptBot {
     jda.getPresence().setGame(Game.watching("@Skript-Bot help"));
     cmdSys.GO.getTextChannelById(cmdSys.LC_ID).getManager().setTopic("Last Restart: (" + new SimpleDateFormat("dd/MM/yy - HH:mm:ss").format(new Date()) + ") - took (" + (System.currentTimeMillis() - st) + "ms)").queue();
     Scanner s = new Scanner(System.in);
-    while (s.hasNext()) {
+/*    while (s.hasNext()) {
       switch (s.nextLine()) {
         case "rs":
           System.exit(0);
@@ -35,7 +35,7 @@ public class SkriptBot {
           System.out.println("<---[ Restart: rs ]--->");
           break;
       }
-    }
+    }*/
   }
 
   static void prSysI(Guild g, TextChannel c, User u, String s) {

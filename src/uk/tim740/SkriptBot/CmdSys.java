@@ -63,6 +63,7 @@ class CmdSys {
     cmdBuilder("request-addon", "%name% %link%", "Request a Addon Channel", "user");
     cmdBuilder("warn", "%name% %reason%", "Warn a User", "admin");
     cmdBuilder("purge", "%number%", "Remove 1-100 msgs", "admin");
+//    cmdBuilder("Kill", "", "Kills Bot", "admin");
   }
 
   private void cmdBuilder(String cmd, String args, String desc, String rank) {

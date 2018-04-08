@@ -63,7 +63,6 @@ class CmdSys {
     cmdBuilder("request-addon", "%name% %link%", "Request a Addon Channel", "user");
     cmdBuilder("warn", "%name% %reason%", "Warn a User", "admin");
     cmdBuilder("purge", "%number%", "Remove 1-100 msgs", "admin");
-//    cmdBuilder("Kill", "", "Kills Bot", "admin");
   }
 
   private void cmdBuilder(String cmd, String args, String desc, String rank) {
@@ -277,9 +276,10 @@ class CmdSys {
                 if (!(GO.getMember(am.getUser()).getRoles().stream().filter(r -> r.getName().equals("Addon Dev")).collect(Collectors.toList()).size() > 0)) {
                   GO.getController().addRolesToMember(am, GO.getRoleById("138470986809999360")).queue();
                 }
-                GO.getController().getGuild().getCategoryById("360741974548152320").createTextChannel(a).setTopic("v0.0.0 | Forums: " + mel.get(2).getValue() + " |\n\nOnly use this channel for " + a + " related chat.").queue(grac -> {
+                GO.getController().getGuild().getCategoryById("360741974548152320").createTextChannel(a).queue(grac -> {
                   grac.createPermissionOverride(am).setAllow(MANAGE_WEBHOOKS, MANAGE_CHANNEL, MESSAGE_MANAGE).queue();
                   grac.createInvite().setTemporary(false).setMaxAge(0).queue();
+                  grac.getManager().setTopic("v0.0.0 | Forums: " + mel.get(2).getValue() + " | Invite: " + grac.getInvites().complete().get(0) + " |\n\nOnly use this channel for " + a + " related chat.").queue();
                   ((TextChannel) grac).sendMessage(am.getAsMention() + " TEMPORARY MESSAGE please remove this after you have read and understand it.\n\n" +
                       "This is your channel for related chat about your addon, you can manage this channel, change the topic, create WebHooks, and remove messages, if this is abused this permission can be removed!\n\n" +
                       "You also now have access to #addon-updates where you can post updates for your addon, please make sure to stick to the format, and only use this channel for posting addon or tool updates.\n\n" +
@@ -308,7 +308,7 @@ class CmdSys {
       eb.setAuthor("@" + e.getUser().getName() + "#" + e.getUser().getDiscriminator() + " (" + e.getGuild().getMember(e.getUser()).getEffectiveName() + ")", e.getUser().getAvatarUrl(), e.getUser().getAvatarUrl());
       eb.setDescription("Banned!");
       eb.setFooter(e.getGuild().getName(), e.getGuild().getIconUrl());
-      AC.sendMessage(eb.build()).queue();
+      SC.sendMessage(eb.build()).queue();
     }
   }
 

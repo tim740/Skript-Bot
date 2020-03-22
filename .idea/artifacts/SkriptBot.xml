@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="SkriptBot">
-    <output-path>$PROJECT_DIR$/../Finished/out</output-path>
-    <root id="archive" name="SkriptBot.jar">
-      <element id="module-output" name="Skript-Bot" />
-    </root>
-  </artifact>
-</component>

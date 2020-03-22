@@ -1,0 +1,47 @@
+plugins {
+    id 'java'
+}
+
+group 'SkriptBot'
+version ''
+apply plugin: 'idea'
+
+sourceCompatibility = 1.8
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+    }
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'SkriptBot',
+                'Implementation-Version': 1,
+                'Main-Class': 'uk.tim740.SkriptBot.SkriptBot'
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile ('net.dv8tion:JDA:4.1.1_122') {
+        exclude module: 'opus-java'
+    }
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
+    compile 'org.slf4j:slf4j-simple:1.7.25'
+    compile 'org.yaml:snakeyaml:1.17'
+
+
+    implementation 'org.jetbrains:annotations:15.0'
+}
+
+repositories {
+    jcenter()
+}

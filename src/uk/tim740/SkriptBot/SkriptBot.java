@@ -1,10 +1,9 @@
 package uk.tim740.SkriptBot;
 
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.Game;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,14 +22,14 @@ public class SkriptBot {
 
   public SkriptBot(String[] args) {
     cmdSys.reg(args[0]);
-    jda.getPresence().setGame(Game.watching("@Skript-Bot help"));
-    cmdSys.GO.getTextChannelById(cmdSys.LC_ID).getManager().setTopic("Last Restart: (" + new SimpleDateFormat("dd/MM/yy - HH:mm:ss").format(new Date()) + ") - took (" + (System.currentTimeMillis() - st) + "ms)").queue();
+    //jda.getPresence().setGame(Game.watching("@Skript-Bot help"));
+    //cmdSys.GO.getTextChannelById(cmdSys.CONSOLE).getManager().setTopic("Last Restart: (" + new SimpleDateFormat("dd/MM/yy - HH:mm:ss").format(new Date()) + ") - took (" + (System.currentTimeMillis() - st) + "ms)").queue();
   }
 
   static void prSysI(Guild g, TextChannel c, User u, String s) {
-    cmdSys.GO.getTextChannelById(cmdSys.LC_ID).sendMessage("`" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "` - **" + g.getName() + "**: " + c.getAsMention() + " - " + u.getAsMention() + " - " + s).queue();
+    g.getTextChannelsByName("Console", true).get(0).sendMessage("`" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "` - **" + g.getName() + "**: " + c.getAsMention() + " - " + u.getAsMention() + " - " + s).queue();
   }
   static void prSysI(String g, User u, String s) {
-    cmdSys.GO.getTextChannelById(cmdSys.LC_ID).sendMessage("`" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "` - **" + g + "**: " + u.getAsMention() + " - " + s).queue();
+    cmdSys.GO.getTextChannelsByName("Console", true).get(0).sendMessage("`" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "` - **" + g + "**: " + u.getAsMention() + " - " + s).queue();
   }
 }

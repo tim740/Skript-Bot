@@ -1,4 +1,8 @@
-target
+build
+.gradle
+gradle
+gradlew
+gradle.bat
 meta-inf
 manifest.mf
 skb-exe

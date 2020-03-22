@@ -33,7 +33,6 @@
       <change beforePath="$PROJECT_DIR$/Skript-Bot.iml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/uk/tim740/SkriptBot/CmdSys.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/uk/tim740/SkriptBot/CmdSys.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/uk/tim740/SkriptBot/SkriptBot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/uk/tim740/SkriptBot/SkriptBot.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -257,21 +256,5 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="943" y="315" width="672" height="678" key="search.everywhere.popup/0.0.2560.1400@0.0.2560.1400" timestamp="1584879611388" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/uk/tim740/SkriptBot/CmdSys.java</url>
-          <line>248</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/uk/tim740/SkriptBot/CmdSys.java</url>
-          <line>260</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

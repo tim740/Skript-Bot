@@ -29,7 +29,10 @@ public class SkriptBot {
   static void prSysI(Guild g, TextChannel c, User u, String s) {
     g.getTextChannelsByName("Console", true).get(0).sendMessage("`" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "` - **" + g.getName() + "**: " + c.getAsMention() + " - " + u.getAsMention() + " - " + s).queue();
   }
-  static void prSysI(String g, User u, String s) {
-    cmdSys.GO.getTextChannelsByName("Console", true).get(0).sendMessage("`" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "` - **" + g + "**: " + u.getAsMention() + " - " + s).queue();
+  static void prSysI(Guild g, User u, String s) {
+    g.getTextChannelsByName("Console", true).get(0).sendMessage("`" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "` - **" + g.getName() + "**: " + u.getAsMention() + " - " + s).queue();
+  }
+  static void prSysIP(String g, User u, String s) {
+    cmdSys.GO.getTextChannelById(cmdSys.CONSOLE).sendMessage("`" + new SimpleDateFormat("HH:mm:ss").format(new Date()) + "` - **" + g + "**: " + u.getAsMention() + " - " + s).queue();
   }
 }

@@ -248,7 +248,7 @@ class CmdSys {
           cmd(mc.split(" "), g.getId(), m);
         }
       } else if (validCmd(mc.split(" "))) {
-        prSysI("Private", m.getAuthor(), "executed: `" + mc + "`");
+        prSysIP("Private", m.getAuthor(), "executed: `" + mc + "`");
         cmd(mc.split(" "), "", m);
       }
     }
@@ -298,11 +298,11 @@ class CmdSys {
     }
     @Override
     public void onGuildMemberJoin(GuildMemberJoinEvent e) {
-      prSysI(e.getGuild().getName(), e.getMember().getUser(), "joined!");
+      prSysI(e.getGuild(), e.getMember().getUser(), "joined! **(" + e.getUser().getName() + "#" + e.getUser().getDiscriminator() + ")**");
     }
     @Override
     public void onGuildMemberLeave(GuildMemberLeaveEvent e) {
-      prSysI(e.getGuild().getName(), e.getUser(), "left! **(" + e.getUser().getName() + "#" + e.getUser().getDiscriminator() + ")**");
+      prSysI(e.getGuild(), e.getUser(), "left! **(" + e.getUser().getName() + "#" + e.getUser().getDiscriminator() + ")**");
     }
     @Override
     public void onGuildBan(GuildBanEvent e) {

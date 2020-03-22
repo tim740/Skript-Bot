@@ -49,8 +49,6 @@ class CmdSys {
   void reg(String key) {
     try {
       jda = new JDABuilder(key).addEventListeners(new MessageListener()).build();
-      //jda = new JDABuilder(AccountType.BOT).setToken(tk).addEventListener(new MessageListener()).buildBlocking();
-      //jda = new JDABuilder(tk).addEventListener(new MessageListener()).build(); //broken as of 3.8.3_464
     } catch (Exception x) {
       x.printStackTrace();
       System.exit(0);
